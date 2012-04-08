@@ -226,11 +226,12 @@ public final class CollapsibleBuilder implements UiBuilder {
         {
           openSpan(output, Components.COUNT_TOTAL.getDomId(id), null, null);
           output.append(totalBlipCount);
+          output.appendEscaped(totalBlipCount > 1? " replies": " reply");
           closeSpan(output);
 
           String unreadExtra = unreadBlipCount <= 0 ? " style='display: none;'" : "";
           openSpanWith(output, Components.COUNT_UNREAD.getDomId(id), null, null, unreadExtra);
-          output.appendEscaped("(" + unreadBlipCount + ")");
+          output.appendEscaped(" (" + unreadBlipCount + " unread)");
           closeSpan(output);
 
           openSpan(output, Components.DROP_CONTAINER.getDomId(id), css.dropContainer() +

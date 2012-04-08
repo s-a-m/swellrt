@@ -81,16 +81,27 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
   private final static Map<MenuOption, SafeHtml> MENU_LABELS =
       new EnumMap<MenuOption, SafeHtml>(MenuOption.class);
 
-  private final static StringMap<MenuOption> MENU_OPTIONS = CollectionUtils.createStringMap();
+  private final static Map<MenuOption, SafeHtml> MENU_ICONS =
+      new EnumMap<MenuOption, SafeHtml>(MenuOption.class);
 
+  private final static StringMap<MenuOption> MENU_OPTIONS = CollectionUtils.createStringMap();
+  public final static Set<MenuOption> DELETE_MENU_OPTIONS_SET = EnumSet.of(IntrinsicBlipMetaView.MenuOption.DELETE);
+  
   public static final String OPTION_ID_ATTRIBUTE = "o";
   public static final String OPTION_SELECTED_ATTRIBUTE = "s";
-
+  
   static {
+    BlipIconResources.Css css = BlipIconResources.Loader.res.css();
+    MENU_ICONS.put(MenuOption.EDIT, EscapeUtils.fromSafeConstant(css.edit()));
+    MENU_ICONS.put(MenuOption.REPLY, EscapeUtils.fromSafeConstant(css.reply()));
+    MENU_ICONS.put(MenuOption.DELETE, EscapeUtils.fromSafeConstant(css.delete()));
+    MENU_ICONS.put(MenuOption.LINK, EscapeUtils.fromSafeConstant(css.link()));
+
     MENU_CODES.put(MenuOption.EDIT, EscapeUtils.fromSafeConstant("e"));
     MENU_CODES.put(MenuOption.REPLY, EscapeUtils.fromSafeConstant("r"));
     MENU_CODES.put(MenuOption.DELETE, EscapeUtils.fromSafeConstant("d"));
     MENU_CODES.put(MenuOption.LINK, EscapeUtils.fromSafeConstant("l"));
+
     MENU_LABELS.put(MenuOption.EDIT, EscapeUtils.fromSafeConstant("Edit"));
     MENU_LABELS.put(MenuOption.REPLY, EscapeUtils.fromSafeConstant("Reply"));
     MENU_LABELS.put(MenuOption.DELETE, EscapeUtils.fromSafeConstant("Delete"));
@@ -245,6 +256,7 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
           out.append(EscapeUtils.fromSafeConstant("|"));
           String style = selected.contains(option) //
               ? css.menuOption() + css.menuOptionSelected() : css.menuOption();
+          style += " " + MENU_ICONS.get(option).asString();
           String extra = OPTION_ID_ATTRIBUTE + "='" + MENU_CODES.get(option).asString() + "'"
               + (selected.contains(option) ? " " + OPTION_SELECTED_ATTRIBUTE + "='s'" : "");
           openSpanWith(out, null, style, TypeCodes.kind(Type.MENU_ITEM), extra);

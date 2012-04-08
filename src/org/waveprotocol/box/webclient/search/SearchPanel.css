@@ -26,6 +26,7 @@
   border-left: 1px solid #E4F1FE;
   background-color: #c9e2fc;
   overflow: hidden;
+  display: none;
 }
 
 @sprite .toolbar {

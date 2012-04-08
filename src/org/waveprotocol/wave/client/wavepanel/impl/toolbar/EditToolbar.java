@@ -436,7 +436,7 @@ public class EditToolbar {
                       linkAnnotationValue);
                 } catch (InvalidLinkException e) {
                   String rawLinkValue =
-                      Window.prompt("Enter link: URL or Wave ID.", WaveRefConstants.WAVE_URI_PREFIX);
+                      Window.prompt("Enter link: URL or Wave ID.", "http://");
                   // user hit "ESC" or "cancel"
                   if (rawLinkValue == null) {
                     return;

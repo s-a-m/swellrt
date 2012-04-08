@@ -36,7 +36,7 @@ public final class BlipMenuItemDomImpl implements DomView, IntrinsicBlipMenuItem
 
   /** The CSS classes used to manipulate style based on state changes. */
   private final BlipViewBuilder.Css css;
-  
+
   BlipMenuItemDomImpl(Element self, BlipViewBuilder.Css css) {
     this.self = self;
     this.css = css;
@@ -63,13 +63,13 @@ public final class BlipMenuItemDomImpl implements DomView, IntrinsicBlipMenuItem
   @Override
   public void select() {
     self.setAttribute(OPTION_SELECTED_ATTRIBUTE, "s");
-    self.setClassName(css.menuOption() + " " + css.menuOptionSelected());
+    self.addClassName(css.menuOptionSelected());
   }
 
   @Override
   public void deselect() {
     self.removeAttribute(OPTION_SELECTED_ATTRIBUTE);
-    self.setClassName(css.menuOption());
+    self.removeClassName(css.menuOptionSelected());
   }
 
   @Override

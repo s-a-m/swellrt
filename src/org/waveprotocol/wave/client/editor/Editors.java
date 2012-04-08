@@ -45,15 +45,19 @@ import org.waveprotocol.wave.model.util.CollectionUtils;
  */
 public final class Editors {
 
+  private static String localDomain;
+
   private Editors() {
   }
 
   /**
    * Creates an editor.
+   * @param localDomain 
    *
    * @return New Editor instance
    */
   public static Editor create() {
+    Editors.localDomain = "kk";
     Element e = Document.get().createDivElement();
     e.setClassName("editor");
     return UserAgent.isMobileWebkit() ? // \u2620
@@ -105,7 +109,7 @@ public final class Editors {
     LineRendering.registerLines(ROOT_HANDLER_REGISTRY);
 
     Caption.register(ROOT_HANDLER_REGISTRY);
-    ChunkyElementHandler.register("br", ROOT_HANDLER_REGISTRY);
+    ChunkyElementHandler.register("br", ROOT_HANDLER_REGISTRY);    
     AnnotationPaint.register(ROOT_HANDLER_REGISTRY);
     ImgDoodad.register(ROOT_HANDLER_REGISTRY);
 

@@ -30,6 +30,7 @@ import org.waveprotocol.wave.client.editor.Editor;
 import org.waveprotocol.wave.client.editor.EditorSettings;
 import org.waveprotocol.wave.client.editor.Editors;
 import org.waveprotocol.wave.client.editor.content.ContentDocument;
+import org.waveprotocol.wave.client.editor.content.misc.AnnotationPaint;
 import org.waveprotocol.wave.client.editor.keys.KeyBindingRegistry;
 import org.waveprotocol.wave.client.util.ClientFlags;
 import org.waveprotocol.wave.client.wave.DocumentRegistry;
@@ -92,7 +93,7 @@ public final class EditSession
 
   public static EditSession install(ModelAsViewProvider views,
       DocumentRegistry<? extends InteractiveDocument> documents,
-      SelectionExtractor selectionExtractor, FocusFramePresenter focus, WavePanelImpl panel) {
+      SelectionExtractor selectionExtractor, FocusFramePresenter focus, WavePanelImpl panel, String localDomain) {
     EditSession edit = new EditSession(views, documents, panel.getGwtPanel(), selectionExtractor);
     focus.addListener(edit);
     if (panel.hasContents()) {
@@ -103,6 +104,7 @@ public final class EditSession
     // Warms up the editor code (e.g., internal statics) by creating and throwing
     // away an editor, in order to reduce the latency of starting the first edit
     // session.
+    AnnotationPaint.init(localDomain);
     Editors.create();
 
     return edit;

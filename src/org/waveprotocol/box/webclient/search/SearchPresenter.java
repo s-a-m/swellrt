@@ -95,7 +95,7 @@ public final class SearchPresenter
   private int querySize = DEFAULT_PAGE_SIZE;
   /** Current selected digest. */
   private DigestView selected;
-  
+
   /** The dispatcher of profiles events. */
   SourcesEvents<ProfileListener> profiles;
 
@@ -160,7 +160,7 @@ public final class SearchPresenter
   private void initToolbarMenu() {
     GroupingToolbar.View toolbarUi = searchUi.getToolbar();
     ToolbarView group = toolbarUi.addGroup();
-    new ToolbarButtonViewBuilder().setText("New Wave").applyTo(
+    new ToolbarButtonViewBuilder().setText("New Message").setTooltip("Create a New Message (a Wave)").applyTo(
         group.addClickButton(), new ToolbarClickButton.Listener() {
           @Override
           public void onClicked() {

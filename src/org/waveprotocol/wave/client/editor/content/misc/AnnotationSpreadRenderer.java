@@ -22,6 +22,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
+import com.google.gwt.user.client.Window;
 
 import org.waveprotocol.wave.client.common.scrub.Scrub;
 import org.waveprotocol.wave.client.common.util.DomHelper;
@@ -33,9 +34,9 @@ import org.waveprotocol.wave.client.editor.content.ContentElement;
 import org.waveprotocol.wave.client.editor.content.misc.AnnotationPaint.EventHandler;
 import org.waveprotocol.wave.client.editor.content.misc.AnnotationPaint.MutationHandler;
 import org.waveprotocol.wave.client.scheduler.Scheduler;
-import org.waveprotocol.wave.client.scheduler.SchedulerInstance;
 import org.waveprotocol.wave.client.scheduler.Scheduler.Priority;
 import org.waveprotocol.wave.client.scheduler.Scheduler.Task;
+import org.waveprotocol.wave.client.scheduler.SchedulerInstance;
 import org.waveprotocol.wave.model.util.ReadableStringMap.ProcV;
 
 import java.util.HashSet;
@@ -72,11 +73,13 @@ class AnnotationSpreadRenderer extends RenderingMutationHandler {
     }
   };
 
+  private String domain;
+
   private static MutationHandler getMutationHandler(ContentElement element) {
     String handlerId = element.getAttribute(AnnotationPaint.MUTATION_LISTENER_ATTR);
     return handlerId == null ? null : AnnotationPaint.mutationHandlerRegistry.get(handlerId);
   }
-
+  
   @Override
   public void onActivationStart(ContentElement element) {
     fanoutAttrs(element);
@@ -108,9 +111,9 @@ class AnnotationSpreadRenderer extends RenderingMutationHandler {
       if (newValue != null) {
         String scrubbedValue = Scrub.scrub(newValue);
         implNodelet.setAttribute("href", scrubbedValue);
-        if (scrubbedValue.startsWith("#")) {
+        if (scrubbedValue.startsWith("#") || (domain != null && scrubbedValue.matches("^http([s]|)://" + domain + "/.*"))) {
           implNodelet.removeAttribute("target");
-        } else {
+        } else {                    
           implNodelet.setAttribute("target", "_blank");
         }
       } else {
@@ -216,5 +219,14 @@ class AnnotationSpreadRenderer extends RenderingMutationHandler {
   @Override
   public void onDescendantsMutated(ContentElement element) {
     scheduleMutationNotification(element);
+  }
+
+  /**
+   * Sets the local domain (used to render local links properly) 
+   *
+   * @param localDomain the new local domain
+   */
+  public void setLocalDomain(String localDomain) {
+    domain = localDomain;
   }
 }

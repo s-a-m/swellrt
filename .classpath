@@ -5,7 +5,7 @@
 	<classpathentry kind="src" path="proto_src"/>
 	<classpathentry kind="src" path="gen/messages"/>
 	<classpathentry kind="src" path="gen/gxp"/>
-	<classpathentry kind="lib" path="third_party/runtime/jetty/servlet-api-3.0.jar"/>
+	<classpathentry kind="lib" path="third_party/runtime/jetty/servlet-api-3.0.jar" sourcepath="/home/vjrj/.m2/repository/org/eclipse/jetty/orbit/javax.servlet/3.0.0.v201112011016/javax.servlet-3.0.0.v201112011016-sources.jar"/>
 	<classpathentry kind="lib" path="third_party/runtime/guava/guava-r09.jar"/>
 	<classpathentry kind="lib" path="third_party/codegen/antlr/antlr-3.2.jar"/>
 	<classpathentry kind="lib" path="third_party/codegen/gwt/gwt-dev.jar"/>
@@ -75,8 +75,8 @@
 	<classpathentry kind="lib" path="third_party/codegen/socketio/socketio-gwt-0.1-SNAPSHOT.jar" sourcepath="third_party/codegen/socketio/socketio-gwt-0.1-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="lib" path="third_party/runtime/socketio/socketio-jetty-0.1-SNAPSHOT.jar" sourcepath="third_party/runtime/socketio/socketio-jetty-0.1-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="lib" path="third_party/runtime/commons-fileupload/commons-fileupload.jar" sourcepath="third_party/runtime/commons-fileupload/commons-fileupload-src.zip"/>
-        <classpathentry kind="lib" path="third_party/runtime/google-api-client/google-api-client-1.5.0-beta.jar"/>
-        <classpathentry kind="lib" path="third_party/runtime/google-api-client/google-http-client-1.5.0-beta.jar"/>
-        <classpathentry kind="lib" path="third_party/runtime/google-api-client/google-oauth-client-1.5.0-beta.jar"/>
+	<classpathentry kind="lib" path="third_party/runtime/google-api-client/google-api-client-1.5.0-beta.jar"/>
+	<classpathentry kind="lib" path="third_party/runtime/google-api-client/google-http-client-1.5.0-beta.jar"/>
+	<classpathentry kind="lib" path="third_party/runtime/google-api-client/google-oauth-client-1.5.0-beta.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

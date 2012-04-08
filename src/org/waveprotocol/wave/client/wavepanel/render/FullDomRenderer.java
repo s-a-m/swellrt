@@ -24,6 +24,7 @@ import org.waveprotocol.wave.client.state.ThreadReadStateMonitor;
 import org.waveprotocol.wave.client.uibuilder.HtmlClosure;
 import org.waveprotocol.wave.client.uibuilder.HtmlClosureCollection;
 import org.waveprotocol.wave.client.uibuilder.UiBuilder;
+import org.waveprotocol.wave.client.wavepanel.view.IntrinsicBlipMetaView;
 import org.waveprotocol.wave.client.wavepanel.view.ViewIdMapper;
 import org.waveprotocol.wave.client.wavepanel.view.dom.full.AnchorViewBuilder;
 import org.waveprotocol.wave.client.wavepanel.view.dom.full.BlipMetaViewBuilder;
@@ -48,6 +49,7 @@ import org.waveprotocol.wave.model.wave.ParticipantId;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -220,6 +222,8 @@ public final class FullDomRenderer implements RenderingRules<UiBuilder> {
     };
 
     BlipMetaViewBuilder metaUi = BlipMetaViewBuilder.create(viewIdMapper.metaOf(blip), document);
+    if (blip.isRoot())
+      metaUi.disable(BlipMetaViewBuilder.DELETE_MENU_OPTIONS_SET);
     blipPopulator.render(blip, metaUi);
 
     return BlipViewBuilder.create(viewIdMapper.blipOf(blip), metaUi, threadsUi, convsUi);

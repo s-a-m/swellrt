@@ -17,7 +17,7 @@
 <ui:UiBinder
     xmlns:ui="urn:ui:com.google.gwt.uibinder"
     xmlns:w="urn:import:org.waveprotocol.wave.client.widget.common" >
-    
+
   <ui:style>
     .self {
       overflow: hidden;
@@ -25,30 +25,32 @@
       border: 1px solid #ccc;
       margin: 15px 0px;
     }
-    
+
     .self:hover {
       background: #ddd;
     }
-    
+
     .img {
       float: left;
+      display: none;
     }
-    
+
     .img img {
-      width: 120px;
-      height: 120px;
+      width: 0px;
+      height: 0px;
     }
-    
+
     .description {
       overflow: hidden;
       color: #888;
     }
-    
-    .img, .description, .self h3 {     
+
+    .img, .description, .self h3 {
       margin: 15px;
     }
+
   </ui:style>
-  
+
   <w:ImplPanel ui:field="self" styleName="{style.self}">
     <div class="{style.img}">
       <img ui:field="image"/>
