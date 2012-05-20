@@ -78,5 +78,6 @@
 	<classpathentry kind="lib" path="third_party/runtime/google-api-client/google-api-client-1.5.0-beta.jar"/>
 	<classpathentry kind="lib" path="third_party/runtime/google-api-client/google-http-client-1.5.0-beta.jar"/>
 	<classpathentry kind="lib" path="third_party/runtime/google-api-client/google-oauth-client-1.5.0-beta.jar"/>
+	<classpathentry kind="lib" path="third_party/runtime/lucene/lucene-core-3.5.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

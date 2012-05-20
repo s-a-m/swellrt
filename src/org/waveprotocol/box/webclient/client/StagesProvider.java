@@ -22,6 +22,7 @@ import com.google.gwt.dom.client.Element;
 
 import org.waveprotocol.box.webclient.search.WaveContext;
 import org.waveprotocol.box.webclient.search.WaveStore;
+import org.waveprotocol.box.webclient.widget.frame.FramedPanel;
 import org.waveprotocol.wave.client.StageOne;
 import org.waveprotocol.wave.client.StageThree;
 import org.waveprotocol.wave.client.StageTwo;
@@ -35,6 +36,7 @@ import org.waveprotocol.wave.client.wavepanel.impl.focus.FocusBlipSelector;
 import org.waveprotocol.wave.client.wavepanel.impl.focus.FocusFramePresenter;
 import org.waveprotocol.wave.client.wavepanel.impl.focus.ViewTraverser;
 import org.waveprotocol.wave.client.wavepanel.impl.reader.Reader;
+import org.waveprotocol.wave.client.wavepanel.impl.title.WindowTitleHandler;
 import org.waveprotocol.wave.client.wavepanel.view.BlipView;
 import org.waveprotocol.wave.client.wavepanel.view.dom.ModelAsViewProvider;
 import org.waveprotocol.wave.client.wavepanel.view.dom.full.BlipQueueRenderer;
@@ -57,6 +59,8 @@ public class StagesProvider extends Stages {
   };
 
   private final Element wavePanelElement;
+  private final Element unsavedIndicatorElement;
+  private final FramedPanel waveFrame;
   private final LogicalPanel rootPanel;
   private final WaveRef waveRef;
   private final RemoteViewServiceMultiplexer channel;
@@ -73,19 +77,24 @@ public class StagesProvider extends Stages {
   private WaveContext wave;
 
   /**
-   * @param wavePanelElement The dom element to become the wave panel
-   * @param rootPanel A panel that this an ancestor of wavePanelElement. This is
+   * @param wavePanelElement the DOM element to become the wave panel.
+   * @param unsavedIndicatorElement the element that displays the wave saved state.
+   * @param rootPanel a panel that this an ancestor of wavePanelElement. This is
    *        used for adopting to the GWT widget tree.
+   * @param waveFrame the wave frame.
    * @param waveRef the id of the wave to open. If null, it means, create a new
    *        wave.
-   * @param channel communication channel.
+   * @param channel the communication channel.
    * @param isNewWave true if the wave is a new client-created wave
    * @param idGenerator
    */
-  public StagesProvider(Element wavePanelElement, LogicalPanel rootPanel, WaveRef waveRef,
-      RemoteViewServiceMultiplexer channel, IdGenerator idGenerator, ProfileManager profiles,
-      WaveStore store, boolean isNewWave, String localDomain) {
+  public StagesProvider(Element wavePanelElement, Element unsavedIndicatorElement,
+      LogicalPanel rootPanel, FramedPanel waveFrame, WaveRef waveRef, RemoteViewServiceMultiplexer channel,
+      IdGenerator idGenerator, ProfileManager profiles, WaveStore store, boolean isNewWave,
+      String localDomain) {
     this.wavePanelElement = wavePanelElement;
+    this.unsavedIndicatorElement = unsavedIndicatorElement;
+    this.waveFrame = waveFrame;
     this.rootPanel = rootPanel;
     this.waveRef = waveRef;
     this.channel = channel;
@@ -119,7 +128,7 @@ public class StagesProvider extends Stages {
   @Override
   protected AsyncHolder<StageTwo> createStageTwoLoader(StageOne one) {
     return haltIfClosed(new StageTwoProvider(
-        this.one = one, waveRef, channel, isNewWave, idGenerator, profiles));
+        this.one = one, waveRef, channel, isNewWave, idGenerator, profiles, unsavedIndicatorElement));
   }
 
   @Override
@@ -157,6 +166,7 @@ public class StagesProvider extends Stages {
     wave = new WaveContext(
         two.getWave(), two.getConversations(), two.getSupplement(), two.getReadMonitor());
     waveStore.add(wave);
+    install();
     whenReady.use(x);
   }
 
@@ -179,6 +189,13 @@ public class StagesProvider extends Stages {
       selectAndFocusOnBlip(two.getReader(), two.getModelAsViewProvider(), two.getConversations(),
           one.getFocusFrame(), waveRef);
     }
+  }
+
+  /**
+   * A hook to install features that are not dependent an a certain stage.
+   */
+  protected void install() {
+    WindowTitleHandler.install(waveStore, waveFrame);
   }
 
   public void destroy() {

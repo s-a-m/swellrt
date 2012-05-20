@@ -87,13 +87,21 @@ admin_user = @ADMIN_USER@
 # Default value: "" (empty)
 welcome_wave_id = @WELCOME_WAVE_ID@
 
-# Thread counts
-#The number of threads to listen on wavelet updates. Default value: 1
+# The number of threads to listen on wavelet updates. Default value: 1
 listener_executor_thread_count = @LISTENER_EXECUTOR_THREAD_COUNT@
-#The number of threads for loading wavelets. Default value: 2
+
+# The number of threads for loading wavelets. Default value: 1
 wavelet_load_executor_thread_count = @WAVELET_LOAD_EXECUTOR_THREAD_COUNT@
-#The number of threads to persist deltas. Default value: 2
+
+# The number of threads to persist deltas. Default value: 1
 delta_persist_executor_thread_count = @DELTA_PERSIST_EXECUTOR_THREAD_COUNT@
+
+# The number of threads to perform post wavelet loading logic. Default value: 1
+storage_continuation_executor_thread_count = @STORAGE_CONTINUATION_EXECUTOR_THREAD_COUNT@
+
+# The number of threads for looking up the wavelet ids
+# while creating a list of all wavelets in the persistent storage. Default value: 1
+lookup_executor_thread_count = @LOOKUP_EXECUTOR_THREAD_COUNT@
 
 # To enable federation, edit the server.federation.config file and include it here.
 # Or run ant -f server-config.xml server-federation-config
@@ -115,14 +123,32 @@ waveserver_disable_signer_verification = true
 # Default value: false
 disable_registration = @DISABLE_REGISTRATION@
 
-# Enable SSL for all address/port combinations listed (makes the next 2 settings non-optional)
+# Enable SSL for all address/port combinations listed (makes the next 2 settings non-optional).
+# Default value: false
 enable_ssl = @ENABLE_SSL@
 
 # Path to keystore containg the ssl certificates to server
+# Note: this is only used when enable_ssl set to true.
 ssl_keystore_path = @SSL_KEYSTORE_PATH@
 
-#Password to the keystore
+# Password to the keystore.
+# Note: this is only used when enable_ssl set to true.
 ssl_keystore_password = @SSL_KEYSTORE_PASSWORD@
 
-# Enable import of waves via /import URL. Default value: false
+# Enable import of waves via /import URL.
+# Default value: false
 enable_import = @ENABLE_IMPORT@
+
+# Currently supported search types: memory, lucene.
+# Default value: lucene.
+search_type = @SEARCH_TYPE@
+
+# The location where search indexes are stored on disk.
+# Note: This is only used when using the lucene search type. It is ignored
+# for other search types.
+# Default value: _indexes
+index_directory = @INDEX_DIRECTORY@
+
+ # Google Analytics account.
+ # Default value: empty
+analytics_account = @ANALYTICS_ACCOUNT@
