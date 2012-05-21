@@ -93,7 +93,7 @@ public class AuthenticationServlet extends HttpServlet {
   }
 
   @SuppressWarnings("unchecked")
-  private LoginContext login(BufferedReader body) throws IOException, LoginException {
+  public LoginContext login(BufferedReader body) throws IOException, LoginException {
     try {
       Subject subject = new Subject();
 

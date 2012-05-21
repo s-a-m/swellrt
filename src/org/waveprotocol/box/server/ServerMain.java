@@ -230,7 +230,6 @@ public class ServerMain {
     server.addServlet(SessionManager.SIGN_IN_URL, injector.getInstance(AuthenticationServlet.class));
     server.addServlet("/auth/signout", injector.getInstance(SignOutServlet.class));
     server.addServlet("/auth/register", injector.getInstance(UserRegistrationServlet.class));
-
     server.addServlet("/fetch/*", injector.getInstance(FetchServlet.class));
     server.addServlet("/search/*", injector.getInstance(SearchServlet.class));
     server.addServlet("/notification/*", injector.getInstance(NotificationServlet.class));
