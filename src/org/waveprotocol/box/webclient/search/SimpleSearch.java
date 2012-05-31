@@ -79,7 +79,6 @@ public final class SimpleSearch implements Search, WaveStore.Listener {
     void activate(WaveContext wave) {
       Preconditions.checkState(dynamicDigest == null);
       dynamicDigest = WaveBasedDigest.create(wave, staticDigest);
-      dynamicDigest.addListener(this);
       fireOnChanged();
     }
 
