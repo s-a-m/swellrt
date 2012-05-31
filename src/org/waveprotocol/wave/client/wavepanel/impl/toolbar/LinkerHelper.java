@@ -54,6 +54,7 @@ public class LinkerHelper {
       EditorAnnotationUtil.setAnnotationOverSelection(editor, Link.KEY, linkAnnotationValue);
     } catch (InvalidLinkException e) {
       String rawLinkValue =
+<<<<<<< HEAD
           Window.prompt("Enter link URL", "http://");
       // user hit "ESC" or "cancel"
       if (rawLinkValue == null) {
@@ -66,6 +67,22 @@ public class LinkerHelper {
         Window.alert(e2.getLocalizedMessage());
       }
     }
+=======
+          Window.prompt("Enter link: URL or Wave ID.", WaveRefConstants.WAVE_URI_PREFIX);
+      // user hit "ESC" or "cancel"
+      if (rawLinkValue == null) {
+        return;
+      }
+      try {
+        String linkAnnotationValue = Link.normalizeLink(rawLinkValue);
+        EditorAnnotationUtil.setAnnotationOverSelection(editor, Link.KEY, linkAnnotationValue);
+      } catch (InvalidLinkException e2) {
+        Window.alert(e2.getLocalizedMessage());
+      }
+
+    }
+
+>>>>>>> refs/heads/trunk
   }
 
   /**
