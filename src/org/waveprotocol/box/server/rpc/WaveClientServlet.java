@@ -118,7 +118,7 @@ public class WaveClientServlet extends HttpServlet {
     response.setStatus(HttpServletResponse.SC_OK);
   }
 
-  private JSONObject getClientFlags(HttpServletRequest request) {
+  public JSONObject getClientFlags(HttpServletRequest request) {
     try {
       JSONObject ret = new JSONObject();
 
@@ -165,7 +165,7 @@ public class WaveClientServlet extends HttpServlet {
     }
   }
 
-  private JSONObject getSessionJson(HttpSession session) {
+  public JSONObject getSessionJson(HttpSession session) {
     try {
       ParticipantId user = sessionManager.getLoggedInUser(session);
       String address = (user != null) ? user.getAddress() : null;

@@ -24,14 +24,13 @@ import org.waveprotocol.wave.client.state.ThreadReadStateMonitor;
 import org.waveprotocol.wave.client.uibuilder.HtmlClosure;
 import org.waveprotocol.wave.client.uibuilder.HtmlClosureCollection;
 import org.waveprotocol.wave.client.uibuilder.UiBuilder;
-import org.waveprotocol.wave.client.wavepanel.view.IntrinsicBlipMetaView;
 import org.waveprotocol.wave.client.wavepanel.view.ViewIdMapper;
 import org.waveprotocol.wave.client.wavepanel.view.dom.full.AnchorViewBuilder;
 import org.waveprotocol.wave.client.wavepanel.view.dom.full.BlipMetaViewBuilder;
 import org.waveprotocol.wave.client.wavepanel.view.dom.full.BlipViewBuilder;
 import org.waveprotocol.wave.client.wavepanel.view.dom.full.ContinuationIndicatorViewBuilder;
 import org.waveprotocol.wave.client.wavepanel.view.dom.full.InlineThreadViewBuilder;
-import org.waveprotocol.wave.client.wavepanel.view.dom.full.ParticipantNameViewBuilder;
+import org.waveprotocol.wave.client.wavepanel.view.dom.full.ParticipantAvatarViewBuilder;
 import org.waveprotocol.wave.client.wavepanel.view.dom.full.ParticipantsViewBuilder;
 import org.waveprotocol.wave.client.wavepanel.view.dom.full.ReplyBoxViewBuilder;
 import org.waveprotocol.wave.client.wavepanel.view.dom.full.RootThreadViewBuilder;
@@ -49,7 +48,6 @@ import org.waveprotocol.wave.model.wave.ParticipantId;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -141,7 +139,9 @@ public final class FullDomRenderer implements RenderingRules<UiBuilder> {
     Profile profile = profileManager.getProfile(participant);
     String id = viewIdMapper.participantOf(conversation, participant);
     // Use ParticipantAvatarViewBuilder for avatars.
-    ParticipantNameViewBuilder participantUi = ParticipantNameViewBuilder.create(id);
+
+    // final ParticipantNameViewBuilder participantUi = ParticipantNameViewBuilder.create(id);
+    ParticipantAvatarViewBuilder participantUi = ParticipantAvatarViewBuilder.create(id);
     participantUi.setAvatar(profile.getImageUrl());
     participantUi.setName(profile.getFullName());
     return participantUi;
