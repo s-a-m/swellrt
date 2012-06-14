@@ -68,6 +68,7 @@ import org.waveprotocol.wave.util.logging.Log;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -339,6 +340,7 @@ public class ServerRpcProvider {
 
   @Inject
   public ServerRpcProvider(@Named(CoreSettings.HTTP_FRONTEND_ADDRESSES) List<String> httpAddresses,
+      @Named(CoreSettings.HTTP_WEBSOCKET_PUBLIC_ADDRESS) String websocketAddress,
       @Named(CoreSettings.FLASHSOCKET_POLICY_PORT) Integer flashsocketPolicyPort,
       @Named(CoreSettings.RESOURCE_BASES) List<String> resourceBases,
       SessionManager sessionManager, org.eclipse.jetty.server.SessionManager jettySessionManager,
@@ -346,7 +348,7 @@ public class ServerRpcProvider {
       @Named(CoreSettings.ENABLE_SSL) boolean sslEnabled,
       @Named(CoreSettings.SSL_KEYSTORE_PATH) String sslKeystorePath,
       @Named(CoreSettings.SSL_KEYSTORE_PASSWORD) String sslKeystorePassword) {
-    this(parseAddressList(httpAddresses), flashsocketPolicyPort, resourceBases
+    this(parseAddressList(httpAddresses, websocketAddress), flashsocketPolicyPort, resourceBases
         .toArray(new String[0]), sessionManager, jettySessionManager, sessionStoreDir,
         sslEnabled, sslKeystorePath, sslKeystorePassword);
   }
@@ -501,12 +503,15 @@ public class ServerRpcProvider {
 //    };
 //  }
 
-  private static InetSocketAddress[] parseAddressList(List<String> addressList) {
+  private static InetSocketAddress[] parseAddressList(List<String> addressList, String websocketAddress) {
     if (addressList == null || addressList.size() == 0) {
       return new InetSocketAddress[0];
     } else {
       Set<InetSocketAddress> addresses = Sets.newHashSet();
-      for (String str : addressList) {
+      // We add the websocketAddress as another listening address
+      ArrayList<String> mergedAddressList = new ArrayList<String>(addressList);
+      mergedAddressList.add(websocketAddress);
+      for (String str : mergedAddressList) {
         if (str.length() == 0) {
           LOG.warning("Encountered empty address in http addresses list.");
         } else {
