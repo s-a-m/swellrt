@@ -17,7 +17,6 @@
 package org.waveprotocol.wave.client.wavepanel.impl.edit;
 
 import com.google.common.base.Preconditions;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.waveprotocol.wave.client.common.util.EventWrapper;
@@ -45,6 +44,7 @@ import org.waveprotocol.wave.client.wavepanel.impl.toolbar.LinkerHelper;
 import org.waveprotocol.wave.client.wavepanel.view.BlipView;
 import org.waveprotocol.wave.client.wavepanel.view.IntrinsicBlipMetaView.MenuOption;
 import org.waveprotocol.wave.client.wavepanel.view.dom.ModelAsViewProvider;
+import org.waveprotocol.wave.client.wavepanel.view.dom.full.BlipMetaViewBuilder;
 import org.waveprotocol.wave.model.util.CopyOnWriteSet;
 
 /**
@@ -152,6 +152,7 @@ public final class EditSession
 
     // Find the document.
     ContentDocument document = documents.get(views.getBlip(blipUi)).getDocument();
+    blipUi.getMeta().disable(BlipMetaViewBuilder.DISABLED_WHILE_EDITING_MENU_OPTIONS_SET);
     blipUi.getMeta().select(MenuOption.EDIT);
 
     // Create or re-use and editor for it.
@@ -193,6 +194,7 @@ public final class EditSession
       // TODO(user): this does not work if the view has been deleted and
       // detached.
       editing.getMeta().deselect(MenuOption.EDIT);
+      editing.getMeta().enable(BlipMetaViewBuilder.DISABLED_WHILE_EDITING_MENU_OPTIONS_SET);
       Editor oldEditor = editor;
       BlipView oldEditing = editing;
       editor = null;

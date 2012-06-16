@@ -86,10 +86,12 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
 
   private final static StringMap<MenuOption> MENU_OPTIONS = CollectionUtils.createStringMap();
   public final static Set<MenuOption> DELETE_MENU_OPTIONS_SET = EnumSet.of(IntrinsicBlipMetaView.MenuOption.DELETE);
-  
+  public final static Set<MenuOption> DISABLED_WHILE_EDITING_MENU_OPTIONS_SET = EnumSet.of(IntrinsicBlipMetaView.MenuOption.REPLY,
+      IntrinsicBlipMetaView.MenuOption.DELETE, IntrinsicBlipMetaView.MenuOption.LINK);
+
   public static final String OPTION_ID_ATTRIBUTE = "o";
   public static final String OPTION_SELECTED_ATTRIBUTE = "s";
-  
+
   static {
     BlipIconResources.Css css = BlipIconResources.Loader.res.css();
     MENU_ICONS.put(MenuOption.EDIT, EscapeUtils.fromSafeConstant(css.edit()));
