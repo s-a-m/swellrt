@@ -71,6 +71,7 @@ public class WebSocketServerChannel extends WebSocketChannel implements WebSocke
    */
   @Override
   public void onMessage(String data) {
+    LOG.fine("websocket message (" + data + ")");
     handleMessageString(data);
   }
 
@@ -98,8 +99,9 @@ public class WebSocketServerChannel extends WebSocketChannel implements WebSocke
       if (connection == null) {
         // Just drop the message. It's rude to throw an exception since the
         // caller had no way of knowing.
-        LOG.warning("Websocket is not connected");
+        LOG.warning("Websocket is not connected, dropping data "+ data);
       } else {
+        LOG.fine("websocket send message (" + data + ")");
         connection.sendMessage(data);
       }
     }
