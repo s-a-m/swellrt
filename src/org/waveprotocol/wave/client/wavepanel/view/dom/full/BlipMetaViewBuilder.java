@@ -91,6 +91,9 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
 
   public static final String OPTION_ID_ATTRIBUTE = "o";
   public static final String OPTION_SELECTED_ATTRIBUTE = "s";
+  public final static Set<MenuOption> DISABLED_WHILE_EDITING_MENU_OPTIONS_SET = EnumSet.of(IntrinsicBlipMetaView.MenuOption.REPLY,
+      IntrinsicBlipMetaView.MenuOption.DELETE, IntrinsicBlipMetaView.MenuOption.LINK);
+
 
   static {
     BlipIconResources.Css css = BlipIconResources.Loader.res.css();
