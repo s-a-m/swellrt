@@ -19,3 +19,11 @@
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
 }
+
+.notEditing {
+  border: 3px solid rgb(114, 135, 27);
+}
+
+.editing {
+  border: 3px solid orange;
+}

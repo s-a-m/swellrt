@@ -87,6 +87,8 @@ public final class EditSession
   /** Editor control. */
   private Editor editor;
 
+  private static FocusFramePresenter focus;
+
   EditSession(ModelAsViewProvider views, DocumentRegistry<? extends InteractiveDocument> documents,
       LogicalPanel container, SelectionExtractor selectionExtractor) {
     this.views = views;
@@ -98,6 +100,7 @@ public final class EditSession
   public static EditSession install(ModelAsViewProvider views,
       DocumentRegistry<? extends InteractiveDocument> documents,
       SelectionExtractor selectionExtractor, FocusFramePresenter focus, WavePanelImpl panel, String localDomain) {
+    EditSession.focus = focus;
     EditSession edit = new EditSession(views, documents, panel.getGwtPanel(), selectionExtractor);
     focus.addListener(edit);
     if (panel.hasContents()) {
@@ -173,6 +176,7 @@ public final class EditSession
       }
     });
     editor.setEditing(true);
+    focus.setEditing(true);
     editor.focus(false);
     editing = blipUi;
     selectionExtractor.start(editor);
@@ -188,6 +192,7 @@ public final class EditSession
       container.doOrphan(editor.getWidget());
       editor.blur();
       editor.setEditing(false);
+      focus.setEditing(false);
       // "removeContent" just means detach the editor from the document.
       editor.removeContent();
       editor.reset();

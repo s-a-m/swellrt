@@ -170,6 +170,8 @@ public final class FocusFrame implements FocusFrameView {
     /** CSS for this widget. */
     public interface Css extends CssResource {
       String focus();
+      String editing();
+      String notEditing();
     }
 
     Resources res = GWT.create(Resources.class);
@@ -186,6 +188,8 @@ public final class FocusFrame implements FocusFrameView {
     StyleInjector.inject(css.getText(), true);
   }
 
+  @UiField
+  DivElement frame;
   private final Element element;
 
   /**
@@ -197,5 +201,11 @@ public final class FocusFrame implements FocusFrameView {
 
   public Element getElement() {
     return element;
+  }
+
+  @Override
+  public void setEditing(boolean editing) {
+    frame.addClassName(editing? Css3Binder.res.css().editing(): Css3Binder.res.css().notEditing());
+    frame.removeClassName(!editing? Css3Binder.res.css().editing(): Css3Binder.res.css().notEditing());
   }
 }

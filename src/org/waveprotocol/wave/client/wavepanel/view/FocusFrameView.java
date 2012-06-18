@@ -21,5 +21,5 @@ package org.waveprotocol.wave.client.wavepanel.view;
  *
  */
 public interface FocusFrameView {
-
+   void setEditing(boolean editing);
 }
