@@ -49,6 +49,8 @@ public class BlipViewBuilder implements UiBuilder, IntrinsicBlipView {
     /** The topmost blip element. */
     String blip();
 
+    String rootBlip();
+
     String meta();
 
     String avatar();
@@ -109,6 +111,7 @@ public class BlipViewBuilder implements UiBuilder, IntrinsicBlipView {
   private final UiBuilder meta;
   private final UiBuilder replies;
   private final UiBuilder privateReplies;
+  private final boolean isRoot;
 
   /**
    * Creates a new blip view builder with the given id.
@@ -116,23 +119,25 @@ public class BlipViewBuilder implements UiBuilder, IntrinsicBlipView {
    * @param id unique id for this builder, it must only contains alphanumeric
    *        characters
    * @param replies collection of non-inline replies
+   * @param isInRoot
    */
   public static BlipViewBuilder create(String id, UiBuilder meta, UiBuilder replies,
-      UiBuilder privateReplies) {
+      UiBuilder privateReplies, boolean isRoot) {
     // must not contain ', it is especially troublesome because it cause
     // security issues.
     Preconditions.checkArgument(!id.contains("\'"));
     return new BlipViewBuilder(id, nonNull(meta), nonNull(replies), nonNull(privateReplies),
-        WavePanelResourceLoader.getBlip().css());
+        WavePanelResourceLoader.getBlip().css(), isRoot);
   }
 
   @VisibleForTesting
-  BlipViewBuilder(String id, UiBuilder meta, UiBuilder replies, UiBuilder privateReplies, Css css) {
+  BlipViewBuilder(String id, UiBuilder meta, UiBuilder replies, UiBuilder privateReplies, Css css, boolean isRoot) {
     this.id = id;
     this.meta = meta;
     this.replies = replies;
     this.privateReplies = privateReplies;
     this.css = css;
+    this.isRoot = isRoot;
   }
 
   @Override
@@ -145,7 +150,7 @@ public class BlipViewBuilder implements UiBuilder, IntrinsicBlipView {
     // HACK HACK HACK
     // This code should be automatically generated from UiBinder template, not
     // hand written.
-    open(output, id, css.blip(), TypeCodes.kind(Type.BLIP));
+    open(output, id, isRoot? css.rootBlip()+ " " + css.blip(): css.blip(), TypeCodes.kind(Type.BLIP));
 
     // Meta (no wrapper).
     meta.outputHtml(output);
