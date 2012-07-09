@@ -81,13 +81,16 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
   private final static Map<MenuOption, SafeHtml> MENU_LABELS =
       new EnumMap<MenuOption, SafeHtml>(MenuOption.class);
 
+  private final static Map<MenuOption, String> MENU_TITLES =
+      new EnumMap<MenuOption, String>(MenuOption.class);
+
+
   private final static Map<MenuOption, SafeHtml> MENU_ICONS =
       new EnumMap<MenuOption, SafeHtml>(MenuOption.class);
 
   private final static StringMap<MenuOption> MENU_OPTIONS = CollectionUtils.createStringMap();
   public final static Set<MenuOption> DELETE_MENU_OPTIONS_SET = EnumSet.of(IntrinsicBlipMetaView.MenuOption.DELETE);
-  public final static Set<MenuOption> DISABLED_WHILE_EDITING_MENU_OPTIONS_SET = EnumSet.of(IntrinsicBlipMetaView.MenuOption.REPLY,
-      IntrinsicBlipMetaView.MenuOption.DELETE, IntrinsicBlipMetaView.MenuOption.LINK);
+
 
   public static final String OPTION_ID_ATTRIBUTE = "o";
   public static final String OPTION_SELECTED_ATTRIBUTE = "s";
@@ -113,6 +116,12 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
     MENU_LABELS.put(MenuOption.REPLY, EscapeUtils.fromSafeConstant("Reply"));
     MENU_LABELS.put(MenuOption.DELETE, EscapeUtils.fromSafeConstant("Delete"));
     MENU_LABELS.put(MenuOption.LINK, EscapeUtils.fromSafeConstant("Link"));
+
+    MENU_TITLES.put(MenuOption.EDIT, "Edit");
+    MENU_TITLES.put(MenuOption.REPLY, "Reply");
+    MENU_TITLES.put(MenuOption.DELETE, "Delete");
+    MENU_TITLES.put(MenuOption.LINK, "Link");
+
     for (MenuOption option : MENU_CODES.keySet()) {
       MENU_OPTIONS.put(MENU_CODES.get(option).asString(), option);
     }
@@ -267,9 +276,11 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
               ? css.menuOption() + css.menuOptionSelected() : css.menuOption();
           style += " " + MENU_ICONS.get(option).asString();
           String extra = OPTION_ID_ATTRIBUTE + "='" + MENU_CODES.get(option).asString() + "'"
-              + (selected.contains(option) ? " " + OPTION_SELECTED_ATTRIBUTE + "='s'" : "");
+              + (selected.contains(option) ? " " + OPTION_SELECTED_ATTRIBUTE + "='s'" : "")
+          + "title=\'" +  MENU_TITLES.get(option) + "'";
           openSpanWith(out, null, style, TypeCodes.kind(Type.MENU_ITEM), extra);
-          out.append(MENU_LABELS.get(option));
+          if (option == MenuOption.EDIT)
+            out.append(MENU_LABELS.get(option));
           closeSpan(out);
         }
       }
