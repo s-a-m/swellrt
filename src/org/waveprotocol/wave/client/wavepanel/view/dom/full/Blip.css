@@ -153,7 +153,7 @@ if user.agent ie6 ie8 {
   -moz-border-radius: 0.3em;
   -webkit-border-radius: 0.3em;
   cursor: pointer;
-  padding: 0.3em; /* Matches metabar padding. */
+  padding: 0.3em 0.5em 0.3em 1.4em;     /* Matches metabar padding. */
 }
 
 .read .menuOption:hover {
