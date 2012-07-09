@@ -72,6 +72,17 @@
   padding: 1em 1em 0em 4.5em;
 }
 
+.rootBlip {
+  border: 1px solid #808080;
+  border-right-width: 3px;
+  border-bottom-width: 3px;
+  margin: 12px 16px;
+  padding: 25px 40px 25px 10px;
+  /* border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px; */
+}
+
 .avatar {
   height: 2.5em;
   width: 2.5em;
