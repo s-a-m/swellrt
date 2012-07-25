@@ -18,8 +18,7 @@
 package org.waveprotocol.wave.client.editor.harness;
 
 import com.google.gwt.core.client.EntryPoint;
-
-import org.waveprotocol.wave.client.common.util.WindowUtil;
+import com.google.gwt.user.client.Window;
 
 // TODO(danilatos/schuck): Delete this and use DefaultHarness directly
 // (just need to update all the webdriver tests, go links, etc).
@@ -33,11 +32,11 @@ public class EditorTestHarness implements EntryPoint {
         new DefaultTestHarness().onModuleLoad();
         break;
       } catch (RuntimeException e) {
-        if (!WindowUtil.confirm("Exception on module load, try again?")) {
+        if (!Window.confirm("Exception on module load, try again?")) {
           throw e;
         }
       } catch (Error e) {
-        if (!WindowUtil.confirm("Error on module load, try again?")) {
+        if (!Window.confirm("Error on module load, try again?")) {
           throw e;
         }
       }

@@ -17,7 +17,7 @@
 
 package org.waveprotocol.wave.client.wavepanel.impl.toolbar;
 
-import org.waveprotocol.wave.client.common.util.WaveRefConstants;
+import org.waveprotocol.wave.client.common.util.WindowPromptCallback;
 import org.waveprotocol.wave.client.common.util.WindowUtil;
 import org.waveprotocol.wave.client.doodad.link.Link;
 import org.waveprotocol.wave.client.doodad.link.Link.InvalidLinkException;
@@ -38,7 +38,7 @@ public class LinkerHelper {
    *
    * @param editor the wave editor
    */
-  public static void onCreateLink(EditorContext editor) {
+  public static void onCreateLink(final EditorContext editor) {
     FocusedRange range = editor.getSelectionHelper().getSelectionRange();
     if (range == null || range.isCollapsed()) {
       WindowUtil.alert("Select some text to create a link.");
@@ -52,18 +52,22 @@ public class LinkerHelper {
       String linkAnnotationValue = Link.normalizeLink(text);
       EditorAnnotationUtil.setAnnotationOverSelection(editor, Link.KEY, linkAnnotationValue);
     } catch (InvalidLinkException e) {
-      String rawLinkValue =
-          WindowUtil.prompt("Enter link URL", "http://");
-      // user hit "ESC" or "cancel"
-      if (rawLinkValue == null) {
-        return;
-      }
-      try {
-        String linkAnnotationValue = Link.normalizeLink(rawLinkValue);
-        EditorAnnotationUtil.setAnnotationOverSelection(editor, Link.KEY, linkAnnotationValue);
-      } catch (InvalidLinkException e2) {
-        WindowUtil.alert(e2.getLocalizedMessage());
-      }
+          WindowUtil.prompt("Enter link URL", "http://",
+              new WindowPromptCallback() {
+                @Override
+                public void onReturn(String rawLinkValue) {
+                  // user hit "ESC" or "cancel"
+                  if (rawLinkValue == null) {
+                    return;
+                  }
+                  try {
+                    String linkAnnotationValue = Link.normalizeLink(rawLinkValue);
+                    EditorAnnotationUtil.setAnnotationOverSelection(editor, Link.KEY, linkAnnotationValue);
+                  } catch (InvalidLinkException e2) {
+                    WindowUtil.alert(e2.getLocalizedMessage());
+                  }
+                }}
+              );
     }
   }
 
