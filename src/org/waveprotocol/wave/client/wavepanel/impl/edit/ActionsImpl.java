@@ -16,9 +16,8 @@
  */
 package org.waveprotocol.wave.client.wavepanel.impl.edit;
 
-import com.google.gwt.user.client.Window;
-
 import org.waveprotocol.wave.client.common.util.WaveRefConstants;
+import org.waveprotocol.wave.client.common.util.WindowUtil;
 import org.waveprotocol.wave.client.editor.content.ContentDocument;
 import org.waveprotocol.wave.client.wave.InteractiveDocument;
 import org.waveprotocol.wave.client.wave.WaveDocuments;
@@ -153,7 +152,7 @@ public final class ActionsImpl implements Actions {
     try {
       waveletId = DualIdSerialiser.MODERN.deserialiseWaveletId(blip.getConversation().getId());
     } catch (InvalidIdException e) {
-      Window.alert(
+      WindowUtil.alert(
           "Unable to link to this blip, invalid conversation id " + blip.getConversation().getId());
       return;
     }

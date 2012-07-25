@@ -16,16 +16,14 @@
  */
 package org.waveprotocol.wave.client.wavepanel.impl.edit;
 
-import javax.annotation.Nullable;
-
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 
 import org.waveprotocol.wave.client.account.Profile;
 import org.waveprotocol.wave.client.account.ProfileManager;
 import org.waveprotocol.wave.client.common.safehtml.EscapeUtils;
+import org.waveprotocol.wave.client.common.util.WindowUtil;
 import org.waveprotocol.wave.client.wavepanel.WavePanel;
 import org.waveprotocol.wave.client.wavepanel.event.EventHandlerRegistry;
 import org.waveprotocol.wave.client.wavepanel.event.WaveClickHandler;
@@ -42,6 +40,8 @@ import org.waveprotocol.wave.model.util.Pair;
 import org.waveprotocol.wave.model.util.Preconditions;
 import org.waveprotocol.wave.model.wave.InvalidParticipantAddress;
 import org.waveprotocol.wave.model.wave.ParticipantId;
+
+import javax.annotation.Nullable;
 
 /**
  * Installs the add/remove participant controls.
@@ -133,7 +133,7 @@ public final class ParticipantController {
    * Shows an add-participant popup.
    */
   private void handleAddButtonClicked(Element context) {
-    String addressString = Window.prompt("Add a participant(s) (separate with comma ','): ", "");
+    String addressString = WindowUtil.prompt("Add a participant(s) (separate with comma ','): ", "");
     if (addressString == null) {
       return;
     }
@@ -143,7 +143,7 @@ public final class ParticipantController {
     try {
       participants = buildParticipantList(localDomain, addressString);
     } catch (InvalidParticipantAddress e) {
-      Window.alert(e.getMessage());
+      WindowUtil.alert(e.getMessage());
       return;
     }
 

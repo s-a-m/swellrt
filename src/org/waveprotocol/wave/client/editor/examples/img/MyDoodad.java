@@ -20,11 +20,11 @@ package org.waveprotocol.wave.client.editor.examples.img;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.waveprotocol.wave.client.common.util.DomHelper;
 import org.waveprotocol.wave.client.common.util.DomHelper.JavaScriptEventListener;
+import org.waveprotocol.wave.client.common.util.WindowUtil;
 import org.waveprotocol.wave.client.editor.ElementHandlerRegistry;
 import org.waveprotocol.wave.client.editor.NodeEventHandler;
 import org.waveprotocol.wave.client.editor.RenderingMutationHandler;
@@ -141,7 +141,7 @@ public class MyDoodad {
   }
 
   static void promptNewRef(ContentElement element) {
-    String newRef = Window.prompt("New Ref", element.getAttribute(REF_ATTR));
+    String newRef = WindowUtil.prompt("New Ref", element.getAttribute(REF_ATTR));
     if (newRef != null) {
       // Get the document view for mutating the persistent state, then update it
       element.getMutableDoc().setElementAttribute(element, REF_ATTR, newRef);

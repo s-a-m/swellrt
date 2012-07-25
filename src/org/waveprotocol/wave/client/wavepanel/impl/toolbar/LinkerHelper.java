@@ -17,9 +17,8 @@
 
 package org.waveprotocol.wave.client.wavepanel.impl.toolbar;
 
-import com.google.gwt.user.client.Window;
-
 import org.waveprotocol.wave.client.common.util.WaveRefConstants;
+import org.waveprotocol.wave.client.common.util.WindowUtil;
 import org.waveprotocol.wave.client.doodad.link.Link;
 import org.waveprotocol.wave.client.doodad.link.Link.InvalidLinkException;
 import org.waveprotocol.wave.client.editor.EditorContext;
@@ -42,7 +41,7 @@ public class LinkerHelper {
   public static void onCreateLink(EditorContext editor) {
     FocusedRange range = editor.getSelectionHelper().getSelectionRange();
     if (range == null || range.isCollapsed()) {
-      Window.alert("Select some text to create a link.");
+      WindowUtil.alert("Select some text to create a link.");
       return;
     }
     try {
@@ -54,7 +53,7 @@ public class LinkerHelper {
       EditorAnnotationUtil.setAnnotationOverSelection(editor, Link.KEY, linkAnnotationValue);
     } catch (InvalidLinkException e) {
       String rawLinkValue =
-          Window.prompt("Enter link: URL or Wave ID.", WaveRefConstants.WAVE_URI_PREFIX);
+          WindowUtil.prompt("Enter link: URL or Wave ID.", WaveRefConstants.WAVE_URI_PREFIX);
       // user hit "ESC" or "cancel"
       if (rawLinkValue == null) {
         return;
@@ -63,7 +62,7 @@ public class LinkerHelper {
         String linkAnnotationValue = Link.normalizeLink(rawLinkValue);
         EditorAnnotationUtil.setAnnotationOverSelection(editor, Link.KEY, linkAnnotationValue);
       } catch (InvalidLinkException e2) {
-        Window.alert(e2.getLocalizedMessage());
+        WindowUtil.alert(e2.getLocalizedMessage());
       }
 
     }
