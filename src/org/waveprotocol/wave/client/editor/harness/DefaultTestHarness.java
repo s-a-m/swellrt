@@ -21,11 +21,11 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 
-import org.waveprotocol.wave.client.common.util.WindowUtil;
 import org.waveprotocol.wave.client.doodad.attachment.ImageThumbnail;
 import org.waveprotocol.wave.client.doodad.attachment.ImageThumbnail.ThumbnailActionHandler;
 import org.waveprotocol.wave.client.doodad.attachment.render.ImageThumbnailWrapper;
@@ -73,7 +73,7 @@ public class DefaultTestHarness implements EntryPoint {
           @Override
           public boolean onClick(ImageThumbnailWrapper thumbnail) {
             ContentElement e = thumbnail.getElement();
-            String newId = WindowUtil.prompt("New attachment id, or 'remove' to remove the attribute",
+            String newId = Window.prompt("New attachment id, or 'remove' to remove the attribute",
                 e.getAttribute(ImageThumbnail.ATTACHMENT_ATTR));
 
             if (newId == null) {
