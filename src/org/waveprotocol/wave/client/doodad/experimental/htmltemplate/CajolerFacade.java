@@ -126,7 +126,7 @@ class CajolerFacade {
 
   private static native void initializeDoodadEnvironment(
       Element cajaFrame, Element domitaVdocElement, JavaScriptObject wave) /*-{
-    cajaFrame.contentWindow.caja___.initialize(domitaVdocElement, wave);
+    cajaFrame.contentWindowUtil.caja___.initialize(domitaVdocElement, wave);
   }-*/;
 
   private void handleSuccessfulResponse(
@@ -186,6 +186,6 @@ class CajolerFacade {
   }
 
   private static native JavaScriptObject doGetCajaObject(JavaScriptObject cajaFrame) /*-{
-    return cajaFrame.contentWindow.caja___;
+    return cajaFrame.contentWindowUtil.caja___;
   }-*/;
 }
