@@ -19,8 +19,9 @@ package org.waveprotocol.wave.client.wavepanel.impl.menu;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.user.client.Window;
 
+import org.waveprotocol.wave.client.common.util.WindowConfirmCallback;
+import org.waveprotocol.wave.client.common.util.WindowUtil;
 import org.waveprotocol.wave.client.wavepanel.WavePanel;
 import org.waveprotocol.wave.client.wavepanel.event.WaveClickHandler;
 import org.waveprotocol.wave.client.wavepanel.impl.edit.Actions;
@@ -61,7 +62,7 @@ public final class MenuController implements WaveClickHandler {
     if (event.getNativeButton() != NativeEvent.BUTTON_LEFT) {
       return false;
     }
-    BlipMenuItemView item = panel.asBlipMenuItem(context);
+    final BlipMenuItemView item = panel.asBlipMenuItem(context);
     switch (item.getOption()) {
       case EDIT:
         if (item.isSelected()) {
@@ -75,9 +76,20 @@ public final class MenuController implements WaveClickHandler {
         break;
       case DELETE:
         // We delete the blip without confirmation if shift key is pressed
-        if (event.getNativeEvent().getShiftKey()
-            || Window.confirm("Please confirm the deletion of this message"))
+        if (event.getNativeEvent().getShiftKey()) {
           actions.delete(item.getParent().getParent());
+        } else {
+            WindowUtil.confirm("Please confirm the deletion of this message", new WindowConfirmCallback() {
+              @Override
+              public void onOk() {
+                actions.delete(item.getParent().getParent());
+              }
+
+              @Override
+              public void onCancel() {
+              }
+            });
+        }
         break;
       case LINK:
         actions.popupLink(item.getParent().getParent());
