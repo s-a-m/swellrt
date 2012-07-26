@@ -39,7 +39,7 @@ public class LinkerHelper {
    * @param editor the wave editor
    */
   public static void onCreateLink(final EditorContext editor) {
-    FocusedRange range = editor.getSelectionHelper().getSelectionRange();
+    final FocusedRange range = editor.getSelectionHelper().getSelectionRange();
     if (range == null || range.isCollapsed()) {
       WindowUtil.alert("Select some text to create a link.");
       return;
@@ -61,6 +61,8 @@ public class LinkerHelper {
                     return;
                   }
                   try {
+                    // We set again the range (because can be lost with modal dialogs);
+                    editor.getSelectionHelper().setSelectionRange(range);
                     String linkAnnotationValue = Link.normalizeLink(rawLinkValue);
                     EditorAnnotationUtil.setAnnotationOverSelection(editor, Link.KEY, linkAnnotationValue);
                   } catch (InvalidLinkException e2) {
