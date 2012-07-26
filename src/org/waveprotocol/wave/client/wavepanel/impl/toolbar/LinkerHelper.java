@@ -66,7 +66,7 @@ public class LinkerHelper {
                     String linkAnnotationValue = Link.normalizeLink(rawLinkValue);
                     EditorAnnotationUtil.setAnnotationOverSelection(editor, Link.KEY, linkAnnotationValue);
                   } catch (InvalidLinkException e2) {
-                    WindowUtil.alert(e2.getLocalizedMessage());
+                    WindowUtil.alert("Invalid link. Should be a web url in the form: http://example.com/");
                   }
                 }}
               );
