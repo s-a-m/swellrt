@@ -33,7 +33,7 @@ import org.waveprotocol.wave.model.wave.SourcesEvents;
  *
  */
 public final class FocusFramePresenter
-    implements SourcesEvents<FocusFramePresenter.Listener>, WavePanelImpl.LifecycleListener {
+    implements BlipEditStatusListener, SourcesEvents<FocusFramePresenter.Listener>, WavePanelImpl.LifecycleListener {
 
   public interface Listener {
     void onFocusMoved(BlipView oldUi, BlipView newUi);

@@ -207,9 +207,11 @@ public final class FocusFrame implements FocusFrameView {
 
   @Override
   public void setEditing(boolean editing) {
-    if (editing)
+    if (editing) {
       frame.addClassName(css.editing());
-    else
+    }
+    else {
       frame.removeClassName(css.editing());
+    }
   }
 }

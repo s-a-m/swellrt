@@ -19,6 +19,7 @@ package org.waveprotocol.wave.client.wavepanel.impl.menu;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.user.client.Window;
 
 import org.waveprotocol.wave.client.common.util.WindowConfirmCallback;
 import org.waveprotocol.wave.client.common.util.WindowUtil;

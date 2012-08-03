@@ -39,6 +39,7 @@ import org.waveprotocol.wave.client.wave.DocumentRegistry;
 import org.waveprotocol.wave.client.wave.InteractiveDocument;
 import org.waveprotocol.wave.client.wavepanel.WavePanel;
 import org.waveprotocol.wave.client.wavepanel.impl.WavePanelImpl;
+import org.waveprotocol.wave.client.wavepanel.impl.focus.BlipEditStatusListener;
 import org.waveprotocol.wave.client.wavepanel.impl.focus.FocusFramePresenter;
 import org.waveprotocol.wave.client.wavepanel.impl.toolbar.LinkerHelper;
 import org.waveprotocol.wave.client.wavepanel.view.BlipView;
@@ -86,22 +87,22 @@ public final class EditSession
   private BlipView editing;
   /** Editor control. */
   private Editor editor;
-
-  private static FocusFramePresenter focus;
+  /** Control the focus style on the editing blip **/
+  private final BlipEditStatusListener blipEditStatusListener;
 
   EditSession(ModelAsViewProvider views, DocumentRegistry<? extends InteractiveDocument> documents,
-      LogicalPanel container, SelectionExtractor selectionExtractor) {
+      LogicalPanel container, SelectionExtractor selectionExtractor, BlipEditStatusListener blipEditStatusListener) {
     this.views = views;
     this.documents = documents;
     this.container = container;
     this.selectionExtractor = selectionExtractor;
+    this.blipEditStatusListener = blipEditStatusListener;
   }
 
   public static EditSession install(ModelAsViewProvider views,
       DocumentRegistry<? extends InteractiveDocument> documents,
       SelectionExtractor selectionExtractor, FocusFramePresenter focus, WavePanelImpl panel, String localDomain) {
-    EditSession.focus = focus;
-    EditSession edit = new EditSession(views, documents, panel.getGwtPanel(), selectionExtractor);
+    EditSession edit = new EditSession(views, documents, panel.getGwtPanel(), selectionExtractor, focus);
     focus.addListener(edit);
     if (panel.hasContents()) {
       edit.onInit();
@@ -176,7 +177,7 @@ public final class EditSession
       }
     });
     editor.setEditing(true);
-    focus.setEditing(true);
+    blipEditStatusListener.setEditing(true);
     editor.focus(false);
     editing = blipUi;
     selectionExtractor.start(editor);
@@ -192,7 +193,7 @@ public final class EditSession
       container.doOrphan(editor.getWidget());
       editor.blur();
       editor.setEditing(false);
-      focus.setEditing(false);
+      blipEditStatusListener.setEditing(false);
       // "removeContent" just means detach the editor from the document.
       editor.removeContent();
       editor.reset();
@@ -229,11 +230,7 @@ public final class EditSession
 
   @Override
   public void onFocusMoved(BlipView oldUi, BlipView newUi) {
-    boolean wasEditing = isEditing();
     endSession();
-    if (wasEditing && newUi != null) {
-      startEditing(newUi);
-    }
   }
 
   @Override
