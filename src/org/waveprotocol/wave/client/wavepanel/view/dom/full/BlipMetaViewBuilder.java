@@ -248,7 +248,6 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
       @Override
       public void outputHtml(SafeHtmlBuilder out) {
         for (MenuOption option : options) {
-          out.append(EscapeUtils.fromSafeConstant("|"));
           String style = selected.contains(option) //
               ? css.menuOption() + css.menuOptionSelected() : css.menuOption();
           String extra = OPTION_ID_ATTRIBUTE + "='" + MENU_CODES.get(option).asString() + "'"

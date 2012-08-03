@@ -75,7 +75,9 @@ public final class UndercurrentShallowBlipRenderer implements ShallowBlipRendere
 
   @Override
   public void renderTime(ConversationBlip blip, IntrinsicBlipMetaView meta) {
-    meta.setTime(DateUtils.getInstance().formatPastDate(blip.getLastModifiedTime()));
+    if (blip.getLastModifiedTime() != 0) {
+      meta.setTime(DateUtils.getInstance().formatPastDate(blip.getLastModifiedTime()));
+    }
   }
 
   @Override
