@@ -68,7 +68,7 @@ public final class MenuController implements WaveClickHandler {
       case EDIT:
         actions.startEditing(item.getParent().getParent());
         break;
-      case EDITDONE:
+      case EDIT_DONE:
         actions.stopEditing();
         break;
       case REPLY:

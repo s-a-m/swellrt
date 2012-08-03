@@ -36,7 +36,7 @@ public interface IntrinsicBlipMetaView {
     /** Option to edit this blip. */
     EDIT,
     /** Option to finish edit this blip. */
-    EDITDONE,;
+    EDIT_DONE,;
   }
 
   /**

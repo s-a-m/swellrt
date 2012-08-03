@@ -100,33 +100,32 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
       IntrinsicBlipMetaView.MenuOption.EDIT,
       IntrinsicBlipMetaView.MenuOption.LINK);
   public final static Set<MenuOption> ENABLED_WHILE_EDITING_MENU_OPTIONS_SET = EnumSet.of(
-      IntrinsicBlipMetaView.MenuOption.EDITDONE);
+      IntrinsicBlipMetaView.MenuOption.EDIT_DONE);
   public final static Set<MenuOption> DISABLED_WHILE_EDITING_MENU_OPTIONS_SET = MENU_OPTIONS_BEFORE_EDITING;
-
 
 
   static {
     BlipIconResources.Css css = BlipIconResources.Loader.res.css();
     MENU_ICONS.put(MenuOption.EDIT, EscapeUtils.fromSafeConstant(css.edit()));
-    MENU_ICONS.put(MenuOption.EDITDONE, EscapeUtils.fromSafeConstant(css.edit()));
+    MENU_ICONS.put(MenuOption.EDIT_DONE, EscapeUtils.fromSafeConstant(css.edit()));
     MENU_ICONS.put(MenuOption.REPLY, EscapeUtils.fromSafeConstant(css.reply()));
     MENU_ICONS.put(MenuOption.DELETE, EscapeUtils.fromSafeConstant(css.delete()));
     MENU_ICONS.put(MenuOption.LINK, EscapeUtils.fromSafeConstant(css.link()));
 
     MENU_CODES.put(MenuOption.EDIT, EscapeUtils.fromSafeConstant("e"));
-    MENU_CODES.put(MenuOption.EDITDONE, EscapeUtils.fromSafeConstant("x"));
+    MENU_CODES.put(MenuOption.EDIT_DONE, EscapeUtils.fromSafeConstant("x"));
     MENU_CODES.put(MenuOption.REPLY, EscapeUtils.fromSafeConstant("r"));
     MENU_CODES.put(MenuOption.DELETE, EscapeUtils.fromSafeConstant("d"));
     MENU_CODES.put(MenuOption.LINK, EscapeUtils.fromSafeConstant("l"));
 
     MENU_LABELS.put(MenuOption.EDIT, EscapeUtils.fromSafeConstant("Edit"));
-    MENU_LABELS.put(MenuOption.EDITDONE, EscapeUtils.fromSafeConstant("Done"));
+    MENU_LABELS.put(MenuOption.EDIT_DONE, EscapeUtils.fromSafeConstant("Done"));
     MENU_LABELS.put(MenuOption.REPLY, EscapeUtils.fromSafeConstant("Reply"));
     MENU_LABELS.put(MenuOption.DELETE, EscapeUtils.fromSafeConstant("Delete"));
     MENU_LABELS.put(MenuOption.LINK, EscapeUtils.fromSafeConstant("Link"));
 
     MENU_TITLES.put(MenuOption.EDIT, "Edit");
-    MENU_TITLES.put(MenuOption.EDITDONE, "Finish to edit");
+    MENU_TITLES.put(MenuOption.EDIT_DONE, "Finish to edit");
     MENU_TITLES.put(MenuOption.REPLY, "Reply");
     MENU_TITLES.put(MenuOption.DELETE, "Delete (press 'shift' for deletion without confirmation)");
     MENU_TITLES.put(MenuOption.LINK, "Link");
@@ -293,7 +292,7 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
               + (selected.contains(option) ? " " + OPTION_SELECTED_ATTRIBUTE + "='s'" : "")
           + "title=\'" +  MENU_TITLES.get(option) + "'";
           openSpanWith(out, null, style, TypeCodes.kind(Type.MENU_ITEM), extra);
-          if (option == MenuOption.EDIT || option == MenuOption.EDITDONE)
+          if (option == MenuOption.EDIT || option == MenuOption.EDIT_DONE)
             out.append(MENU_LABELS.get(option));
           closeSpan(out);
         }
