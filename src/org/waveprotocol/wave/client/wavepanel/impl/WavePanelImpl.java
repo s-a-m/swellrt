@@ -157,7 +157,8 @@ public final class WavePanelImpl implements WavePanel, Focusable {
       fireEvent = true;
     } else {
       // Render empty message.
-      panel.getElement().setInnerHTML("No conversations in this wave.");
+      // In Wave: "No conversations in this wave."
+      panel.getElement().setInnerHTML("Problem loading this message.");
       fireEvent = false;
     }
     initialized = true;
