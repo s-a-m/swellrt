@@ -128,7 +128,9 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
   private String metaline;
   private String avatarUrl;
   private boolean read = true;
-  private final Set<MenuOption> options = MENU_OPTIONS_BEFORE_EDITING;
+  private final Set<MenuOption> options = EnumSet.of(IntrinsicBlipMetaView.MenuOption.REPLY,
+      IntrinsicBlipMetaView.MenuOption.DELETE, IntrinsicBlipMetaView.MenuOption.LINK,
+      IntrinsicBlipMetaView.MenuOption.EDIT);
   private final Set<MenuOption> selected = EnumSet.noneOf(MenuOption.class);
 
   //
