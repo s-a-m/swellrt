@@ -127,7 +127,7 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
     MENU_TITLES.put(MenuOption.EDIT, "Edit");
     MENU_TITLES.put(MenuOption.EDIT_DONE, "Finish to edit");
     MENU_TITLES.put(MenuOption.REPLY, "Reply");
-    MENU_TITLES.put(MenuOption.DELETE, "Delete (press 'shift' for deletion without confirmation)");
+    MENU_TITLES.put(MenuOption.DELETE, "Delete (press Shift for deletion without confirmation)");
     MENU_TITLES.put(MenuOption.LINK, "Link");
 
     for (MenuOption option : MENU_CODES.keySet()) {
