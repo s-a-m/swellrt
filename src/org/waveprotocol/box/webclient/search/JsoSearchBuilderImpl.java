@@ -130,6 +130,7 @@ public final class JsoSearchBuilderImpl implements SearchBuilder {
     });
 
     try {
+      requestBuilder.setTimeoutMillis(SearchPresenter.POLLING_INTERVAL_MS);
       requestBuilder.send();
     } catch (RequestException e) {
       callback.onFailure(e.getMessage());
