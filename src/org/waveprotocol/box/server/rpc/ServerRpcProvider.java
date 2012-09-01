@@ -42,6 +42,7 @@ import com.glines.socketio.server.transport.XHRMultipartTransport;
 import com.glines.socketio.server.transport.XHRPollingTransport;
 import com.glines.socketio.server.transport.jetty.JettyWebSocketTransport;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.http.ssl.SslContextFactory;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
@@ -508,9 +509,11 @@ public class ServerRpcProvider {
       return new InetSocketAddress[0];
     } else {
       Set<InetSocketAddress> addresses = Sets.newHashSet();
-      // We add the websocketAddress as another listening address
+      // We add the websocketAddress as another listening address.
       ArrayList<String> mergedAddressList = new ArrayList<String>(addressList);
-      mergedAddressList.add(websocketAddress);
+      if (!StringUtils.isEmpty(websocketAddress)) {
+        mergedAddressList.add(websocketAddress);
+      }
       for (String str : mergedAddressList) {
         if (str.length() == 0) {
           LOG.warning("Encountered empty address in http addresses list.");

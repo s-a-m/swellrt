@@ -22,6 +22,7 @@ import com.google.gxp.base.GxpContext;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.waveprotocol.box.common.SessionConstants;
@@ -39,6 +40,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServlet;
@@ -77,11 +79,13 @@ public class WaveClientServlet extends HttpServlet {
   @Inject
   public WaveClientServlet(
       @Named(CoreSettings.WAVE_SERVER_DOMAIN) String domain,
+      @Named(CoreSettings.HTTP_FRONTEND_ADDRESSES) List<String> httpAddresses,
       @Named(CoreSettings.HTTP_WEBSOCKET_PUBLIC_ADDRESS) String websocketAddress,
       @Named(CoreSettings.ANALYTICS_ACCOUNT) String analyticsAccount,
       SessionManager sessionManager) {
     this.domain = domain;
-    this.websocketAddress = websocketAddress;
+    this.websocketAddress = StringUtils.isEmpty(websocketAddress) ?
+        httpAddresses.get(0) : websocketAddress;
     this.analyticsAccount = analyticsAccount;
     this.sessionManager = sessionManager;
   }
