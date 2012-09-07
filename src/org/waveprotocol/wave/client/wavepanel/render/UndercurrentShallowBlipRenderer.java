@@ -26,6 +26,7 @@ import org.waveprotocol.wave.model.supplement.ReadableSupplementedWave;
 import org.waveprotocol.wave.model.wave.ParticipantId;
 
 import java.util.Set;
+import java.util.Date;
 
 /**
  * Defines the shallow blip rendering for the Undercurrent UI.
@@ -40,6 +41,9 @@ public final class UndercurrentShallowBlipRenderer implements ShallowBlipRendere
   /** Provides read state of blips. */
   private final ReadableSupplementedWave supplement;
 
+  /** Provides direct access to a DateUtils instance */
+  private final DateUtils dateUtils;
+
   /**
    * Defines the rendering function for the contents of a blip.
    */
@@ -48,9 +52,10 @@ public final class UndercurrentShallowBlipRenderer implements ShallowBlipRendere
   }
 
   public UndercurrentShallowBlipRenderer(
-      ProfileManager manager, ReadableSupplementedWave supplement) {
+      ProfileManager manager, ReadableSupplementedWave supplement, DateUtils dateUtils) {
     this.manager = manager;
     this.supplement = supplement;
+    this.dateUtils = dateUtils;
   }
 
   @Override
