@@ -114,7 +114,7 @@ public class ClientFrontendImpl implements ClientFrontend, WaveBus.Subscriber {
 
     String channelId = generateChannelID();
     UserManager userManager = waveletInfo.getUserManager(loggedInUser);
-    synchronized (userManager) {
+    // synchronized (userManager) {
       WaveViewSubscription subscription =
           userManager.subscribe(waveId, waveletIdFilter, channelId, openListener);
       LOG.info("Subscribed " + loggedInUser + " to " + waveId + " channel " + channelId);
@@ -173,7 +173,7 @@ public class ClientFrontendImpl implements ClientFrontend, WaveBus.Subscriber {
       LOG.info("sending marker for " + dummyWaveletName);
       openListener.onUpdate(dummyWaveletName, null, DeltaSequence.empty(), null, true, null);
     }
-  }
+  // }
 
   private String generateChannelID() {
     return "ch" + channel_counter.addAndGet(1);
