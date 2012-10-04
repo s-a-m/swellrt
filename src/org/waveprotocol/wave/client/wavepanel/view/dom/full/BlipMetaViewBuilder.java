@@ -32,6 +32,7 @@ import org.waveprotocol.wave.client.uibuilder.BuilderHelper.Component;
 import org.waveprotocol.wave.client.uibuilder.UiBuilder;
 import org.waveprotocol.wave.client.wavepanel.view.IntrinsicBlipMetaView;
 import org.waveprotocol.wave.client.wavepanel.view.View.Type;
+import org.waveprotocol.wave.client.wavepanel.view.dom.full.BlipIconResources.Css;
 import org.waveprotocol.wave.model.util.CollectionUtils;
 import org.waveprotocol.wave.model.util.StringMap;
 
@@ -105,13 +106,6 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
 
 
   static {
-    BlipIconResources.Css css = BlipIconResources.Loader.res.css();
-    MENU_ICONS.put(MenuOption.EDIT, EscapeUtils.fromSafeConstant(css.edit()));
-    MENU_ICONS.put(MenuOption.EDIT_DONE, EscapeUtils.fromSafeConstant(css.edit()));
-    MENU_ICONS.put(MenuOption.REPLY, EscapeUtils.fromSafeConstant(css.reply()));
-    MENU_ICONS.put(MenuOption.DELETE, EscapeUtils.fromSafeConstant(css.delete()));
-    MENU_ICONS.put(MenuOption.LINK, EscapeUtils.fromSafeConstant(css.link()));
-
     MENU_CODES.put(MenuOption.EDIT, EscapeUtils.fromSafeConstant("e"));
     MENU_CODES.put(MenuOption.EDIT_DONE, EscapeUtils.fromSafeConstant("x"));
     MENU_CODES.put(MenuOption.REPLY, EscapeUtils.fromSafeConstant("r"));
@@ -136,6 +130,14 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
     assert MENU_CODES.keySet().equals(MENU_LABELS.keySet());
     assert MENU_OPTIONS.countEntries() == MENU_CODES.size();
     assert new HashSet<MenuOption>(Arrays.asList(MenuOption.values())).equals(MENU_LABELS.keySet());
+  }
+
+  private void setMenuIcons() {
+    MENU_ICONS.put(MenuOption.EDIT, EscapeUtils.fromSafeConstant(iconCss.edit()));
+    MENU_ICONS.put(MenuOption.EDIT_DONE, EscapeUtils.fromSafeConstant(iconCss.edit()));
+    MENU_ICONS.put(MenuOption.REPLY, EscapeUtils.fromSafeConstant(iconCss.reply()));
+    MENU_ICONS.put(MenuOption.DELETE, EscapeUtils.fromSafeConstant(iconCss.delete()));
+    MENU_ICONS.put(MenuOption.LINK, EscapeUtils.fromSafeConstant(iconCss.link()));
   }
 
   /**
@@ -163,6 +165,8 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
 
   private final UiBuilder content;
 
+  private final Css iconCss;
+
   /**
    * Creates a new blip view builder with the given id.
    *
@@ -170,17 +174,19 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
    *        characters
    */
   public static BlipMetaViewBuilder create(String id, UiBuilder content) {
-    return new BlipMetaViewBuilder(WavePanelResourceLoader.getBlip().css(), id, nonNull(content));
+    return new BlipMetaViewBuilder(WavePanelResourceLoader.getBlip().css(), id, nonNull(content), BlipIconResources.Loader.res.css());
   }
 
   @VisibleForTesting
-  BlipMetaViewBuilder(BlipViewBuilder.Css css, String id, UiBuilder content) {
+  BlipMetaViewBuilder(BlipViewBuilder.Css css, String id, UiBuilder content, BlipIconResources.Css iconCss) {
     // must not contain ', it is especially troublesome because it cause
     // security issues.
     Preconditions.checkArgument(!id.contains("\'"));
     this.css = css;
+    this.iconCss = iconCss;
     this.id = id;
     this.content = content;
+    setMenuIcons();
   }
 
   @Override
@@ -292,7 +298,7 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
           style += " " + MENU_ICONS.get(option).asString();
           String extra = OPTION_ID_ATTRIBUTE + "='" + MENU_CODES.get(option).asString() + "'"
               + (selected.contains(option) ? " " + OPTION_SELECTED_ATTRIBUTE + "='s'" : "")
-          + "title=\'" +  MENU_TITLES.get(option) + "'";
+          + " title=\'" +  MENU_TITLES.get(option) + "'";
           openSpanWith(out, null, style, TypeCodes.kind(Type.MENU_ITEM), extra);
           if (option == MenuOption.EDIT || option == MenuOption.EDIT_DONE)
             out.append(MENU_LABELS.get(option));
