@@ -142,6 +142,8 @@ public class EventWrapper {
       put('#' + CTRL + SHIFT, KeyCombo.CTRL_SHIFT_3);
       put('3' + CTRL + SHIFT, KeyCombo.CTRL_SHIFT_3);
 
+      put('5' + ALT + SHIFT, KeyCombo.ALT_SHIFT_5);
+      put('%' + ALT + SHIFT, KeyCombo.ALT_SHIFT_5);
 
       // Allowable ORDER combos
       // ORDER is the Apple key on OS X and the Ctrl key in Windows and Linux.

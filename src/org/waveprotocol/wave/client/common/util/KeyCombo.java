@@ -245,5 +245,8 @@ public enum KeyCombo {
   /***/
   CTRL_SHIFT_3,
 
+  /***/
+  ALT_SHIFT_5,
+
   OTHER,
 }
