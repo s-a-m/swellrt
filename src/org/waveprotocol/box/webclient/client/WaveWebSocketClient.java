@@ -89,7 +89,7 @@ public class WaveWebSocketClient implements WaveSocket.WaveSocketCallback {
     }
   }
 
-  private final WaveSocket socket;
+  private WaveSocket socket;
   private final IntMap<SubmitResponseCallback> submitRequestCallbacks;
 
   /**
@@ -109,8 +109,8 @@ public class WaveWebSocketClient implements WaveSocket.WaveSocketCallback {
   private final RepeatingCommand reconnectCommand = new RepeatingCommand() {
     @Override
     public boolean execute() {
-      //useSocketIOifWebsocketFails();
-      // connectTry++;
+      useSocketIOifWebsocketFails();
+      connectTry++;
       if (connected == ConnectState.DISCONNECTED) {
         LOG.info("Attemping to reconnect");
         connected = ConnectState.CONNECTING;
@@ -123,14 +123,12 @@ public class WaveWebSocketClient implements WaveSocket.WaveSocketCallback {
   private boolean connectedAtLeastOnce = false;
   private long connectTry = 0;
   private final String urlBase;
-  private WaveSocket socketio;
 
   public WaveWebSocketClient(boolean websocketNotAvailable, String urlBase) {
     this.websocketNotAvailable = websocketNotAvailable;
     this.urlBase = urlBase;
     submitRequestCallbacks = CollectionUtils.createIntMap();
-    socket = WaveSocketFactory.create(true, urlBase, this);
-    //socketio = WaveSocketFactory.create(true, urlBase, this);
+    socket = WaveSocketFactory.create(websocketNotAvailable, urlBase, this);
   }
 
   /**
@@ -228,11 +226,11 @@ public class WaveWebSocketClient implements WaveSocket.WaveSocketCallback {
   }
 
   private void useSocketIOifWebsocketFails() {
-    if (!connectedAtLeastOnce && !websocketNotAvailable && connectTry > 0) {
+    if (!connectedAtLeastOnce && !websocketNotAvailable && connectTry > 2) {
       // Let's try to use socketio, seems that websocket it's not working
       // (we are under a proxy or similar)
       GWT.log("Trying to use socketio");
-      // socket = socketio;
+      socket = WaveSocketFactory.create(true, urlBase, this);
     }
   }
 }
