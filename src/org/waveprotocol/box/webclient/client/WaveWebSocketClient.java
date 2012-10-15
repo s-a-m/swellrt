@@ -25,6 +25,7 @@ import static org.waveprotocol.wave.communication.gwt.JsonHelper.setPropertyAsOb
 import static org.waveprotocol.wave.communication.gwt.JsonHelper.setPropertyAsString;
 
 import com.google.common.base.Preconditions;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.user.client.Cookies;
@@ -108,6 +109,8 @@ public class WaveWebSocketClient implements WaveSocket.WaveSocketCallback {
   private final RepeatingCommand reconnectCommand = new RepeatingCommand() {
     @Override
     public boolean execute() {
+      //useSocketIOifWebsocketFails();
+      // connectTry++;
       if (connected == ConnectState.DISCONNECTED) {
         LOG.info("Attemping to reconnect");
         connected = ConnectState.CONNECTING;
@@ -116,10 +119,18 @@ public class WaveWebSocketClient implements WaveSocket.WaveSocketCallback {
       return true;
     }
   };
+  private final boolean websocketNotAvailable;
+  private boolean connectedAtLeastOnce = false;
+  private long connectTry = 0;
+  private final String urlBase;
+  private WaveSocket socketio;
 
-  public WaveWebSocketClient(boolean useSocketIO, String urlBase) {
+  public WaveWebSocketClient(boolean websocketNotAvailable, String urlBase) {
+    this.websocketNotAvailable = websocketNotAvailable;
+    this.urlBase = urlBase;
     submitRequestCallbacks = CollectionUtils.createIntMap();
-    socket = WaveSocketFactory.create(useSocketIO, urlBase, this);
+    socket = WaveSocketFactory.create(true, urlBase, this);
+    //socketio = WaveSocketFactory.create(true, urlBase, this);
   }
 
   /**
@@ -144,6 +155,7 @@ public class WaveWebSocketClient implements WaveSocket.WaveSocketCallback {
   @Override
   public void onConnect() {
     connected = ConnectState.CONNECTED;
+    connectedAtLeastOnce = true;
 
     // Sends the session cookie to the server via an RPC to work around browser bugs.
     // See: http://code.google.com/p/wave-protocol/issues/detail?id=119
@@ -212,6 +224,15 @@ public class WaveWebSocketClient implements WaveSocket.WaveSocketCallback {
         break;
       default:
         messages.add(message);
+    }
+  }
+
+  private void useSocketIOifWebsocketFails() {
+    if (!connectedAtLeastOnce && !websocketNotAvailable && connectTry > 0) {
+      // Let's try to use socketio, seems that websocket it's not working
+      // (we are under a proxy or similar)
+      GWT.log("Trying to use socketio");
+      // socket = socketio;
     }
   }
 }
