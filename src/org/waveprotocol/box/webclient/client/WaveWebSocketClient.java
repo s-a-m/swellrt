@@ -25,7 +25,6 @@ import static org.waveprotocol.wave.communication.gwt.JsonHelper.setPropertyAsOb
 import static org.waveprotocol.wave.communication.gwt.JsonHelper.setPropertyAsString;
 
 import com.google.common.base.Preconditions;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.user.client.Cookies;
@@ -50,6 +49,7 @@ import java.util.Queue;
  * Wrapper around SocketIO that handles the FedOne client-server protocol.
  */
 public class WaveWebSocketClient implements WaveSocket.WaveSocketCallback {
+  private static final int MAX_INITIAL_FAILURES = 2;
   private static final Log LOG = Log.get(WaveWebSocketClient.class);
   private static final int RECONNECT_TIME_MS = 5000;
   private static final String JETTY_SESSION_TOKEN_NAME = "JSESSIONID";
@@ -109,7 +109,11 @@ public class WaveWebSocketClient implements WaveSocket.WaveSocketCallback {
   private final RepeatingCommand reconnectCommand = new RepeatingCommand() {
     @Override
     public boolean execute() {
-      useSocketIOifWebsocketFails();
+      if (!connectedAtLeastOnce && !websocketNotAvailable && connectTry > MAX_INITIAL_FAILURES) {
+        // Let's try to use socketio, seems that websocket it's not working
+        // (we are under a proxy or similar)
+        socket = WaveSocketFactory.create(true, urlBase, WaveWebSocketClient.this);
+      }
       connectTry++;
       if (connected == ConnectState.DISCONNECTED) {
         LOG.info("Attemping to reconnect");
@@ -225,12 +229,4 @@ public class WaveWebSocketClient implements WaveSocket.WaveSocketCallback {
     }
   }
 
-  private void useSocketIOifWebsocketFails() {
-    if (!connectedAtLeastOnce && !websocketNotAvailable && connectTry > 2) {
-      // Let's try to use socketio, seems that websocket it's not working
-      // (we are under a proxy or similar)
-      GWT.log("Trying to use socketio");
-      socket = WaveSocketFactory.create(true, urlBase, this);
-    }
-  }
 }
