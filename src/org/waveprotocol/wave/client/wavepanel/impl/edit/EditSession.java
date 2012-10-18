@@ -33,7 +33,9 @@ import org.waveprotocol.wave.client.editor.EditorSettings;
 import org.waveprotocol.wave.client.editor.Editors;
 import org.waveprotocol.wave.client.editor.content.ContentDocument;
 import org.waveprotocol.wave.client.editor.content.misc.AnnotationPaint;
+import org.waveprotocol.wave.client.editor.content.misc.StyleAnnotationHandler;
 import org.waveprotocol.wave.client.editor.keys.KeyBindingRegistry;
+import org.waveprotocol.wave.client.editor.util.EditorAnnotationUtil;
 import org.waveprotocol.wave.client.util.ClientFlags;
 import org.waveprotocol.wave.client.wave.DocumentRegistry;
 import org.waveprotocol.wave.client.wave.InteractiveDocument;
@@ -165,6 +167,18 @@ public final class EditSession
     container.doAdopt(editor.getWidget());
     editor.init(null, KEY_BINDINGS, EDITOR_SETTINGS);
     editor.addKeySignalListener(this);
+    KEY_BINDINGS.registerAction(KeyCombo.ALT_SHIFT_5, new EditorAction() {
+      @Override
+      public void execute(EditorContext context) {
+        String key = StyleAnnotationHandler.key("textDecoration");
+        String style = "line-through";
+        if (EditorAnnotationUtil.getAnnotationOverSelectionIfFull(context, key) != null) {
+          EditorAnnotationUtil.clearAnnotationsOverSelection(editor, key, style);
+        } else {
+          EditorAnnotationUtil.setAnnotationOverSelection(context, key, style);
+        }
+      }
+    });
     KEY_BINDINGS.registerAction(KeyCombo.ORDER_K, new EditorAction() {
       @Override
       public void execute(EditorContext context) {
