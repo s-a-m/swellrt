@@ -70,6 +70,8 @@ import org.waveprotocol.box.server.waveserver.WaveIndexer;
 import org.waveprotocol.box.server.waveserver.WaveServerException;
 import org.waveprotocol.box.server.waveserver.WaveletProvider;
 import org.waveprotocol.box.server.waveserver.WaveletStateException;
+import org.waveprotocol.box.server.rpc.AttachmentInfoServlet;
+import org.waveprotocol.box.server.rpc.AttachmentServlet;
 import org.waveprotocol.wave.crypto.CertPathStore;
 import org.waveprotocol.wave.federation.FederationSettings;
 import org.waveprotocol.wave.federation.FederationTransport;
@@ -79,6 +81,7 @@ import org.waveprotocol.wave.model.version.HashedVersionFactory;
 import org.waveprotocol.wave.model.wave.ParticipantIdUtil;
 import org.waveprotocol.wave.util.logging.Log;
 import org.waveprotocol.wave.util.settings.SettingsBinder;
+
 
 import java.io.IOException;
 import java.util.Collections;
@@ -226,6 +229,9 @@ public class ServerMain {
   private static void initializeServlets(Injector injector, ServerRpcProvider server) {
     server.addServlet("/gadget/gadgetlist", injector.getInstance(GadgetProviderServlet.class));
     server.addServlet("/attachment/*", injector.getInstance(AttachmentServlet.class));
+    server.addServlet(AttachmentServlet.ATTACHMENT_URL + "/*", injector.getInstance(AttachmentServlet.class));
+    server.addServlet(AttachmentServlet.THUMBNAIL_URL + "/*", injector.getInstance(AttachmentServlet.class));
+    server.addServlet(AttachmentInfoServlet.ATTACHMENTS_INFO_URL, injector.getInstance(AttachmentInfoServlet.class));
 
     server.addServlet(SessionManager.SIGN_IN_URL, injector.getInstance(AuthenticationServlet.class));
     server.addServlet("/auth/signout", injector.getInstance(SignOutServlet.class));
