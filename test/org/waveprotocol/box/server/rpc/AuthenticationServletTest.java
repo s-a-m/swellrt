@@ -76,7 +76,7 @@ public class AuthenticationServletTest extends TestCase {
     store.putAccount(account);
 
     servlet = new AuthenticationServlet(store, AuthTestUtil.makeConfiguration(),
-        manager, "examPLe.com", false, "", false, false, welcomeBot, "UA-someid");
+        manager, "examPLe.com", false, "", false, false, "UA-someid");
     AccountStoreHolder.init(store, "eXaMple.com");
   }
 

@@ -134,9 +134,9 @@ public final class ParticipantsViewBuilder implements UiBuilder {
             }
             closeSpan(output);
             appendSpan(output, null, css.addButton(), TypeCodes.kind(Type.ADD_PARTICIPANT));
-            button(output, null, css.newWaveWithParticipantsButton(),
-                TypeCodes.kind(Type.NEW_WAVE_WITH_PARTICIPANTS),
-                "New wave with the participants of current wave", "New wave");
+//            button(output, null, css.newWaveWithParticipantsButton(),
+//                TypeCodes.kind(Type.NEW_WAVE_WITH_PARTICIPANTS),
+//                "New wave with the participants of current wave", "New wave");
           }
           closeSpan(output);
 
@@ -144,9 +144,9 @@ public final class ParticipantsViewBuilder implements UiBuilder {
           openSpan(output, null, css.simple(), null);
           {
             appendSpan(output, null, css.addButton(), TypeCodes.kind(Type.ADD_PARTICIPANT));
-            button(output, null, css.newWaveWithParticipantsButton(),
-                TypeCodes.kind(Type.NEW_WAVE_WITH_PARTICIPANTS),
-                "New wave with the participants of current wave", "New wave");
+//            button(output, null, css.newWaveWithParticipantsButton(),
+//                TypeCodes.kind(Type.NEW_WAVE_WITH_PARTICIPANTS),
+//                "New wave with the participants of current wave", "New wave");
           }
           closeSpan(output);
         }
