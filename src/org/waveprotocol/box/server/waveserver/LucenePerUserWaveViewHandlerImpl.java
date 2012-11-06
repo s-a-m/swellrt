@@ -21,8 +21,10 @@ import static org.waveprotocol.box.server.waveserver.IndexFieldType.WAVEID;
 import static org.waveprotocol.box.server.waveserver.IndexFieldType.WAVELETID;
 import static org.waveprotocol.box.server.waveserver.IndexFieldType.WITH;
 
+import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.MapMaker;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
@@ -65,8 +67,10 @@ import org.waveprotocol.wave.model.wave.data.ReadableWaveletData;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -127,6 +131,15 @@ public class LucenePerUserWaveViewHandlerImpl implements PerUserWaveViewHandler,
   private final ReadableWaveletDataProvider waveletProvider;
   private boolean isClosed = false;
 
+  /**
+   * The period of time in minutes the per user waves view should be actively
+   * kept up to date after last access.
+   */
+  private static final int PER_USER_WAVES_VIEW_CACHE_MINUTES = 5;
+
+  /** The computing map that holds wave viev per each online user.*/
+  public ConcurrentMap<ParticipantId, Multimap<WaveId, WaveletId>> explicitPerUserWaveViews;
+
   @Inject
   public LucenePerUserWaveViewHandlerImpl(IndexDirectory directory,
       ReadableWaveletDataProvider waveletProvider, TextCollator textCollator,
@@ -145,6 +158,41 @@ public class LucenePerUserWaveViewHandlerImpl implements PerUserWaveViewHandler,
 
     nrtManagerReopenThread = new NRTManagerReopenThread(nrtManager, MAX_STALE_SEC, MIN_STALE_SEC);
     nrtManagerReopenThread.start();
+
+    explicitPerUserWaveViews =
+        new MapMaker().expireAfterAccess(PER_USER_WAVES_VIEW_CACHE_MINUTES, TimeUnit.MINUTES)
+            .makeComputingMap(new Function<ParticipantId, Multimap<WaveId, WaveletId>>() {
+
+              @Override
+              public Multimap<WaveId, WaveletId> apply(final ParticipantId user) {
+                Preconditions.checkNotNull(user);
+
+                Multimap<WaveId, WaveletId> userWavesViewMap = HashMultimap.create();
+                BooleanQuery participantQuery = new BooleanQuery();
+                participantQuery.add(new TermQuery(new Term(WITH.toString(), user.getAddress())), Occur.SHOULD);
+                SearcherManager searcherManager = nrtManager.getSearcherManager(true);
+                IndexSearcher indexSearcher = searcherManager.acquire();
+                try {
+                  TopDocs hints = indexSearcher.search(participantQuery, MAX_WAVES, LMT_ASC_SORT);
+                  for (ScoreDoc hint : hints.scoreDocs) {
+                    Document document = indexSearcher.doc(hint.doc);
+                    WaveId waveId = WaveId.deserialise(document.get(WAVEID.toString()));
+                    WaveletId waveletId = WaveletId.deserialise(document.get(WAVELETID.toString()));
+                    userWavesViewMap.put(waveId, waveletId);
+                  }
+                } catch (IOException e) {
+                  LOG.log(Level.WARNING, "Search failed: " + user, e);
+                } finally {
+                  try {
+                    searcherManager.release(indexSearcher);
+                  } catch (IOException e) {
+                    LOG.log(Level.WARNING, "Failed to close searcher. " + user, e);
+                  }
+                  indexSearcher = null;
+                }
+                return userWavesViewMap;
+              }
+            });
   }
 
   /**
@@ -345,31 +393,6 @@ public class LucenePerUserWaveViewHandlerImpl implements PerUserWaveViewHandler,
 
   @Override
   public Multimap<WaveId, WaveletId> retrievePerUserWaveView(ParticipantId user) {
-    Preconditions.checkNotNull(user);
-
-    Multimap<WaveId, WaveletId> userWavesViewMap = HashMultimap.create();
-    BooleanQuery participantQuery = new BooleanQuery();
-    participantQuery.add(new TermQuery(new Term(WITH.toString(), user.getAddress())), Occur.SHOULD);
-    SearcherManager searcherManager = nrtManager.getSearcherManager(true);
-    IndexSearcher indexSearcher = searcherManager.acquire();
-    try {
-      TopDocs hints = indexSearcher.search(participantQuery, MAX_WAVES, LMT_ASC_SORT);
-      for (ScoreDoc hint : hints.scoreDocs) {
-        Document document = indexSearcher.doc(hint.doc);
-        WaveId waveId = WaveId.deserialise(document.get(WAVEID.toString()));
-        WaveletId waveletId = WaveletId.deserialise(document.get(WAVELETID.toString()));
-        userWavesViewMap.put(waveId, waveletId);
-      }
-    } catch (IOException e) {
-      LOG.log(Level.WARNING, "Search failed: " + user, e);
-    } finally {
-      try {
-        searcherManager.release(indexSearcher);
-      } catch (IOException e) {
-        LOG.log(Level.WARNING, "Failed to close searcher. " + user, e);
-      }
-      indexSearcher = null;
-    }
-    return userWavesViewMap;
+    return explicitPerUserWaveViews.get(user);
   }
 }
