@@ -29,7 +29,7 @@ import java.util.Collection;
  * @author hearnden@google.com (David Hearnden)
  */
 public final class SearchPanelRenderer {
-  private final static int MAX_AVATARS = 1;
+  private final static int MAX_AVATARS = 3;
 
   /** Profile provider, for avatars. */
   private final ProfileManager profiles;

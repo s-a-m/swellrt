@@ -53,7 +53,7 @@
 .avatars {
   float: left;
   margin-right: 1em;
-  width: 34px;  /* (32 + 4) x 3. */
+  width: 108px;  /* (32 + 4) x 3. */
 }
 
 .avatar {
