@@ -244,11 +244,6 @@ public class ServerMain {
     server.addServlet("/profile/*", injector.getInstance(FetchProfilesServlet.class));
     server.addServlet("/waveref/*", injector.getInstance(WaveRefServlet.class));
 
-    boolean enableImport = injector
-            .getInstance(Key.get(Boolean.class, Names.named(CoreSettings.ENABLE_IMPORT)));
-    if (enableImport)
-      server.addServlet("/import", injector.getInstance(ImportServlet.class));
-
     String gadgetHostName =
         injector
             .getInstance(Key.get(String.class, Names.named(CoreSettings.GADGET_SERVER_HOSTNAME)));
