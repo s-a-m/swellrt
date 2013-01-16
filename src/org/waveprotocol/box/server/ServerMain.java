@@ -1,18 +1,20 @@
 /**
- * Copyright 2009 Google Inc.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.waveprotocol.box.server;
@@ -43,13 +45,10 @@ import org.waveprotocol.box.server.persistence.SignerInfoStore;
 import org.waveprotocol.box.server.robots.RobotApiModule;
 import org.waveprotocol.box.server.robots.RobotRegistrationServlet;
 import org.waveprotocol.box.server.robots.active.ActiveApiServlet;
-import org.waveprotocol.box.server.robots.agent.passwd.PasswordAdminRobot;
-import org.waveprotocol.box.server.robots.agent.passwd.PasswordRobot;
-import org.waveprotocol.box.server.robots.agent.registration.RegistrationRobot;
-import org.waveprotocol.box.server.robots.agent.welcome.WelcomeRobot;
 import org.waveprotocol.box.server.robots.dataapi.DataApiOAuthServlet;
 import org.waveprotocol.box.server.robots.dataapi.DataApiServlet;
 import org.waveprotocol.box.server.robots.passive.RobotsGateway;
+import org.waveprotocol.box.server.rpc.AttachmentInfoServlet;
 import org.waveprotocol.box.server.rpc.AttachmentServlet;
 import org.waveprotocol.box.server.rpc.AuthenticationServlet;
 import org.waveprotocol.box.server.rpc.FetchProfilesServlet;
@@ -62,7 +61,6 @@ import org.waveprotocol.box.server.rpc.SignOutServlet;
 import org.waveprotocol.box.server.rpc.UserRegistrationServlet;
 import org.waveprotocol.box.server.rpc.WaveClientServlet;
 import org.waveprotocol.box.server.rpc.WaveRefServlet;
-import org.waveprotocol.box.server.waveserver.ImportServlet;
 import org.waveprotocol.box.server.waveserver.PerUserWaveViewBus;
 import org.waveprotocol.box.server.waveserver.PerUserWaveViewDistpatcher;
 import org.waveprotocol.box.server.waveserver.WaveBus;
@@ -70,8 +68,6 @@ import org.waveprotocol.box.server.waveserver.WaveIndexer;
 import org.waveprotocol.box.server.waveserver.WaveServerException;
 import org.waveprotocol.box.server.waveserver.WaveletProvider;
 import org.waveprotocol.box.server.waveserver.WaveletStateException;
-import org.waveprotocol.box.server.rpc.AttachmentInfoServlet;
-import org.waveprotocol.box.server.rpc.AttachmentServlet;
 import org.waveprotocol.wave.crypto.CertPathStore;
 import org.waveprotocol.wave.federation.FederationSettings;
 import org.waveprotocol.wave.federation.FederationTransport;
@@ -81,7 +77,6 @@ import org.waveprotocol.wave.model.version.HashedVersionFactory;
 import org.waveprotocol.wave.model.wave.ParticipantIdUtil;
 import org.waveprotocol.wave.util.logging.Log;
 import org.waveprotocol.wave.util.settings.SettingsBinder;
-
 
 import java.io.IOException;
 import java.util.Collections;

@@ -1,19 +1,22 @@
 /**
- * Copyright 2010 Google Inc.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
+
 package org.waveprotocol.wave.client.gadget.renderer;
 
 import static org.waveprotocol.wave.model.gadget.GadgetConstants.AUTHOR_ATTRIBUTE;
@@ -301,6 +304,7 @@ public class GadgetWidget extends ObservableSupplementedWave.ListenerImpl
   private boolean toUpdateIframeUrl = false;
 
   private final String clientInstanceLogLabel;
+  private boolean isSavedHeightSet = false;
 
   // Note that the following regex expressions are strings rather than compiled patterns because GWT
   // does not (yet) support those. Consider using the new GWT RegExp class in the future.
@@ -608,6 +612,23 @@ public class GadgetWidget extends ObservableSupplementedWave.ListenerImpl
   }
 
   /**
+   * Update the gadget iframe height in a deferred command if the panel is
+   * editable
+   *
+   * @param height the new height of the gadget iframe
+   */
+  private void scheduleGadgetHeightUpdate(final String height) {
+    ScheduleCommand.addCommand(new Scheduler.Task() {
+      @Override
+      public void execute() {
+        if (canModifyDocument()) {
+          updateIframeHeight(height);
+        }
+      }
+    });
+  }
+
+  /**
    * Updates gadget IFrame attributes.
    *
    * @param url URL template for the iframe.
@@ -652,6 +673,7 @@ public class GadgetWidget extends ObservableSupplementedWave.ListenerImpl
       try {
         int height = parseSizeString(savedHeight);
         ui.setIframeHeight(height);
+        isSavedHeightSet = true;
       } catch (NumberFormatException e) {
         log("Invalid saved height attribute (ignored): ", savedHeight);
       }
@@ -932,9 +954,9 @@ public class GadgetWidget extends ObservableSupplementedWave.ListenerImpl
         (int) (metadata.hasWidth() ? metadata.getWidth() : metadata.getPreferredWidth(view));
     registerWithController(url, width, height);
     if (height > 0) {
-      setIframeHeight(String.valueOf(height));
+      updateIframeHeight(String.valueOf(height));
     } else {
-      setIframeHeight(String.valueOf(DEFAULT_HEIGHT_PX));
+      updateIframeHeight(String.valueOf(DEFAULT_HEIGHT_PX));
     }
     if (width > 0){
       setIframeWidth(String.valueOf(width));
@@ -1320,9 +1342,8 @@ public class GadgetWidget extends ObservableSupplementedWave.ListenerImpl
     active = false;
   }
 
-  @Override
-  public void setIframeHeight(String height) {
-    if (!isActive()) {
+  private void updateIframeHeight(String height) {
+    if (!isActive() || (isSavedHeightSet && !documentModified)) {
       return;
     }
     log("Set IFrame height ", height);
@@ -1333,6 +1354,11 @@ public class GadgetWidget extends ObservableSupplementedWave.ListenerImpl
     } catch (NumberFormatException e) {
       log("Invalid height (ignored): ", height);
     }
+  }
+
+  @Override
+  public void setIframeHeight(String height) {
+    scheduleGadgetHeightUpdate(height);
   }
 
   public void setIframeWidth(String width) {

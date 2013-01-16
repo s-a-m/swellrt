@@ -1,18 +1,20 @@
 /**
- * Copyright 2009 Google Inc.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.waveprotocol.box.server;
@@ -62,7 +64,6 @@ public class CoreSettings {
   public static final String ENABLE_SSL = "enable_ssl";
   public static final String SSL_KEYSTORE_PATH = "ssl_keystore_path";
   public static final String SSL_KEYSTORE_PASSWORD = "ssl_keystore_password";
-  public static final String ENABLE_IMPORT = "enable_import";
   public static final String ENABLE_CLIENTAUTH = "enable_clientauth";
   public static final String CLIENTAUTH_CERT_DOMAIN = "clientauth_cert_domain";
   public static final String DISABLE_LOGINPAGE = "disable_loginpage";
@@ -224,10 +225,6 @@ public class CoreSettings {
   @Setting(name = SSL_KEYSTORE_PASSWORD,
       description = "Password to the SSL keystore", defaultValue = "")
   private static String sslKeystorePassword;
-
-  @Setting(name = ENABLE_IMPORT,
-      description = "Enable import servlet at <Server URL>/import", defaultValue = "false")
-  private static boolean enableImport;
 
   @Setting(name = ENABLE_CLIENTAUTH,
       description = "Enable x509 certificated based authentication", defaultValue = "false")

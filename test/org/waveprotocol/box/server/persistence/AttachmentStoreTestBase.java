@@ -1,18 +1,20 @@
 /**
- * Copyright 2010 Google Inc.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.waveprotocol.box.server.persistence;
@@ -20,6 +22,7 @@ package org.waveprotocol.box.server.persistence;
 import junit.framework.TestCase;
 
 import org.waveprotocol.box.server.persistence.AttachmentStore.AttachmentData;
+import org.waveprotocol.wave.media.model.AttachmentId;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -27,7 +30,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import org.waveprotocol.wave.media.model.AttachmentId;
 
 /**
  * Test cases for the Attachment Stores.
@@ -78,8 +80,13 @@ public abstract class AttachmentStoreTestBase extends TestCase {
     AttachmentData data = store.getAttachment(id);
 
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
-    AttachmentUtil.writeTo(data.getInputStream(), stream);
-    assertEquals(testData, stream.toString("UTF-8"));
+    InputStream io = data.getInputStream();
+    try {
+      AttachmentUtil.writeTo(io, stream);
+      assertEquals(testData, stream.toString("UTF-8"));
+    } finally {
+      io.close();
+    }
   }
 
   public void testAttachmentHasWorkingInputStream() throws Exception {
@@ -92,14 +99,17 @@ public abstract class AttachmentStoreTestBase extends TestCase {
 
     StringBuilder builder = new StringBuilder();
     String line;
-    while ((line = reader.readLine()) != null) {
-      // This little snippet will discard any "\n" characters, but it shouldn't
-      // matter.
-      builder.append(line);
+    try {
+      while ((line = reader.readLine()) != null) {
+        // This little snippet will discard any "\n" characters, but it shouldn't
+        // matter.
+        builder.append(line);
+      }
+    } finally {
+      reader.close();
     }
 
     assertEquals(testData, builder.toString());
-    reader.close();
   }
 
   public void testGetStreamReturnsNewStream() throws Exception {
@@ -110,18 +120,24 @@ public abstract class AttachmentStoreTestBase extends TestCase {
 
     InputStream is1 = data.getInputStream();
     InputStream is2 = data.getInputStream();
-    assertNotSame(is1, is2);
+    InputStream is3 = null;
+    try {
+      assertNotSame(is1, is2);
 
-    int firstByte = is1.read();
-    assertSame(firstByte, is2.read());
+      int firstByte = is1.read();
+      assertSame(firstByte, is2.read());
 
-    // Check that a new input stream created now still has the same first byte.
-    InputStream is3 = data.getInputStream();
-    assertSame(firstByte, is3.read());
-
-    is1.close();
-    is2.close();
-    is3.close();
+      // Check that a new input stream created now still has the same first
+      // byte.
+      is3 = data.getInputStream();
+      assertSame(firstByte, is3.read());
+    } finally {
+      is1.close();
+      is2.close();
+      if (is3 != null) {
+        is3.close();
+      }
+    }
   }
 
   public void testOverwriteAttachmentThrowsException() throws Exception {
@@ -163,7 +179,12 @@ public abstract class AttachmentStoreTestBase extends TestCase {
 
   protected String dataToString(AttachmentData data) throws IOException {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    AttachmentUtil.writeTo(data.getInputStream(), out);
+    InputStream io = data.getInputStream();
+    try {
+      AttachmentUtil.writeTo(io, out);
+    } finally {
+      io.close();
+    }
     return out.toString("UTF-8");
   }
 }
