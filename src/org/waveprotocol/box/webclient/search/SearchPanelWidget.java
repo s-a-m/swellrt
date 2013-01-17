@@ -76,7 +76,7 @@ public class SearchPanelWidget extends Composite implements SearchPanelView {
    * Positioning constants for components of this panel.
    */
   static class CssConstants {
-    private static int SEARCH_HEIGHT_PX = 0; // To match wave panel.
+    private static int SEARCH_HEIGHT_PX = 51; // To match wave panel.
     private static int TOOLBAR_HEIGHT_PX =
         SearchPanelResourceLoader.getPanel().emptyToolbar().getHeight();
     private static int TOOLBAR_TOP_PX = 0 + SEARCH_HEIGHT_PX;

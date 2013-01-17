@@ -19,8 +19,6 @@
 
 package org.waveprotocol.box.webclient.search;
 
-import org.waveprotocol.box.webclient.client.ClientEvents;
-import org.waveprotocol.box.webclient.client.events.WaveCreationEvent;
 import org.waveprotocol.box.webclient.search.Search.State;
 import org.waveprotocol.wave.client.account.Profile;
 import org.waveprotocol.wave.client.account.ProfileListener;
@@ -102,9 +100,11 @@ public final class SearchPresenter
   /** The dispatcher of profiles events. */
   SourcesEvents<ProfileListener> profiles;
   private boolean isRenderingInProgress = false;
+  private final SearchPresenterResources.Css css;
 
-  SearchPresenter(TimerService scheduler, Search search, SearchPanelView searchUi,
+  SearchPresenter(SearchPresenterResources.Css css, TimerService scheduler, Search search, SearchPanelView searchUi,
       WaveActionHandler actionHandler, SourcesEvents<ProfileListener> profiles) {
+    this.css = css;
     this.search = search;
     this.searchUi = searchUi;
     this.scheduler = scheduler;
@@ -123,7 +123,8 @@ public final class SearchPresenter
   public static SearchPresenter create(
       Search model, SearchPanelView view, WaveActionHandler actionHandler,
       SourcesEvents<ProfileListener> profileEventsDispatcher) {
-    SearchPresenter presenter = new SearchPresenter(
+    SearchPresenterResources.Css css = SearchPresenterResources.Loader.res.css();
+    SearchPresenter presenter = new SearchPresenter(css,
         SchedulerInstance.getHighPriorityTimer(), model, view, actionHandler,
         profileEventsDispatcher);
     presenter.init();
@@ -164,7 +165,7 @@ public final class SearchPresenter
   private void initToolbarMenu() {
     GroupingToolbar.View toolbarUi = searchUi.getToolbar();
     ToolbarView group = toolbarUi.addGroup();
-    new ToolbarButtonViewBuilder().setText("New Message").setTooltip("Create a New Message (a Wave)").applyTo(
+    new ToolbarButtonViewBuilder().setText("New message").setIcon(css.docsAdd()).setTooltip("Create a New Message (a Wave)").applyTo(
         group.addClickButton(), new ToolbarClickButton.Listener() {
           @Override
           public void onClicked() {

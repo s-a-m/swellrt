@@ -43,10 +43,11 @@ input.query {
   border-width: 1px;  /* Standardize (Webkit default is 2px, FF is 3). */
   padding: 1px;
   width: 100%;  /* Stretch to width of container. */
+  display: none;
 }
 
 .searchButtonsPanel {
-  width: 190px;
+  width: 130px;
   margin: 13px 5px;
   float: right;
   font-family: verdana;
