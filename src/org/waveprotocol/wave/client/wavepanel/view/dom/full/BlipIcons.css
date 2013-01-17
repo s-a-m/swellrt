@@ -17,6 +17,7 @@
 @sprite .link {
   gwt-image: 'link';
   margin-left: 5px;
+  margin-right: -6px;
   background-position: 4px center;
 }
 
