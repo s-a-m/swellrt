@@ -40,9 +40,11 @@ public final class ViewToolbar {
   private final FocusFramePresenter focusFrame;
   private final FocusBlipSelector blipSelector;
   private final Reader reader;
+  private final ViewerToolbarResources.Css css;
 
-  private ViewToolbar(ToplevelToolbarWidget toolbarUi, FocusFramePresenter focusFrame,
+  private ViewToolbar(ViewerToolbarResources.Css css, ToplevelToolbarWidget toolbarUi, FocusFramePresenter focusFrame,
       ModelAsViewProvider views, ConversationView wave, Reader reader) {
+    this.css = css;
     this.toolbarUi = toolbarUi;
     this.focusFrame = focusFrame;
     this.reader = reader;
@@ -51,21 +53,15 @@ public final class ViewToolbar {
 
   public static ViewToolbar create(FocusFramePresenter focus,  ModelAsViewProvider views,
   ConversationView wave, Reader reader) {
-    return new ViewToolbar(new ToplevelToolbarWidget(), focus, views, wave, reader);
+    ViewerToolbarResources.Css css = ViewerToolbarResources.Loader.res.css();
+    return new ViewToolbar(css, new ToplevelToolbarWidget(), focus, views, wave, reader);
   }
 
   public void init() {
     ToolbarView group = toolbarUi.addGroup();
 
-    new ToolbarButtonViewBuilder().setText("Recent").applyTo(
-        group.addClickButton(), new ToolbarClickButton.Listener() {
-          @Override
-          public void onClicked() {
-            focusFrame.focus(blipSelector.selectMostRecentlyModified());
-          }
-        });
 
-    new ToolbarButtonViewBuilder().setText("Next Unread").applyTo(
+    new ToolbarButtonViewBuilder().setIcon(css.nextUnread()).setTooltip("Next Unread").applyTo(
         group.addClickButton(), new ToolbarClickButton.Listener() {
           @Override
           public void onClicked() {
@@ -82,18 +78,25 @@ public final class ViewToolbar {
             }
           }
         });
-    new ToolbarButtonViewBuilder().setText("Previous").applyTo(
+    new ToolbarButtonViewBuilder().setIcon(css.previous()).setTooltip("Previous").applyTo(
         group.addClickButton(), new ToolbarClickButton.Listener() {
           @Override
           public void onClicked() {
             focusFrame.moveUp();
           }
         });
-    new ToolbarButtonViewBuilder().setText("Next").applyTo(
+    new ToolbarButtonViewBuilder().setIcon(css.next()).setTooltip("Next").applyTo(
         group.addClickButton(), new ToolbarClickButton.Listener() {
           @Override
           public void onClicked() {
             focusFrame.moveDown();
+          }
+        });
+    new ToolbarButtonViewBuilder().setIcon(css.recent()).setTooltip("Recent").applyTo(
+        group.addClickButton(), new ToolbarClickButton.Listener() {
+          @Override
+          public void onClicked() {
+            focusFrame.focus(blipSelector.selectMostRecentlyModified());
           }
         });
     // Fake group
