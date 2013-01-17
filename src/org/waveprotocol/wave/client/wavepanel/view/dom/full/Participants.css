@@ -193,3 +193,12 @@ img.participant {
   display: inline-block;
   cursor: pointer;
 }
+
+@sprite .addMessage {
+  gwt-image: 'addMessage';
+  position: absolute;
+  width: 24px;
+  margin-left: 5px;
+  cursor: pointer;
+  border: 0px;
+}
