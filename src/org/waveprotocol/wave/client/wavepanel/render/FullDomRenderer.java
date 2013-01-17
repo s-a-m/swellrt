@@ -143,8 +143,8 @@ public final class FullDomRenderer implements RenderingRules<UiBuilder> {
     Profile profile = profileManager.getProfile(participant);
     String id = viewIdMapper.participantOf(conversation, participant);
     // Use ParticipantAvatarViewBuilder for avatars.
-
     // final ParticipantNameViewBuilder participantUi = ParticipantNameViewBuilder.create(id);
+
     ParticipantAvatarViewBuilder participantUi = ParticipantAvatarViewBuilder.create(id);
     participantUi.setAvatar(profile.getImageUrl());
     participantUi.setName(profile.getFullName());
