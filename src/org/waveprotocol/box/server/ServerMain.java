@@ -87,6 +87,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
+import org.waveprotocol.box.server.rpc.LocaleServlet;
 
 /**
  * Wave Server entrypoint.
@@ -231,6 +232,7 @@ public class ServerMain {
     server.addServlet(SessionManager.SIGN_IN_URL, injector.getInstance(AuthenticationServlet.class));
     server.addServlet("/auth/signout", injector.getInstance(SignOutServlet.class));
     server.addServlet("/auth/register", injector.getInstance(UserRegistrationServlet.class));
+    server.addServlet("/locale/*", injector.getInstance(LocaleServlet.class));
     server.addServlet("/fetch/*", injector.getInstance(FetchServlet.class));
     server.addServlet("/search/*", injector.getInstance(SearchServlet.class));
     server.addServlet("/notification/*", injector.getInstance(NotificationServlet.class));
@@ -243,6 +245,8 @@ public class ServerMain {
     server.addServlet("/webclient/remote_logging", injector.getInstance(RemoteLoggingServiceImpl.class));
     server.addServlet("/profile/*", injector.getInstance(FetchProfilesServlet.class));
     server.addServlet("/waveref/*", injector.getInstance(WaveRefServlet.class));
+
+
 
     String gadgetHostName =
         injector

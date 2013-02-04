@@ -19,10 +19,12 @@
 
 package org.waveprotocol.wave.client.wavepanel.impl.toolbar;
 
+import com.google.gwt.core.client.GWT;
 import org.waveprotocol.wave.client.wavepanel.impl.focus.FocusBlipSelector;
 import org.waveprotocol.wave.client.wavepanel.impl.focus.FocusFramePresenter;
 import org.waveprotocol.wave.client.wavepanel.impl.focus.ViewTraverser;
 import org.waveprotocol.wave.client.wavepanel.impl.reader.Reader;
+import org.waveprotocol.wave.client.wavepanel.impl.toolbar.i18n.ToolbarMessages;
 import org.waveprotocol.wave.client.wavepanel.view.BlipView;
 import org.waveprotocol.wave.client.wavepanel.view.dom.ModelAsViewProvider;
 import org.waveprotocol.wave.client.widget.toolbar.ToolbarButtonViewBuilder;
@@ -37,6 +39,7 @@ import org.waveprotocol.wave.model.conversation.ConversationView;
  * @author kalman@google.com (Benjamin Kalman)
  */
 public final class ViewToolbar {
+  private final static ToolbarMessages messages = GWT.create(ToolbarMessages.class);
 
   private final ToplevelToolbarWidget toolbarUi;
   private final FocusFramePresenter focusFrame;
@@ -62,8 +65,7 @@ public final class ViewToolbar {
   public void init() {
     ToolbarView group = toolbarUi.addGroup();
 
-
-    new ToolbarButtonViewBuilder().setIcon(css.nextUnread()).setTooltip("Next Unread").applyTo(
+    new ToolbarButtonViewBuilder().setIcon(css.nextUnread()).setTooltip(messages.nextUnread()).applyTo(
         group.addClickButton(), new ToolbarClickButton.Listener() {
           @Override
           public void onClicked() {
@@ -80,21 +82,21 @@ public final class ViewToolbar {
             }
           }
         });
-    new ToolbarButtonViewBuilder().setIcon(css.previous()).setTooltip("Previous").applyTo(
+    new ToolbarButtonViewBuilder().setIcon(css.previous()).setTooltip(messages.previous()).applyTo(
         group.addClickButton(), new ToolbarClickButton.Listener() {
           @Override
           public void onClicked() {
             focusFrame.moveUp();
           }
         });
-    new ToolbarButtonViewBuilder().setIcon(css.next()).setTooltip("Next").applyTo(
+    new ToolbarButtonViewBuilder().setIcon(css.next()).setTooltip(messages.next()).applyTo(
         group.addClickButton(), new ToolbarClickButton.Listener() {
           @Override
           public void onClicked() {
             focusFrame.moveDown();
           }
         });
-    new ToolbarButtonViewBuilder().setIcon(css.recent()).setTooltip("Recent").applyTo(
+    new ToolbarButtonViewBuilder().setIcon(css.recent()).setTooltip(messages.recent()).applyTo(
         group.addClickButton(), new ToolbarClickButton.Listener() {
           @Override
           public void onClicked() {

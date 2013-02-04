@@ -29,6 +29,7 @@ import org.waveprotocol.wave.client.common.util.WindowUtil;
 import org.waveprotocol.wave.client.wavepanel.WavePanel;
 import org.waveprotocol.wave.client.wavepanel.event.WaveMouseDownHandler;
 import org.waveprotocol.wave.client.wavepanel.impl.edit.Actions;
+import org.waveprotocol.wave.client.wavepanel.impl.menu.i18n.MenuMessages;
 import org.waveprotocol.wave.client.wavepanel.view.BlipMenuItemView;
 import org.waveprotocol.wave.client.wavepanel.view.View.Type;
 import org.waveprotocol.wave.client.wavepanel.view.dom.DomAsViewProvider;
@@ -41,6 +42,7 @@ import org.waveprotocol.wave.client.wavepanel.view.dom.full.TypeCodes;
 public final class MenuController implements WaveMouseDownHandler {
   private final DomAsViewProvider panel;
   private final Actions actions;
+  private final MenuMessages messages;
 
   /**
    * Creates a manu handler.
@@ -48,16 +50,17 @@ public final class MenuController implements WaveMouseDownHandler {
    * @param actions
    * @param panel
    */
-  private MenuController(Actions actions, DomAsViewProvider panel) {
+  private MenuController(Actions actions, DomAsViewProvider panel, MenuMessages messages) {
     this.actions = actions;
     this.panel = panel;
+    this.messages = messages;
   }
 
   /**
    * Installs the focus-frame feature in a wave panel.
    */
-  public static void install(Actions handler, WavePanel panel) {
-    MenuController controller = new MenuController(handler, panel.getViewProvider());
+  public static void install(Actions handler, WavePanel panel, MenuMessages messages) {
+    MenuController controller = new MenuController(handler, panel.getViewProvider(), messages);
     panel.getHandlers().registerMouseDownHandler(TypeCodes.kind(Type.MENU_ITEM), controller);
   }
 
@@ -82,7 +85,7 @@ public final class MenuController implements WaveMouseDownHandler {
         if (event.getNativeEvent().getShiftKey()) {
           actions.delete(item.getParent().getParent());
         } else {
-            WindowUtil.confirm("Please confirm the deletion of this message", new WindowConfirmCallback() {
+            WindowUtil.confirm(messages.confirmDeletion(), new WindowConfirmCallback() {
               @Override
               public void onOk() {
                 actions.delete(item.getParent().getParent());

@@ -20,6 +20,7 @@
 package org.waveprotocol.wave.client.wavepanel.view.dom.full;
 
 
+import org.waveprotocol.wave.client.wavepanel.view.dom.full.i18n.BlipMessages;
 import junit.framework.TestCase;
 
 import org.waveprotocol.wave.client.common.safehtml.EscapeUtils;
@@ -30,6 +31,7 @@ import org.waveprotocol.wave.client.wavepanel.view.dom.full.BlipViewBuilder.Comp
 
 public class BlipViewBuilderTest extends TestCase {
   private BlipViewBuilder.Css css;
+  BlipMessages constants;
 
   private static final String content = "<div>yyy</div>";
   private String blipDomId;
@@ -40,12 +42,13 @@ public class BlipViewBuilderTest extends TestCase {
   protected void setUp() {
     css = UiBuilderTestHelper.mockCss(BlipViewBuilder.Css.class);
     Css iconCss = UiBuilderTestHelper.mockCss(BlipIconResources.Css.class);
+    constants = UiBuilderTestHelper.mockBlipMessages(BlipMessages.class);
     String blipId = "askljfalikwh4rlkhs";
     String metaDomId = blipId = "M";
     blipDomId = blipId + "B";
 
     UiBuilder fakeContent = UiBuilder.Constant.of(EscapeUtils.fromSafeConstant(content));
-    metaUi = new BlipMetaViewBuilder(css, metaDomId, fakeContent, iconCss);
+    metaUi = new BlipMetaViewBuilder(css, constants, metaDomId, fakeContent, iconCss);
     blipUi = new BlipViewBuilder(blipDomId, metaUi, UiBuilder.EMPTY, UiBuilder.EMPTY, css, false);
   }
 
