@@ -68,6 +68,7 @@
   background-color: #c9e2fc;
   overflow: hidden;
   height: 46px;
+  line-height: 1em;
   min-width: 110px;  /* 1 avatar, and nice room for buttons. */
 
   /*
@@ -192,6 +193,7 @@ img.participant {
   /* The button is a span, to conform to HTML's backward schema. */
   display: inline-block;
   cursor: pointer;
+  border: 0px;
 }
 
 @sprite .addMessage {

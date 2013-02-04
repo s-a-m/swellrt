@@ -5,10 +5,15 @@
   <ui:with
       field='style'
       type='org.waveprotocol.wave.client.wavepanel.view.dom.full.BlipLinkPopupWidget.Style' />
+  <ui:with
+      field='msg'
+      type='org.waveprotocol.wave.client.wavepanel.view.dom.full.i18n.BlipLinkMessages' />
   <g:HTMLPanel styleName="{style.self}">
-    <div class="{style.title}">Link to this reply</div>
-    <div class="{style.explanation}">Use this reference to link
-      to this reply from the web</div>
+    <div class="{style.title}"><ui:text from="{msg.title}"/></div>
+    <div class="{style.explanation}"><ui:text from="{msg.linkExplanation}"/></div>
+    <g:TextBox ui:field="linkInfoBox" styleName="{style.link}"
+      readOnly="true"></g:TextBox>
+    <div class="{style.explanation}"><ui:text from="{msg.webLinkExplanation}"/></div>
     <g:TextBox ui:field="waverefLink" styleName="{style.link}"
       readOnly="true"></g:TextBox>
   </g:HTMLPanel>

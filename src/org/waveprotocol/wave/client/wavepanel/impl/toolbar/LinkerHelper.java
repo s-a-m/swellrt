@@ -21,10 +21,15 @@ package org.waveprotocol.wave.client.wavepanel.impl.toolbar;
 
 import org.waveprotocol.wave.client.common.util.WindowPromptCallback;
 import org.waveprotocol.wave.client.common.util.WindowUtil;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
+
+import org.waveprotocol.wave.client.common.util.WaveRefConstants;
 import org.waveprotocol.wave.client.doodad.link.Link;
 import org.waveprotocol.wave.client.doodad.link.Link.InvalidLinkException;
 import org.waveprotocol.wave.client.editor.EditorContext;
 import org.waveprotocol.wave.client.editor.util.EditorAnnotationUtil;
+import org.waveprotocol.wave.client.wavepanel.impl.toolbar.i18n.LinkerMessages;
 import org.waveprotocol.wave.model.document.util.DocHelper;
 import org.waveprotocol.wave.model.document.util.FocusedRange;
 import org.waveprotocol.wave.model.document.util.Range;
@@ -34,6 +39,7 @@ import org.waveprotocol.wave.model.document.util.Range;
  * while editing a document via the toolbar or via shortcuts
  */
 public class LinkerHelper {
+  private static final LinkerMessages messages = GWT.create(LinkerMessages.class);
 
   /**
    * Helper for insert links while editing a document
@@ -43,7 +49,7 @@ public class LinkerHelper {
   public static void onCreateLink(final EditorContext editor) {
     final FocusedRange range = editor.getSelectionHelper().getSelectionRange();
     if (range == null || range.isCollapsed()) {
-      WindowUtil.alert("Select some text to create a link.");
+      Window.alert(messages.selectSomeText());
       return;
     }
     try {
@@ -54,7 +60,7 @@ public class LinkerHelper {
       String linkAnnotationValue = Link.normalizeLink(text);
       EditorAnnotationUtil.setAnnotationOverSelection(editor, Link.KEY, linkAnnotationValue);
     } catch (InvalidLinkException e) {
-          WindowUtil.prompt("Enter link URL", "http://",
+          WindowUtil.prompt(messages.enterLink(), "http://",
               new WindowPromptCallback() {
                 @Override
                 public void onReturn(String rawLinkValue) {

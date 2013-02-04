@@ -20,11 +20,15 @@
 
 package org.waveprotocol.wave.client.wavepanel.impl.edit;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
+
 import org.waveprotocol.wave.client.common.util.WaveRefConstants;
 import org.waveprotocol.wave.client.common.util.WindowUtil;
 import org.waveprotocol.wave.client.editor.content.ContentDocument;
 import org.waveprotocol.wave.client.wave.InteractiveDocument;
 import org.waveprotocol.wave.client.wave.WaveDocuments;
+import org.waveprotocol.wave.client.wavepanel.impl.edit.i18n.ActionMessages;
 import org.waveprotocol.wave.client.wavepanel.impl.focus.FocusFramePresenter;
 import org.waveprotocol.wave.client.wavepanel.view.BlipLinkPopupView;
 import org.waveprotocol.wave.client.wavepanel.view.BlipView;
@@ -46,6 +50,8 @@ import org.waveprotocol.wave.util.escapers.GwtWaverefEncoder;
  *
  */
 public final class ActionsImpl implements Actions {
+  private static final ActionMessages messages = GWT.create(ActionMessages.class);
+
   private final ModelAsViewProvider views;
   private final WaveDocuments<? extends InteractiveDocument> documents;
   private final BlipQueueRenderer blipQueue;
@@ -156,8 +162,7 @@ public final class ActionsImpl implements Actions {
     try {
       waveletId = DualIdSerialiser.MODERN.deserialiseWaveletId(blip.getConversation().getId());
     } catch (InvalidIdException e) {
-      WindowUtil.alert(
-          "Unable to link to this blip, invalid conversation id " + blip.getConversation().getId());
+      WindowUtil.alert(messages.invalidWaveletId(blip.getConversation().getId()));
       return;
     }
     WaveRef waveRef = WaveRef.of(waveId, waveletId, blip.getId());
