@@ -227,6 +227,7 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
     open(output, id, css.meta(), TypeCodes.kind(Type.META));
     {
       // Author avatar.
+      // FIXME i18n
       image(output, Components.AVATAR.getDomId(id), css.avatar(), EscapeUtils.fromString(avatarUrl),
           EscapeUtils.fromPlainText(avatarName), null);
 
