@@ -65,6 +65,26 @@ public final class Reader implements FocusFramePresenter.Listener, FocusOrder {
     return reader;
   }
 
+  public void follow() {
+    supplement.follow();
+  }
+
+  public void unfollow() {
+    supplement.unfollow();
+  }
+
+  public boolean isFollowed() {
+    return supplement.isFollowed();
+  }
+
+  public void markAsUnread() {
+    supplement.markAsUnread();
+  }
+
+  public void markAsRead() {
+    supplement.markAsRead();
+  }
+
   @Override
   public void onFocusMoved(BlipView oldUi, BlipView newUi) {
     if (oldUi != null) {
@@ -114,4 +134,10 @@ public final class Reader implements FocusFramePresenter.Listener, FocusOrder {
     }
     return blipUi;
   }
+
+  public void markAsRead(BlipView blip) {
+    ConversationBlip convBlip = models.getBlip(blip);
+    supplement.markAsRead(convBlip);
+  }
+
 }

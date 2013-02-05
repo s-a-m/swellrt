@@ -34,12 +34,20 @@ public interface ViewerToolbarResources extends ClientBundle {
     String nextUnread();
     String recent();
     String previous();
+    String follow();
+    String read();
+    String unfollow();
+    String unread();
   }
 
   @Source("images/view/next.png") ImageResource next();
   @Source("images/view/nextUnread.png") ImageResource nextUnread();
   @Source("images/view/recent.png") ImageResource recent();
   @Source("images/view/previous.png") ImageResource previous();
+  @Source("images/view/follow.png") ImageResource follow();
+  @Source("images/view/read.png") ImageResource read();
+  @Source("images/view/unfollow.png") ImageResource unfollow();
+  @Source("images/view/unread.png") ImageResource unread();
 
   @Source("ViewToolbar.css")
   Css css();
