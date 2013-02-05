@@ -72,7 +72,9 @@ public final class UndercurrentShallowBlipRenderer implements ShallowBlipRendere
   public void renderContributors(ConversationBlip blip, IntrinsicBlipMetaView meta) {
     Set<ParticipantId> contributors = blip.getContributorIds();
     if (!contributors.isEmpty()) {
-      meta.setAvatar(avatarOf(contributors.iterator().next()));
+      ParticipantId author = contributors.iterator().next();
+      meta.setAvatar(avatarOf(author));
+      meta.setAvatarName(avatarNameOf(author));
       meta.setMetaline(buildNames(contributors));
     } else {
       // Blips are never meant to have no contributors.  The wave state is broken.
@@ -121,5 +123,9 @@ public final class UndercurrentShallowBlipRenderer implements ShallowBlipRendere
 
   private String avatarOf(ParticipantId contributor) {
     return manager.getProfile(contributor).getImageUrl();
+  }
+
+  private String avatarNameOf(ParticipantId contributor) {
+    return manager.getProfile(contributor).getFullName();
   }
 }

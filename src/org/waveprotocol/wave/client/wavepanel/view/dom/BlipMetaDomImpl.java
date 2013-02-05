@@ -65,7 +65,7 @@ public final class BlipMetaDomImpl implements DomView, IntrinsicBlipMetaView {
 
   /** The HTML id of {@code self}. */
   private final String id;
-  
+
   /** The CSS classes used to manipulate style based on state changes. */
   private final BlipViewBuilder.Css css;
 
@@ -101,6 +101,11 @@ public final class BlipMetaDomImpl implements DomView, IntrinsicBlipMetaView {
   @Override
   public void setAvatar(String avatarUrl) {
     getAvatar().setSrc(avatarUrl);
+  }
+
+  @Override
+  public void setAvatarName(String avatarName) {
+    getAvatar().setTitle(avatarName);
   }
 
   @Override
