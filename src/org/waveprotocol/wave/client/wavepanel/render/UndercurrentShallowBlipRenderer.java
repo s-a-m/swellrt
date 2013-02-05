@@ -74,11 +74,12 @@ public final class UndercurrentShallowBlipRenderer implements ShallowBlipRendere
     if (!contributors.isEmpty()) {
       ParticipantId author = contributors.iterator().next();
       meta.setAvatar(avatarOf(author));
-      meta.setAvatarName(avatarNameOf(author));
+      meta.setAvatarName("author: " + avatarNameOf(author));
       meta.setMetaline(buildNames(contributors));
     } else {
       // Blips are never meant to have no contributors.  The wave state is broken.
       meta.setAvatar("");
+      meta.setAvatarName("");
       meta.setMetaline("anon");
     }
   }
