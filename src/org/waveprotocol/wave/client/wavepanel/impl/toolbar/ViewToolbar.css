@@ -34,3 +34,23 @@
   gwt-image: 'recent';
   margin-top: 5px;
 }
+
+@sprite .read {
+  gwt-image: 'read';
+  margin-top: 5px;
+}
+
+@sprite .unread {
+  gwt-image: 'unread';
+  margin-top: 5px;
+}
+
+@sprite .follow {
+  gwt-image: 'follow';
+  margin-top: 5px;
+}
+
+@sprite .unfollow {
+  gwt-image: 'unfollow';
+  margin-top: 5px;
+}
