@@ -48,6 +48,11 @@ public interface IntrinsicBlipMetaView {
   void setAvatar(String imageUrl);
 
   /**
+   * Sets the avatar name.
+   */
+  void setAvatarName(String avatarName);
+
+  /**
    * Sets the last modified time.
    */
   void setTime(String time);

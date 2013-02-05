@@ -129,6 +129,7 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
   private String time;
   private String metaline;
   private String avatarUrl;
+  private String avatarName;
   private boolean read = true;
   private final Set<MenuOption> options = EnumSet.of(IntrinsicBlipMetaView.MenuOption.REPLY,
       IntrinsicBlipMetaView.MenuOption.DELETE, IntrinsicBlipMetaView.MenuOption.LINK,
@@ -142,6 +143,7 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
   private final UiBuilder content;
 
   private final Css iconCss;
+
 
   /**
    * Creates a new blip view builder with the given id.
@@ -169,6 +171,11 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
   @Override
   public void setAvatar(String avatarUrl) {
     this.avatarUrl = avatarUrl;
+  }
+
+  @Override
+  public void setAvatarName(String avatarName) {
+    this.avatarName = avatarName;
   }
 
   @Override
@@ -221,7 +228,7 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
     {
       // Author avatar.
       image(output, Components.AVATAR.getDomId(id), css.avatar(), EscapeUtils.fromString(avatarUrl),
-          EscapeUtils.fromPlainText("author"), null);
+          EscapeUtils.fromPlainText(avatarName), null);
 
       // Metabar.
       open(output, Components.METABAR.getDomId(id),
