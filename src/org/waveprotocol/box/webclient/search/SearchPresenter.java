@@ -223,7 +223,7 @@ public final class SearchPresenter
     } else {
       totalStr = messages.ofUnknown();
     }
-    searchUi.setTitleText(queryText + " (0-" + resultEnd + " of " + totalStr + ")");
+    searchUi.setTitleText(queryText + " (0-" + resultEnd + " " + totalStr + ")");
   }
 
   private void renderDigests() {
