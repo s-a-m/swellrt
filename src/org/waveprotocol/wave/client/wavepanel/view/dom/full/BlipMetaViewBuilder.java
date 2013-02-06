@@ -283,7 +283,7 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
           style += " " + MENU_ICONS.get(option).asString();
           String extra = OPTION_ID_ATTRIBUTE + "='" + MENU_CODES.get(option).asString() + "'"
               + (selected.contains(option) ? " " + OPTION_SELECTED_ATTRIBUTE + "='s'" : "")
-          + " title=\'" +  MENU_TITLES.get(option) + "'";
+          + " title=\'" +  MENU_TITLES.get(option).asString() + "'";
           openSpanWith(out, null, style, TypeCodes.kind(Type.MENU_ITEM), extra);
           if (option == MenuOption.EDIT || option == MenuOption.EDIT_DONE)
             out.append(MENU_LABELS.get(option));
