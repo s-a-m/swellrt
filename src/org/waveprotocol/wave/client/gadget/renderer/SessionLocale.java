@@ -19,6 +19,7 @@
 
 package org.waveprotocol.wave.client.gadget.renderer;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocaleInfo;
 
 
@@ -52,7 +53,7 @@ public class SessionLocale implements Locale {
    * @param session Wave session to get locale information from
    */
   public SessionLocale() {
-    this.localeString = LocaleInfo.getCurrentLocale().getLocaleName();
+    this.localeString = GWT.isClient()? LocaleInfo.getCurrentLocale().getLocaleName(): "";
   }
 
   private String[] splitSessionLocale() {
