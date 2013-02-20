@@ -39,7 +39,7 @@ import org.waveprotocol.wave.model.supplement.ObservableSupplementedWave;
 public class GadgetRenderer extends GwtRenderingMutationHandler {
   private static final Property<GadgetWidget> GADGET_WIDGET = Property.immutable("GadgetWidget");
 
-  private static final Locale CURRENT_LOCALE = new SessionLocale("");
+  private static final Locale CURRENT_LOCALE = new SessionLocale();
 
   private final WaveletName waveletName;
 
