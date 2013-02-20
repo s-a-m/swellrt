@@ -19,6 +19,8 @@
 
 package org.waveprotocol.wave.client.gadget.renderer;
 
+import com.google.gwt.i18n.client.LocaleInfo;
+
 
 /**
  * Locale implementation for Wave Session.
@@ -49,8 +51,8 @@ public class SessionLocale implements Locale {
    *
    * @param session Wave session to get locale information from
    */
-  public SessionLocale(String localeString) {
-    this.localeString = localeString;
+  public SessionLocale() {
+    this.localeString = LocaleInfo.getCurrentLocale().getLocaleName();
   }
 
   private String[] splitSessionLocale() {
