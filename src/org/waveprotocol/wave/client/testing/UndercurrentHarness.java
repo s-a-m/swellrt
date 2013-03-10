@@ -38,9 +38,22 @@ import org.waveprotocol.wave.client.Stages;
 import org.waveprotocol.wave.client.common.safehtml.SafeHtmlBuilder;
 import org.waveprotocol.wave.client.common.util.AsyncHolder;
 import org.waveprotocol.wave.client.concurrencycontrol.MuxConnector;
+import org.waveprotocol.wave.client.doodad.DoodadInstallers;
+import org.waveprotocol.wave.client.doodad.attachment.ImageThumbnail;
+import org.waveprotocol.wave.client.doodad.attachment.render.ImageThumbnailWrapper;
+import org.waveprotocol.wave.client.doodad.attachment.testing.FakeAttachmentsManager;
+import org.waveprotocol.wave.client.doodad.diff.DiffAnnotationHandler;
+import org.waveprotocol.wave.client.doodad.diff.DiffDeleteRenderer;
+import org.waveprotocol.wave.client.doodad.link.LinkAnnotationHandler;
+import org.waveprotocol.wave.client.doodad.selection.SelectionAnnotationHandler;
+import org.waveprotocol.wave.client.doodad.title.TitleAnnotationHandler;
+import org.waveprotocol.wave.client.editor.content.Registries;
+import org.waveprotocol.wave.client.editor.content.misc.StyleAnnotationHandler;
 import org.waveprotocol.wave.client.util.ClientFlags;
 import org.waveprotocol.wave.client.util.NullTypedSource;
 import org.waveprotocol.wave.client.util.OverridingTypedSource;
+import org.waveprotocol.wave.client.wavepanel.impl.toolbar.color.ComplexColorPicker;
+import org.waveprotocol.wave.client.wavepanel.impl.toolbar.color.SampleCustomColorPicker;
 import org.waveprotocol.wave.common.bootstrap.FlagConstants;
 import org.waveprotocol.wave.concurrencycontrol.channel.WaveViewService;
 import org.waveprotocol.wave.model.conversation.Conversation;
@@ -138,6 +151,31 @@ public class UndercurrentHarness implements EntryPoint {
       protected AsyncHolder<StageTwo> createStageTwoLoader(StageOne one) {
         return new StageTwo.DefaultProvider(one, null) {
 
+          protected org.waveprotocol.wave.client.wavepanel.render.DocumentRegistries.Builder installDoodads(org.waveprotocol.wave.client.wavepanel.render.DocumentRegistries.Builder doodads) {
+              return doodads.use(new DoodadInstallers.GlobalInstaller() {
+                @Override
+                public void install(Registries r) {
+                  DiffAnnotationHandler.register(r.getAnnotationHandlerRegistry(), r.getPaintRegistry());
+                  DiffDeleteRenderer.register(r.getElementHandlerRegistry());
+                  StyleAnnotationHandler.register(r);
+                  TitleAnnotationHandler.register(r);
+                  LinkAnnotationHandler.register(r, createLinkAttributeAugmenter());
+                  SelectionAnnotationHandler.register(r, getSessionId(), getProfileManager());
+                  ImageThumbnail.register(r.getElementHandlerRegistry(), new FakeAttachmentsManager(),
+                      new ImageThumbnail.ThumbnailActionHandler() {
+
+                        @Override
+                        public boolean onClick(ImageThumbnailWrapper thumbnail) {
+                          return false;
+                        }
+                      });
+                }
+              });
+            }
+
+
+
+
           @Override
           protected void onStageInit() {
             timeline.add("stage2_start");
@@ -202,6 +240,9 @@ public class UndercurrentHarness implements EntryPoint {
         ClientFlags.resetWithSourceForTesting(OverridingTypedSource.of(new NullTypedSource())
             .withBoolean(FlagConstants.ENABLE_UNDERCURRENT_EDITING, true)
             .build());
+
+        // Only for test additional color pickers
+        new SampleCustomColorPicker(ComplexColorPicker.getInstance());
 
         return new StageThree.DefaultProvider(two) {
           @Override
