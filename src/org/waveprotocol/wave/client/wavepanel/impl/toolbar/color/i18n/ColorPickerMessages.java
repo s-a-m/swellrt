@@ -27,4 +27,7 @@ public interface ColorPickerMessages extends Messages {
 
   @DefaultMessage("None")
   String none();
+
+  @DefaultMessage("Select some text to change the color")
+  String selectSomeText();
 }

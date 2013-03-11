@@ -46,18 +46,20 @@ public class ComplexColorPicker extends DeckPanel {
   }
 
   /** The Constant messages. */
-  private static final ColorPickerMessages messages = GWT.create(ColorPickerMessages.class);
+  public static final ColorPickerMessages messages = GWT.create(ColorPickerMessages.class);
 
   /**
    * The Interface Style.
    */
-  interface Style extends CssResource {
+  public interface Style extends CssResource {
 
     String fl();
 
     String fr();
 
     String margins();
+
+    String buttonsMargins();
 
     String toolbar();
 
@@ -95,7 +97,7 @@ public class ComplexColorPicker extends DeckPanel {
 
     // The background color can be set to "none"
     noneBtn = new PushButton(messages.none());
-    noneBtn.addStyleName(ComplexColorPicker.style.margins());
+    noneBtn.addStyleName(ComplexColorPicker.style.buttonsMargins());
     noneBtn.setStylePrimaryName(ComplexColorPicker.style.customColorPushbutton());
     noneBtn.addClickHandler(new ClickHandler() {
       @Override

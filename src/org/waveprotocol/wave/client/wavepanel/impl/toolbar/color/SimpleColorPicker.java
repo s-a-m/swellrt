@@ -56,7 +56,7 @@ public class SimpleColorPicker extends AbstractColorPicker {
 
     String firstRow();
 
-    String pushbutton();
+    String simplecolorbutton();
 
   }
 
@@ -130,7 +130,7 @@ public class SimpleColorPicker extends AbstractColorPicker {
    */
   private Widget createCell(final String color) {
     final PushButton button = new PushButton();
-    button.setStylePrimaryName(style.pushbutton());
+    button.setStylePrimaryName(style.simplecolorbutton());
     button.setSize(CELL_SIZE, CELL_SIZE);
     button.getElement().getStyle().setBackgroundColor(color);
     return button;
