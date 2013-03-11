@@ -38,6 +38,17 @@ import org.waveprotocol.wave.client.Stages;
 import org.waveprotocol.wave.client.common.safehtml.SafeHtmlBuilder;
 import org.waveprotocol.wave.client.common.util.AsyncHolder;
 import org.waveprotocol.wave.client.concurrencycontrol.MuxConnector;
+import org.waveprotocol.wave.client.doodad.DoodadInstallers;
+import org.waveprotocol.wave.client.doodad.attachment.ImageThumbnail;
+import org.waveprotocol.wave.client.doodad.attachment.render.ImageThumbnailWrapper;
+import org.waveprotocol.wave.client.doodad.attachment.testing.FakeAttachmentsManager;
+import org.waveprotocol.wave.client.doodad.diff.DiffAnnotationHandler;
+import org.waveprotocol.wave.client.doodad.diff.DiffDeleteRenderer;
+import org.waveprotocol.wave.client.doodad.link.LinkAnnotationHandler;
+import org.waveprotocol.wave.client.doodad.selection.SelectionAnnotationHandler;
+import org.waveprotocol.wave.client.doodad.title.TitleAnnotationHandler;
+import org.waveprotocol.wave.client.editor.content.Registries;
+import org.waveprotocol.wave.client.editor.content.misc.StyleAnnotationHandler;
 import org.waveprotocol.wave.client.util.ClientFlags;
 import org.waveprotocol.wave.client.util.NullTypedSource;
 import org.waveprotocol.wave.client.util.OverridingTypedSource;
@@ -139,6 +150,31 @@ public class UndercurrentHarness implements EntryPoint {
       @Override
       protected AsyncHolder<StageTwo> createStageTwoLoader(StageOne one) {
         return new StageTwo.DefaultProvider(one, null) {
+
+          protected org.waveprotocol.wave.client.wavepanel.render.DocumentRegistries.Builder installDoodads(org.waveprotocol.wave.client.wavepanel.render.DocumentRegistries.Builder doodads) {
+              return doodads.use(new DoodadInstallers.GlobalInstaller() {
+                @Override
+                public void install(Registries r) {
+                  DiffAnnotationHandler.register(r.getAnnotationHandlerRegistry(), r.getPaintRegistry());
+                  DiffDeleteRenderer.register(r.getElementHandlerRegistry());
+                  StyleAnnotationHandler.register(r);
+                  TitleAnnotationHandler.register(r);
+                  LinkAnnotationHandler.register(r, createLinkAttributeAugmenter());
+                  SelectionAnnotationHandler.register(r, getSessionId(), getProfileManager());
+                  ImageThumbnail.register(r.getElementHandlerRegistry(), new FakeAttachmentsManager(),
+                      new ImageThumbnail.ThumbnailActionHandler() {
+
+                        @Override
+                        public boolean onClick(ImageThumbnailWrapper thumbnail) {
+                          return false;
+                        }
+                      });
+                }
+              });
+            }
+
+
+
 
           @Override
           protected void onStageInit() {

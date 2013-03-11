@@ -53,7 +53,7 @@ public class SampleCustomColorPicker extends AbstractColorPicker {
     textbox.addStyleName(ComplexColorPicker.style.margins());
 
     PushButton custom = new PushButton("Custom...");
-    custom.addStyleName(ComplexColorPicker.style.buttonsMargins());
+   custom.addStyleName(ComplexColorPicker.style.buttonsMargins());
     custom.setStylePrimaryName(ComplexColorPicker.style.customColorPushbutton());
     custom.addClickHandler(new ClickHandler() {
       @Override
