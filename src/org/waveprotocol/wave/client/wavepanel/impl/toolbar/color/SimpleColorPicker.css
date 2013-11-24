@@ -15,7 +15,7 @@
  * author: vjrj@ourproject.org (Vicente J. Ruiz Jurado)
  */
 
-@external .pushbutton, .pushbutton-down-hovering, .pushbutton-up-hovering;
+@external .simplecolorbutton, .simplecolorbutton-down-hovering, .simplecolorbutton-up-hovering;
 
 .grid {
   margin: 10px;
@@ -25,16 +25,16 @@ tr.firstRow>td {
   padding-bottom: 6px;
 }
 
-.pushbutton {
+.simplecolorbutton {
   cursor: hand;
   cursor: pointer;
   border: 1px solid transparent;
 }
 
-.pushbutton-down-hovering {
+.simplecolorbutton-down-hovering {
   border: 1px solid red;
 }
 
-.pushbutton-up-hovering {
+.simplecolorbutton-up-hovering {
   border: 1px solid black;
 }

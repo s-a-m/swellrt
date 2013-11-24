@@ -31,7 +31,7 @@ public abstract class AbstractColorPicker extends Composite {
 
   protected final ComplexColorPicker colorPicker;
 
-  AbstractColorPicker(ComplexColorPicker colorPicker) {
+  public AbstractColorPicker(ComplexColorPicker colorPicker) {
     this.colorPicker = colorPicker;
   }
 

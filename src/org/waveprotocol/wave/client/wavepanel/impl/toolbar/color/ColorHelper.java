@@ -19,10 +19,13 @@
 
 package org.waveprotocol.wave.client.wavepanel.impl.toolbar.color;
 
+import com.google.gwt.user.client.Window;
+
 import org.waveprotocol.wave.client.editor.EditorContext;
 import org.waveprotocol.wave.client.editor.content.misc.StyleAnnotationHandler;
 import org.waveprotocol.wave.client.editor.util.EditorAnnotationUtil;
 import org.waveprotocol.wave.client.widget.toolbar.buttons.ToolbarClickButton;
+import org.waveprotocol.wave.model.document.util.FocusedRange;
 import org.waveprotocol.wave.model.document.util.Range;
 
 /**
@@ -63,11 +66,17 @@ public class ColorHelper {
    */
   private static void showPopup(final EditorContext editor, ToolbarClickButton button,
       final String suffix, boolean allowNone) {
-    final Range range = editor.getSelectionHelper().getSelectionRange().asRange();
-    if (range == null) {
-      // Don't do nothing
+    FocusedRange focusedRange = editor.getSelectionHelper().getSelectionRange();
+    if (focusedRange == null) {
+      // Lets try to focus
+      editor.focus(false);
+    }
+    focusedRange = editor.getSelectionHelper().getSelectionRange();
+    if (focusedRange == null) {
+      Window.alert(ComplexColorPicker.messages.selectSomeText());
       return;
     }
+    final Range range = focusedRange.asRange();
     final ColorPopup popup = new ColorPopup(button.getButton().hackGetWidget().getElement(), allowNone);
     popup.show(new OnColorChooseListener() {
       @Override
