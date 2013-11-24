@@ -27,7 +27,7 @@ import com.google.gwt.i18n.client.Messages.DefaultMessage;
  * @author akaplanov (Andrew Kaplanov)
  */
 public interface SearchPresenterMessages extends Messages {
-  @DefaultMessage("New Wave")
+  @DefaultMessage("New Message")
   String newWave();
 
   @DefaultMessage("of {0}")
