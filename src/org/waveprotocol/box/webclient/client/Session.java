@@ -22,7 +22,6 @@ package org.waveprotocol.box.webclient.client;
 import org.waveprotocol.box.common.SessionConstants;
 import org.waveprotocol.wave.client.common.util.WindowUtil;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 
 import org.waveprotocol.box.common.SessionConstants;
 import org.waveprotocol.box.webclient.client.i18n.SessionMessages;

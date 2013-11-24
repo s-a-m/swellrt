@@ -50,7 +50,8 @@ public class SessionLocale implements Locale {
    * NOTE(user): Do not access session.getLocale() in constructor to avoid
    * issues with wavepanel tests.
    *
-   * @param session Wave session to get locale information from
+   * @param localeString the locale string representation (ex: "en_GB", "de_DE").
+   *
    */
   public SessionLocale() {
     this.localeString = GWT.isClient()? LocaleInfo.getCurrentLocale().getLocaleName(): "";
