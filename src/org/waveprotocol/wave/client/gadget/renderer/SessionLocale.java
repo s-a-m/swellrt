@@ -53,8 +53,8 @@ public class SessionLocale implements Locale {
    * @param localeString the locale string representation (ex: "en_GB", "de_DE").
    *
    */
-  public SessionLocale() {
-    this.localeString = GWT.isClient()? LocaleInfo.getCurrentLocale().getLocaleName(): "";
+  public SessionLocale(String localeString) {
+    this.localeString = localeString;
   }
 
   private String[] splitSessionLocale() {
