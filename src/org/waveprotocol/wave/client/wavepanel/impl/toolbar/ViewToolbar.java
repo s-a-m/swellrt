@@ -122,6 +122,8 @@ public final class ViewToolbar {
             reader.markAsUnread();
           }
         });
+
+    /* Seems that is not working
     boolean followed = reader.isFollowed();
     followBtn = new ToolbarButtonViewBuilder().setTooltip(getFollowText(followed)).setIcon(getFollowIcon(followed)).applyTo(
         group.addClickButton(), new ToolbarClickButton.Listener() {
@@ -140,6 +142,8 @@ public final class ViewToolbar {
              followBtn.setTooltip(getFollowText(!followed));
           }
         });
+
+     */
 
     // Fake group
     group = toolbarUi.addGroup();
