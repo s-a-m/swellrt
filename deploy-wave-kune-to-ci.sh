@@ -1,4 +1,4 @@
-VERSION=0.3.43
+VERSION=0.3.44
 ant dist-api dist-libraries dist-proto dist-pst dist-robot-client-api dist-pst-dep dist-pst dist-server-dep dist-server 
 for i in `cat kune-artifacts-alone.txt` 
 do 
