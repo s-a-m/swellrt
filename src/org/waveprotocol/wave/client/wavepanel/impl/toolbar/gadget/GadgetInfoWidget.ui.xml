@@ -27,13 +27,18 @@
       margin: 15px 0px;
     }
 
+    .self:hover {
+      background: #ddd;
+    }
+
     .img {
       float: left;
+      display: none;
     }
 
     .img img {
-      width: 120px;
-      height: 120px;
+      width: 0px;
+      height: 0px;
     }
 
     .description {
@@ -44,6 +49,7 @@
     .img, .description, .self h3 {
       margin: 15px;
     }
+
   </ui:style>
 
   <w:ImplPanel ui:field="self" styleName="{style.self}">

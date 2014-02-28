@@ -179,7 +179,7 @@ public class DeltaIndex {
     // We're expected to append the new delta
     long fileLength = file.length();
     Preconditions.checkState(position == fileLength,
-        "position = %d, file=%d", position, fileLength);
+        "position = %d, file=%d, filename=%s", position, fileLength, fileRef.getAbsoluteFile());
     file.seek(position);
     file.writeLong(offset);
     // fill in the additional positions with the 1-complement of the offset,

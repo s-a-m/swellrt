@@ -83,8 +83,6 @@ public final class BlipLinkPopupWidget extends Composite
   }
 
   @UiField
-  TextBox linkInfoBox;
-  @UiField
   TextBox waverefLink;
 
   /** Popup containing this widget. */
@@ -116,12 +114,10 @@ public final class BlipLinkPopupWidget extends Composite
   public void reset() {
     Preconditions.checkState(this.listener != null);
     this.listener = null;
-    linkInfoBox.setText(null);
   }
 
   @Override
   public void setLinkInfo(String url) {
-    linkInfoBox.setText(url);
     String path =
         GWT.getHostPageBaseURL() + "waveref/"
             + url.substring(WaveRefConstants.WAVE_URI_PREFIX.length());
@@ -143,7 +139,6 @@ public final class BlipLinkPopupWidget extends Composite
     if (listener != null) {
       listener.onShow();
     }
-    linkInfoBox.selectAll();
   }
 
   @Override

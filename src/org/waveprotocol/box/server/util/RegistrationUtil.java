@@ -78,7 +78,7 @@ public class RegistrationUtil {
   }
 
   public static boolean createAccountIfMissing(AccountStore accountStore, ParticipantId id,
-      PasswordDigest password, WelcomeRobot welcomeBot) {
+      PasswordDigest password) {
     HumanAccountDataImpl account = new HumanAccountDataImpl(id, password);
     try {
       LOG.info("Registering new account for" + id);
@@ -87,11 +87,11 @@ public class RegistrationUtil {
       LOG.severe("Failed to cretaea new account for " + id, e);
       return false;
     }
-    try {
-      welcomeBot.greet(account.getId());
-    } catch (IOException e) {
-      LOG.warning("Failed to create a welcome wavelet for " + id, e);;
-    }
+//    try {
+//      welcomeBot.greet(account.getId());
+//    } catch (IOException e) {
+//      LOG.warning("Failed to create a welcome wavelet for " + id, e);;
+//    }
     return true;
   }
 

@@ -47,7 +47,7 @@
 
 .digest.selected {
   background-color: #789e35;
-  color: white;  
+  color: white;
 }
 
 .inner {
@@ -75,7 +75,7 @@
 
 .unread {
   font-weight: bold;
-  color: black;  
+  color: black;
 }
 
 .selected .unread {
@@ -95,5 +95,5 @@
   padding: 0 0.5em;
   border-radius: 8px;
   -moz-border-radius: 8px;
-  -webkit-border-radius: 8px; 
+  -webkit-border-radius: 8px;
 }

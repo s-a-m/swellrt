@@ -304,7 +304,6 @@ public class GadgetWidget extends ObservableSupplementedWave.ListenerImpl
   private boolean toUpdateIframeUrl = false;
 
   private final String clientInstanceLogLabel;
-  private boolean isSavedHeightSet = false;
 
   // Note that the following regex expressions are strings rather than compiled patterns because GWT
   // does not (yet) support those. Consider using the new GWT RegExp class in the future.
@@ -612,23 +611,6 @@ public class GadgetWidget extends ObservableSupplementedWave.ListenerImpl
   }
 
   /**
-   * Update the gadget iframe height in a deferred command if the panel is
-   * editable
-   *
-   * @param height the new height of the gadget iframe
-   */
-  private void scheduleGadgetHeightUpdate(final String height) {
-    ScheduleCommand.addCommand(new Scheduler.Task() {
-      @Override
-      public void execute() {
-        if (canModifyDocument()) {
-          updateIframeHeight(height);
-        }
-      }
-    });
-  }
-
-  /**
    * Updates gadget IFrame attributes.
    *
    * @param url URL template for the iframe.
@@ -673,7 +655,6 @@ public class GadgetWidget extends ObservableSupplementedWave.ListenerImpl
       try {
         int height = parseSizeString(savedHeight);
         ui.setIframeHeight(height);
-        isSavedHeightSet = true;
       } catch (NumberFormatException e) {
         log("Invalid saved height attribute (ignored): ", savedHeight);
       }
@@ -954,9 +935,9 @@ public class GadgetWidget extends ObservableSupplementedWave.ListenerImpl
         (int) (metadata.hasWidth() ? metadata.getWidth() : metadata.getPreferredWidth(view));
     registerWithController(url, width, height);
     if (height > 0) {
-      updateIframeHeight(String.valueOf(height));
+      setIframeHeight(String.valueOf(height));
     } else {
-      updateIframeHeight(String.valueOf(DEFAULT_HEIGHT_PX));
+      setIframeHeight(String.valueOf(DEFAULT_HEIGHT_PX));
     }
     if (width > 0){
       setIframeWidth(String.valueOf(width));
@@ -1342,8 +1323,9 @@ public class GadgetWidget extends ObservableSupplementedWave.ListenerImpl
     active = false;
   }
 
-  private void updateIframeHeight(String height) {
-    if (!isActive() || (isSavedHeightSet && !documentModified)) {
+  @Override
+  public void setIframeHeight(String height) {
+    if (!isActive()) {
       return;
     }
     log("Set IFrame height ", height);
@@ -1354,11 +1336,6 @@ public class GadgetWidget extends ObservableSupplementedWave.ListenerImpl
     } catch (NumberFormatException e) {
       log("Invalid height (ignored): ", height);
     }
-  }
-
-  @Override
-  public void setIframeHeight(String height) {
-    scheduleGadgetHeightUpdate(height);
   }
 
   public void setIframeWidth(String width) {

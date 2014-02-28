@@ -312,7 +312,7 @@ public class FileDeltaCollection implements DeltasAccess {
                 nextRecord = Pair.of(Pair.of(transformed.getAppliedAtVersion(),
                         transformed.size()), nextPosition);
                 nextPosition = file.getFilePointer();
-              } catch (IOException e) {
+              } catch (Exception e) {
                 // The next entry is invalid. There was probably a write error / crash.
                 LOG.severe("Error reading delta file for " + waveletName + " starting at " +
                     nextPosition, e);

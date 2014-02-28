@@ -70,10 +70,11 @@
  */
 .panel {
   border-bottom: 1px solid #B8C6D9;
-  border-left: 1px solid #E4F1FE;
-  background-color: #c9e2fc;
+  border-left: 1px solid #F2F2F2;
+  background-color: #F2F2F2;
   overflow: hidden;
   height: 46px;
+  line-height: 1em;
   min-width: 110px;  /* 1 avatar, and nice room for buttons. */
 
   /*
@@ -146,7 +147,7 @@ img.participant {
    *   (4px 0 0 4px) + (8px 0 8px 0) + (2px 0 0 0)border
    */
   padding: 14px 0 8px 4px;
-  background-color: #c9e2fc;
+  background-color: #f2f2f2;
   bottom: 0;
   width: 10em;
 }
@@ -198,4 +199,14 @@ img.participant {
   /* The button is a span, to conform to HTML's backward schema. */
   display: inline-block;
   cursor: pointer;
+  border: 0px;
+}
+
+@sprite .addMessage {
+  gwt-image: 'addMessage';
+  position: absolute;
+  width: 24px;
+  margin-left: 5px;
+  cursor: pointer;
+  border: 0px;
 }

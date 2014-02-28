@@ -251,5 +251,8 @@ public enum KeyCombo {
   /***/
   ORDER_SHIFT_5,
 
+  /***/
+  ALT_SHIFT_5,
+
   OTHER,
 }

@@ -29,7 +29,6 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -42,6 +41,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 
+import org.waveprotocol.wave.client.common.util.WindowUtil;
 import org.waveprotocol.wave.client.wavepanel.view.AttachmentPopupView;
 import org.waveprotocol.wave.client.widget.popup.CenterPopupPositioner;
 import org.waveprotocol.wave.client.widget.popup.PopupChrome;
@@ -175,7 +175,7 @@ public final class AttachmentPopupWidget extends Composite implements Attachment
       public void onClick(ClickEvent event) {
         String filename = fileUpload.getFilename();
         if (filename.length() == 0) {
-          Window.alert("No file to upload!");
+          WindowUtil.alert("No file to upload!");
         } else {
           spinnerPanel.setVisible(true);
           formAttachmentId.setValue(attachmentId.getId());

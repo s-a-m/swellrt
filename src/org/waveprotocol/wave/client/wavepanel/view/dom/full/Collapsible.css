@@ -107,7 +107,7 @@
  * The collapsed rule must come after the expanded rule for precedence, in order
  * to handle correctly the case of multiply nested collapsibles, where both
  * (.expanded .dropContainer) and (.collapsed .dropContainer) may match.
- */ 
+ */
 .collapsed.dropContainer {
   display: none;
 }
@@ -116,7 +116,7 @@
   gwt-image: 'callout';
   vertical-align: bottom;
   display: inline-block;
-  background-color: #FFF;
+  background-color: transparent;
 }
 
 /* Firefox gets it wrong. */

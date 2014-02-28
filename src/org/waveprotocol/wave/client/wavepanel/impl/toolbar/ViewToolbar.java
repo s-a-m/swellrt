@@ -20,6 +20,9 @@
 package org.waveprotocol.wave.client.wavepanel.impl.toolbar;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
+
 import org.waveprotocol.wave.client.wavepanel.impl.focus.FocusBlipSelector;
 import org.waveprotocol.wave.client.wavepanel.impl.focus.FocusFramePresenter;
 import org.waveprotocol.wave.client.wavepanel.impl.focus.ViewTraverser;
@@ -45,9 +48,12 @@ public final class ViewToolbar {
   private final FocusFramePresenter focusFrame;
   private final FocusBlipSelector blipSelector;
   private final Reader reader;
+  private final ViewerToolbarResources.Css css;
+  private ToolbarClickButton followBtn;
 
-  private ViewToolbar(ToplevelToolbarWidget toolbarUi, FocusFramePresenter focusFrame,
+  private ViewToolbar(ViewerToolbarResources.Css css, ToplevelToolbarWidget toolbarUi, FocusFramePresenter focusFrame,
       ModelAsViewProvider views, ConversationView wave, Reader reader) {
+    this.css = css;
     this.toolbarUi = toolbarUi;
     this.focusFrame = focusFrame;
     this.reader = reader;
@@ -56,21 +62,14 @@ public final class ViewToolbar {
 
   public static ViewToolbar create(FocusFramePresenter focus,  ModelAsViewProvider views,
   ConversationView wave, Reader reader) {
-    return new ViewToolbar(new ToplevelToolbarWidget(), focus, views, wave, reader);
+    ViewerToolbarResources.Css css = ViewerToolbarResources.Loader.res.css();
+    return new ViewToolbar(css, new ToplevelToolbarWidget(), focus, views, wave, reader);
   }
 
   public void init() {
     ToolbarView group = toolbarUi.addGroup();
 
-    new ToolbarButtonViewBuilder().setText(messages.recent()).applyTo(
-        group.addClickButton(), new ToolbarClickButton.Listener() {
-          @Override
-          public void onClicked() {
-            focusFrame.focus(blipSelector.selectMostRecentlyModified());
-          }
-        });
-
-    new ToolbarButtonViewBuilder().setText(messages.nextUnread()).applyTo(
+    new ToolbarButtonViewBuilder().setIcon(css.nextUnread()).setTooltip(messages.nextUnread()).applyTo(
         group.addClickButton(), new ToolbarClickButton.Listener() {
           @Override
           public void onClicked() {
@@ -87,23 +86,76 @@ public final class ViewToolbar {
             }
           }
         });
-    new ToolbarButtonViewBuilder().setText(messages.previous()).applyTo(
+    new ToolbarButtonViewBuilder().setIcon(css.previous()).setTooltip(messages.previous()).applyTo(
         group.addClickButton(), new ToolbarClickButton.Listener() {
           @Override
           public void onClicked() {
             focusFrame.moveUp();
           }
         });
-    new ToolbarButtonViewBuilder().setText(messages.next()).applyTo(
+    new ToolbarButtonViewBuilder().setIcon(css.next()).setTooltip(messages.next()).applyTo(
         group.addClickButton(), new ToolbarClickButton.Listener() {
           @Override
           public void onClicked() {
             focusFrame.moveDown();
           }
         });
+    new ToolbarButtonViewBuilder().setIcon(css.recent()).setTooltip(messages.recent()).applyTo(
+        group.addClickButton(), new ToolbarClickButton.Listener() {
+          @Override
+          public void onClicked() {
+            focusFrame.focus(blipSelector.selectMostRecentlyModified());
+          }
+        });
+    group = toolbarUi.addGroup();
+    new ToolbarButtonViewBuilder().setIcon(css.read()).setTooltip(messages.read()).applyTo(
+        group.addClickButton(), new ToolbarClickButton.Listener() {
+          @Override
+          public void onClicked() {
+            reader.markAsRead();
+          }
+        });
+    new ToolbarButtonViewBuilder().setIcon(css.unread()).setTooltip(messages.unread()).applyTo(
+        group.addClickButton(), new ToolbarClickButton.Listener() {
+          @Override
+          public void onClicked() {
+            reader.markAsUnread();
+          }
+        });
+
+    /* Seems that is not working
+    boolean followed = reader.isFollowed();
+    followBtn = new ToolbarButtonViewBuilder().setTooltip(getFollowText(followed)).setIcon(getFollowIcon(followed)).applyTo(
+        group.addClickButton(), new ToolbarClickButton.Listener() {
+          @Override
+          public void onClicked() {
+            final boolean followed = reader.isFollowed();
+             if (followed) {
+               reader.unfollow();
+             } else {
+               reader.follow();
+             }
+             // Hack and duplicate code because ToolbarClickButton don't allow to change icon
+             Element icon = DOM.createDiv();
+             icon.setClassName(getFollowIcon(!followed));
+             followBtn.setVisualElement(icon);
+             followBtn.setTooltip(getFollowText(!followed));
+          }
+        });
+
+     */
+
     // Fake group
     group = toolbarUi.addGroup();
     new ToolbarButtonViewBuilder().setText("").applyTo(group.addClickButton(), null);
+  }
+
+  private String getFollowIcon(final boolean followed) {
+    return followed? css.unfollow(): css.follow();
+  }
+
+  private String getFollowText(final boolean followed) {
+    return followed? messages.unfollow(): messages.follow();
   }
 
   /**

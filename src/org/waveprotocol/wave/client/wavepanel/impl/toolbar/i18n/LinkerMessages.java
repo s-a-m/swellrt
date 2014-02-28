@@ -29,6 +29,6 @@ public interface LinkerMessages extends Messages {
   @DefaultMessage("Select some text to create a link.")
   String selectSomeText();
 
-  @DefaultMessage("Enter link: URL or Wave ID.")
+  @DefaultMessage("Enter link URL")
   String enterLink();
 }

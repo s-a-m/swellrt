@@ -62,6 +62,9 @@ public final class ParticipantsViewBuilder implements UiBuilder {
 
     @Source("add_button.png")
     ImageResource addButton();
+
+    @Source("add_message.png")
+    ImageResource addMessage();
   }
 
   /** CSS for this widget. */
@@ -75,6 +78,7 @@ public final class ParticipantsViewBuilder implements UiBuilder {
     String expandButton();
     String collapseButton();
     String addButton();
+    String addMessage();
     String newWaveWithParticipantsButton();
   }
 
@@ -141,20 +145,20 @@ public final class ParticipantsViewBuilder implements UiBuilder {
               closeSpan(output);
             }
             closeSpan(output);
-            appendSpan(output, null, css.addButton(), TypeCodes.kind(Type.ADD_PARTICIPANT));
-            button(output, null, css.newWaveWithParticipantsButton(),
+            button(output, null, css.addButton(), TypeCodes.kind(Type.ADD_PARTICIPANT), messages.addParticipant(), "");
+            button(output, null, css.addMessage(),
                 TypeCodes.kind(Type.NEW_WAVE_WITH_PARTICIPANTS),
-                messages.newWaveWithParticipantsOfCurrentWave(), messages.newWave());
+                messages.newWaveWithParticipantsOfCurrentWave(), "");
           }
           closeSpan(output);
 
           // Single-line mode panel.
           openSpan(output, null, css.simple(), null);
           {
-            appendSpan(output, null, css.addButton(), TypeCodes.kind(Type.ADD_PARTICIPANT));
-            button(output, null, css.newWaveWithParticipantsButton(),
+            button(output, null, css.addButton(), TypeCodes.kind(Type.ADD_PARTICIPANT), messages.addParticipant(), "");
+            button(output, null, css.addMessage(),
                 TypeCodes.kind(Type.NEW_WAVE_WITH_PARTICIPANTS),
-                messages.newWaveWithParticipantsOfCurrentWave(), messages.newWave());
+                messages.newWaveWithParticipantsOfCurrentWave(), "");
           }
           closeSpan(output);
         }

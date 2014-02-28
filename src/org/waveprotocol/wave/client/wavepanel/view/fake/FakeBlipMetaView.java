@@ -106,6 +106,10 @@ public final class FakeBlipMetaView implements BlipMetaView {
   }
 
   @Override
+  public void setAvatarName(String avatar) {
+  }
+
+  @Override
   public void setTime(String time) {
   }
 

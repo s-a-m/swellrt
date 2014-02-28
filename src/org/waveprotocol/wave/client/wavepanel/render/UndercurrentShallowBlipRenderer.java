@@ -72,24 +72,22 @@ public final class UndercurrentShallowBlipRenderer implements ShallowBlipRendere
   public void renderContributors(ConversationBlip blip, IntrinsicBlipMetaView meta) {
     Set<ParticipantId> contributors = blip.getContributorIds();
     if (!contributors.isEmpty()) {
-      meta.setAvatar(avatarOf(contributors.iterator().next()));
+      ParticipantId author = contributors.iterator().next();
+      meta.setAvatar(avatarOf(author));
+      meta.setAvatarName("author: " + avatarNameOf(author));
       meta.setMetaline(buildNames(contributors));
     } else {
       // Blips are never meant to have no contributors.  The wave state is broken.
       meta.setAvatar("");
+      meta.setAvatarName("");
       meta.setMetaline("anon");
     }
   }
 
   @Override
   public void renderTime(ConversationBlip blip, IntrinsicBlipMetaView meta) {
-    if (blip.getLastModifiedTime() == 0) {
-      //Blip sent using c/s protocol, which has no timestamp attached (WAVE-181)
-      //Using received time as an estimate of the sent time
-      meta.setTime(dateUtils.formatPastDate(new Date().getTime()));
-    }
-    else {
-      meta.setTime(dateUtils.formatPastDate(blip.getLastModifiedTime()));
+    if (blip.getLastModifiedTime() != 0) {
+      meta.setTime(DateUtils.getInstance().formatPastDate(blip.getLastModifiedTime()));
     }
   }
 
@@ -126,5 +124,9 @@ public final class UndercurrentShallowBlipRenderer implements ShallowBlipRendere
 
   private String avatarOf(ParticipantId contributor) {
     return manager.getProfile(contributor).getImageUrl();
+  }
+
+  private String avatarNameOf(ParticipantId contributor) {
+    return manager.getProfile(contributor).getFullName();
   }
 }

@@ -52,18 +52,17 @@ public final class UserRegistrationServlet extends HttpServlet {
 
   private final AccountStore accountStore;
   private final String domain;
-  private final WelcomeRobot welcomeBot;
   private final boolean registrationDisabled;
   private final String analyticsAccount;
 
   @Inject
   public UserRegistrationServlet(AccountStore accountStore,
-      @Named(CoreSettings.WAVE_SERVER_DOMAIN) String domain, WelcomeRobot welcomeBot,
+      @Named(CoreSettings.WAVE_SERVER_DOMAIN) String domain,
       @Named(CoreSettings.DISABLE_REGISTRATION) boolean registrationDisabled,
       @Named(CoreSettings.ANALYTICS_ACCOUNT) String analyticsAccount) {
     this.accountStore = accountStore;
     this.domain = domain;
-    this.welcomeBot = welcomeBot;
+    // this.welcomeBot = welcomeBot;
     this.registrationDisabled = registrationDisabled;
     this.analyticsAccount = analyticsAccount;
   }
@@ -118,7 +117,7 @@ public final class UserRegistrationServlet extends HttpServlet {
     }
 
     if (!RegistrationUtil.createAccountIfMissing(accountStore, id,
-          new PasswordDigest(password.toCharArray()), welcomeBot)) {
+          new PasswordDigest(password.toCharArray()))) {
       return "An unexpected error occured while trying to create the account";
     }
 

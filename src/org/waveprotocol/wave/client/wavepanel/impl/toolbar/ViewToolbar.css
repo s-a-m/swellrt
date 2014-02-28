@@ -1,0 +1,56 @@
+/* Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Icons for the view toolbar, see EditToolbarResources.java.
+ *
+ * author: vjrj@ourproject.org (Vicente J. Ruiz Jurado)
+ */
+
+@sprite .next {
+  gwt-image: 'next';
+  margin-top: 5px;
+}
+
+@sprite .previous {
+  gwt-image: 'previous';
+  margin-top: 5px;
+}
+
+@sprite .nextUnread {
+  gwt-image: 'nextUnread';
+  margin-top: 5px;
+}
+
+@sprite .recent {
+  gwt-image: 'recent';
+  margin-top: 5px;
+}
+
+@sprite .read {
+  gwt-image: 'read';
+  margin-top: 5px;
+}
+
+@sprite .unread {
+  gwt-image: 'unread';
+  margin-top: 5px;
+}
+
+@sprite .follow {
+  gwt-image: 'follow';
+  margin-top: 5px;
+}
+
+@sprite .unfollow {
+  gwt-image: 'unfollow';
+  margin-top: 5px;
+}

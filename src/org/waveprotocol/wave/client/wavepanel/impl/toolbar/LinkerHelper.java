@@ -19,6 +19,8 @@
 
 package org.waveprotocol.wave.client.wavepanel.impl.toolbar;
 
+import org.waveprotocol.wave.client.common.util.WindowPromptCallback;
+import org.waveprotocol.wave.client.common.util.WindowUtil;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
@@ -45,8 +47,8 @@ public class LinkerHelper {
    *
    * @param editor the wave editor
    */
-  public static void onCreateLink(EditorContext editor) {
-    FocusedRange range = editor.getSelectionHelper().getSelectionRange();
+  public static void onCreateLink(final EditorContext editor) {
+    final FocusedRange range = editor.getSelectionHelper().getSelectionRange();
     if (range == null || range.isCollapsed()) {
       Window.alert(messages.selectSomeText());
       return;
@@ -59,21 +61,26 @@ public class LinkerHelper {
       String linkAnnotationValue = Link.normalizeLink(text);
       EditorAnnotationUtil.setAnnotationOverSelection(editor, AnnotationConstants.LINK_PREFIX, linkAnnotationValue);
     } catch (InvalidLinkException e) {
-      String rawLinkValue =
-          Window.prompt(messages.enterLink(), WaveRefConstants.WAVE_URI_PREFIX);
-      // user hit "ESC" or "cancel"
-      if (rawLinkValue == null) {
-        return;
-      }
-      try {
-        String linkAnnotationValue = Link.normalizeLink(rawLinkValue);
-        EditorAnnotationUtil.setAnnotationOverSelection(editor, AnnotationConstants.LINK_PREFIX, linkAnnotationValue);
-      } catch (InvalidLinkException e2) {
-        Window.alert(e2.getLocalizedMessage());
-      }
-
+          WindowUtil.prompt(messages.enterLink(), "http://",
+              new WindowPromptCallback() {
+                @Override
+                public void onReturn(String rawLinkValue) {
+                  // user hit "ESC" or "cancel"
+                  if (rawLinkValue == null) {
+                    return;
+                  }
+                  try {
+                    // We set again the range (because can be lost with modal dialogs);
+                    editor.getSelectionHelper().setSelectionRange(range);
+                    String linkAnnotationValue = Link.normalizeLink(rawLinkValue);
+                    // TODO(pablojan) to compare with Kune's version
+                    EditorAnnotationUtil.setAnnotationOverSelection(editor, AnnotationConstants.LINK_PREFIX, linkAnnotationValue);
+                  } catch (InvalidLinkException e2) {
+                    WindowUtil.alert("Invalid link. Should be a web url in the form: http://example.com/");
+                  }
+                }}
+              );
     }
-
   }
 
   /**

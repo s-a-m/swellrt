@@ -25,6 +25,7 @@ import junit.framework.TestCase;
 
 import org.waveprotocol.wave.client.common.safehtml.EscapeUtils;
 import org.waveprotocol.wave.client.uibuilder.UiBuilder;
+import org.waveprotocol.wave.client.wavepanel.view.dom.full.BlipIconResources.Css;
 import org.waveprotocol.wave.client.wavepanel.view.dom.full.BlipViewBuilder.Components;
 
 
@@ -40,14 +41,15 @@ public class BlipViewBuilderTest extends TestCase {
   @Override
   protected void setUp() {
     css = UiBuilderTestHelper.mockCss(BlipViewBuilder.Css.class);
+    Css iconCss = UiBuilderTestHelper.mockCss(BlipIconResources.Css.class);
     constants = UiBuilderTestHelper.mockBlipMessages(BlipMessages.class);
     String blipId = "askljfalikwh4rlkhs";
     String metaDomId = blipId = "M";
     blipDomId = blipId + "B";
 
     UiBuilder fakeContent = UiBuilder.Constant.of(EscapeUtils.fromSafeConstant(content));
-    metaUi = new BlipMetaViewBuilder(css, constants, metaDomId, fakeContent);
-    blipUi = new BlipViewBuilder(blipDomId, metaUi, UiBuilder.EMPTY, UiBuilder.EMPTY, css);
+    metaUi = new BlipMetaViewBuilder(css, constants, metaDomId, fakeContent, iconCss);
+    blipUi = new BlipViewBuilder(blipDomId, metaUi, UiBuilder.EMPTY, UiBuilder.EMPTY, css, false);
   }
 
   public void testBasicContentAvailable() throws Exception {

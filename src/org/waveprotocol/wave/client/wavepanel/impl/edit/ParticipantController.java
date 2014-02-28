@@ -20,18 +20,17 @@
 
 package org.waveprotocol.wave.client.wavepanel.impl.edit;
 
-import javax.annotation.Nullable;
-
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 
 import org.waveprotocol.box.webclient.client.ClientEvents;
 import org.waveprotocol.box.webclient.client.events.WaveCreationEvent;
 import org.waveprotocol.wave.client.account.Profile;
 import org.waveprotocol.wave.client.account.ProfileManager;
 import org.waveprotocol.wave.client.common.safehtml.EscapeUtils;
+import org.waveprotocol.wave.client.common.util.WindowPromptCallback;
+import org.waveprotocol.wave.client.common.util.WindowUtil;
 import org.waveprotocol.wave.client.wavepanel.WavePanel;
 import org.waveprotocol.wave.client.wavepanel.event.EventHandlerRegistry;
 import org.waveprotocol.wave.client.wavepanel.event.WaveClickHandler;
@@ -52,6 +51,8 @@ import org.waveprotocol.wave.model.wave.InvalidParticipantAddress;
 import org.waveprotocol.wave.model.wave.ParticipantId;
 
 import java.util.Set;
+
+import javax.annotation.Nullable;
 
 /**
  * Installs the add/remove participant controls.
@@ -186,26 +187,30 @@ public final class ParticipantController {
   /**
    * Shows an add-participant popup.
    */
-  private void handleAddButtonClicked(Element context) {
-    String addressString = Window.prompt("Add a participant(s) (separate with comma ','): ", "");
-    if (addressString == null) {
-      return;
-    }
+  private void handleAddButtonClicked(final Element context) {
+    WindowUtil.prompt("Add a participant(s) (separate with comma ','): ", "", new WindowPromptCallback() {
+      @Override
+      public void onReturn(String addressString) {
+        if (addressString == null) {
+          return;
+        }
 
-    ParticipantId[] participants;
+        ParticipantId[] participants;
 
-    try {
-      participants = buildParticipantList(localDomain, addressString);
-    } catch (InvalidParticipantAddress e) {
-      Window.alert(e.getMessage());
-      return;
-    }
+        try {
+          participants = buildParticipantList(localDomain, addressString);
+        } catch (InvalidParticipantAddress e) {
+          WindowUtil.alert(e.getMessage());
+          return;
+        }
 
-    ParticipantsView participantsUi = views.fromAddButton(context);
-    Conversation conversation = models.getParticipants(participantsUi);
-    for (ParticipantId participant : participants) {
-      conversation.addParticipant(participant);
-    }
+        ParticipantsView participantsUi = views.fromAddButton(context);
+        Conversation conversation = models.getParticipants(participantsUi);
+        for (ParticipantId participant : participants) {
+          conversation.addParticipant(participant);
+        }
+      }
+    });
   }
 
   /**

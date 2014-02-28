@@ -63,7 +63,7 @@
     <g:north size="50">
       <g:HTMLPanel>
         <div class="{style.custom}">
-          <label>Select the participants to add to the new wave</label>
+          <label>Select the participants to add to the new message</label>
         </div>
         <div class="{style.selectionButtons}">
           <g:Button ui:field="selectAllButton">Select all</g:Button>

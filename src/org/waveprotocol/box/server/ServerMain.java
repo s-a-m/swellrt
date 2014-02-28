@@ -43,13 +43,10 @@ import org.waveprotocol.box.server.persistence.SignerInfoStore;
 import org.waveprotocol.box.server.robots.RobotApiModule;
 import org.waveprotocol.box.server.robots.RobotRegistrationServlet;
 import org.waveprotocol.box.server.robots.active.ActiveApiServlet;
-import org.waveprotocol.box.server.robots.agent.passwd.PasswordAdminRobot;
-import org.waveprotocol.box.server.robots.agent.passwd.PasswordRobot;
-import org.waveprotocol.box.server.robots.agent.registration.RegistrationRobot;
-import org.waveprotocol.box.server.robots.agent.welcome.WelcomeRobot;
 import org.waveprotocol.box.server.robots.dataapi.DataApiOAuthServlet;
 import org.waveprotocol.box.server.robots.dataapi.DataApiServlet;
 import org.waveprotocol.box.server.robots.passive.RobotsGateway;
+import org.waveprotocol.box.server.rpc.AttachmentInfoServlet;
 import org.waveprotocol.box.server.rpc.AttachmentServlet;
 import org.waveprotocol.box.server.rpc.AuthenticationServlet;
 import org.waveprotocol.box.server.rpc.FetchProfilesServlet;
@@ -69,8 +66,6 @@ import org.waveprotocol.box.server.waveserver.WaveIndexer;
 import org.waveprotocol.box.server.waveserver.WaveServerException;
 import org.waveprotocol.box.server.waveserver.WaveletProvider;
 import org.waveprotocol.box.server.waveserver.WaveletStateException;
-import org.waveprotocol.box.server.rpc.AttachmentInfoServlet;
-import org.waveprotocol.box.server.rpc.AttachmentServlet;
 import org.waveprotocol.wave.crypto.CertPathStore;
 import org.waveprotocol.wave.federation.FederationSettings;
 import org.waveprotocol.wave.federation.FederationTransport;
@@ -80,7 +75,6 @@ import org.waveprotocol.wave.model.version.HashedVersionFactory;
 import org.waveprotocol.wave.model.wave.ParticipantIdUtil;
 import org.waveprotocol.wave.util.logging.Log;
 import org.waveprotocol.wave.util.settings.SettingsBinder;
-
 
 import java.io.IOException;
 import java.util.Collections;
@@ -230,29 +224,30 @@ public class ServerMain {
   }
 
   private static void initializeServlets(Injector injector, ServerRpcProvider server) {
-    server.addServlet("/gadget/gadgetlist", GadgetProviderServlet.class);
+    server.addServlet("/gadget/gadgetlist", injector.getInstance(GadgetProviderServlet.class));
+    server.addServlet("/attachment/*", injector.getInstance(AttachmentServlet.class));
+    server.addServlet(AttachmentServlet.ATTACHMENT_URL + "/*", injector.getInstance(AttachmentServlet.class));
+    server.addServlet(AttachmentServlet.THUMBNAIL_URL + "/*", injector.getInstance(AttachmentServlet.class));
+    server.addServlet(AttachmentInfoServlet.ATTACHMENTS_INFO_URL, injector.getInstance(AttachmentInfoServlet.class));
 
-    server.addServlet(AttachmentServlet.ATTACHMENT_URL + "/*", AttachmentServlet.class);
-    server.addServlet(AttachmentServlet.THUMBNAIL_URL + "/*", AttachmentServlet.class);
-    server.addServlet(AttachmentInfoServlet.ATTACHMENTS_INFO_URL, AttachmentInfoServlet.class);
+    server.addServlet(SessionManager.SIGN_IN_URL, injector.getInstance(AuthenticationServlet.class));
+    server.addServlet("/auth/signout", injector.getInstance(SignOutServlet.class));
+    server.addServlet("/auth/register", injector.getInstance(UserRegistrationServlet.class));
+    server.addServlet("/locale/*", injector.getInstance(LocaleServlet.class));
+    server.addServlet("/fetch/*", injector.getInstance(FetchServlet.class));
+    server.addServlet("/search/*", injector.getInstance(SearchServlet.class));
+    server.addServlet("/notification/*", injector.getInstance(NotificationServlet.class));
 
-    server.addServlet(SessionManager.SIGN_IN_URL, AuthenticationServlet.class);
-    server.addServlet("/auth/signout", SignOutServlet.class);
-    server.addServlet("/auth/register", UserRegistrationServlet.class);
+    server.addServlet("/robot/dataapi", injector.getInstance(DataApiServlet.class));
+    server.addServlet(DataApiOAuthServlet.DATA_API_OAUTH_PATH + "/*", injector.getInstance(DataApiOAuthServlet.class));
+    server.addServlet("/robot/dataapi/rpc", injector.getInstance(DataApiServlet.class));
+    server.addServlet("/robot/register/*", injector.getInstance(RobotRegistrationServlet.class));
+    server.addServlet("/robot/rpc", injector.getInstance(ActiveApiServlet.class));
+    server.addServlet("/webclient/remote_logging", injector.getInstance(RemoteLoggingServiceImpl.class));
+    server.addServlet("/profile/*", injector.getInstance(FetchProfilesServlet.class));
+    server.addServlet("/waveref/*", injector.getInstance(WaveRefServlet.class));
 
-    server.addServlet("/locale/*", LocaleServlet.class);
-    server.addServlet("/fetch/*", FetchServlet.class);
-    server.addServlet("/search/*", SearchServlet.class);
-    server.addServlet("/notification/*", NotificationServlet.class);
 
-    server.addServlet("/robot/dataapi", DataApiServlet.class);
-    server.addServlet(DataApiOAuthServlet.DATA_API_OAUTH_PATH + "/*", DataApiOAuthServlet.class);
-    server.addServlet("/robot/dataapi/rpc", DataApiServlet.class);
-    server.addServlet("/robot/register/*", RobotRegistrationServlet.class);
-    server.addServlet("/robot/rpc", ActiveApiServlet.class);
-    server.addServlet("/webclient/remote_logging", RemoteLoggingServiceImpl.class);
-    server.addServlet("/profile/*", FetchProfilesServlet.class);
-    server.addServlet("/waveref/*", WaveRefServlet.class);
 
     String gadgetHostName =
         injector
@@ -261,9 +256,9 @@ public class ServerMain {
         injector.getInstance(Key.get(Integer.class, Names.named(CoreSettings.GADGET_SERVER_PORT)));
     Map<String, String> initParams =
         Collections.singletonMap("HostHeader", gadgetHostName + ":" + port);
-    server.addServlet("/gadgets/*", GadgetProxyServlet.class, initParams);
+    server.addServlet("/gadgets/*", injector.getInstance(GadgetProxyServlet.class), initParams);
 
-    server.addServlet("/", WaveClientServlet.class);
+    server.addServlet("/", injector.getInstance(WaveClientServlet.class));
   }
 
   private static void initializeRobots(Injector injector, WaveBus waveBus) {
@@ -272,10 +267,10 @@ public class ServerMain {
   }
 
   private static void initializeRobotAgents(Injector injector, ServerRpcProvider server) {
-    server.addServlet(PasswordRobot.ROBOT_URI + "/*", PasswordRobot.class);
-    server.addServlet(PasswordAdminRobot.ROBOT_URI + "/*", PasswordAdminRobot.class);
-    server.addServlet(WelcomeRobot.ROBOT_URI + "/*", WelcomeRobot.class);
-    server.addServlet(RegistrationRobot.ROBOT_URI + "/*", RegistrationRobot.class);
+    //server.addServlet(PasswordRobot.ROBOT_URI + "/*", injector.getInstance(PasswordRobot.class));
+    //server.addServlet(PasswordAdminRobot.ROBOT_URI + "/*", injector.getInstance(PasswordAdminRobot.class));
+    //server.addServlet(WelcomeRobot.ROBOT_URI + "/*", injector.getInstance(WelcomeRobot.class));
+    //server.addServlet(RegistrationRobot.ROBOT_URI + "/*", injector.getInstance(RegistrationRobot.class));
   }
 
   private static void initializeFrontend(Injector injector, ServerRpcProvider server,

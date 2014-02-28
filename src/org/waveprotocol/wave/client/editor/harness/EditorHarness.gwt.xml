@@ -42,7 +42,7 @@
 
 <!-- Uncomment the following to improve debug-ability of CSS: -->
 <!-- <set-property name="ResourceBundle.enableInlining" value="false"/> -->
-<!-- <set-configuration-property name="CssResource.style" value="pretty"/> -->
+<set-configuration-property name="CssResource.style" value="pretty"/>
 
 
 </module>

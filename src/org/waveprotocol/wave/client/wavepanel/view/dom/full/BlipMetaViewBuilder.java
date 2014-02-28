@@ -35,6 +35,7 @@ import org.waveprotocol.wave.client.uibuilder.BuilderHelper.Component;
 import org.waveprotocol.wave.client.uibuilder.UiBuilder;
 import org.waveprotocol.wave.client.wavepanel.view.IntrinsicBlipMetaView;
 import org.waveprotocol.wave.client.wavepanel.view.View.Type;
+import org.waveprotocol.wave.client.wavepanel.view.dom.full.BlipIconResources.Css;
 import org.waveprotocol.wave.client.wavepanel.view.dom.full.i18n.BlipMessages;
 import org.waveprotocol.wave.model.util.CollectionUtils;
 import org.waveprotocol.wave.model.util.StringMap;
@@ -86,7 +87,16 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
   private final static Map<MenuOption, SafeHtml> MENU_LABELS =
       new EnumMap<MenuOption, SafeHtml>(MenuOption.class);
 
+  private final static Map<MenuOption, SafeHtml> MENU_TITLES =
+      new EnumMap<MenuOption, SafeHtml>(MenuOption.class);
+
+
+  private final static Map<MenuOption, SafeHtml> MENU_ICONS =
+      new EnumMap<MenuOption, SafeHtml>(MenuOption.class);
+
   private final static StringMap<MenuOption> MENU_OPTIONS = CollectionUtils.createStringMap();
+  public final static Set<MenuOption> DELETE_MENU_OPTIONS_SET = EnumSet.of(IntrinsicBlipMetaView.MenuOption.DELETE);
+
 
   public static final String OPTION_ID_ATTRIBUTE = "o";
   public static final String OPTION_SELECTED_ATTRIBUTE = "s";
@@ -97,6 +107,14 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
   public final static Set<MenuOption> ENABLED_WHILE_EDITING_MENU_OPTIONS_SET = EnumSet.of(
       IntrinsicBlipMetaView.MenuOption.EDIT_DONE);
   public final static Set<MenuOption> DISABLED_WHILE_EDITING_MENU_OPTIONS_SET = MENU_OPTIONS_BEFORE_EDITING;
+
+  private void setMenuIcons() {
+    MENU_ICONS.put(MenuOption.EDIT, EscapeUtils.fromSafeConstant(iconCss.edit()));
+    MENU_ICONS.put(MenuOption.EDIT_DONE, EscapeUtils.fromSafeConstant(iconCss.edit()));
+    MENU_ICONS.put(MenuOption.REPLY, EscapeUtils.fromSafeConstant(iconCss.reply()));
+    MENU_ICONS.put(MenuOption.DELETE, EscapeUtils.fromSafeConstant(iconCss.delete()));
+    MENU_ICONS.put(MenuOption.LINK, EscapeUtils.fromSafeConstant(iconCss.link()));
+  }
 
   /**
    * A unique id for this builder.
@@ -111,8 +129,11 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
   private String time;
   private String metaline;
   private String avatarUrl;
+  private String avatarName;
   private boolean read = true;
-  private final Set<MenuOption> options = MENU_OPTIONS_BEFORE_EDITING;
+  private final Set<MenuOption> options = EnumSet.of(IntrinsicBlipMetaView.MenuOption.REPLY,
+      IntrinsicBlipMetaView.MenuOption.DELETE, IntrinsicBlipMetaView.MenuOption.LINK,
+      IntrinsicBlipMetaView.MenuOption.EDIT);
   private final Set<MenuOption> selected = EnumSet.noneOf(MenuOption.class);
 
   //
@@ -121,6 +142,9 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
 
   private final UiBuilder content;
 
+  private final Css iconCss;
+
+
   /**
    * Creates a new blip view builder with the given id.
    *
@@ -128,24 +152,30 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
    *        characters
    */
   public static BlipMetaViewBuilder create(String id, UiBuilder content) {
-    return new BlipMetaViewBuilder(WavePanelResourceLoader.getBlip().css(),
-        WavePanelResourceLoader.getBlipMessages(), id, nonNull(content));
+    return new BlipMetaViewBuilder(WavePanelResourceLoader.getBlip().css(), WavePanelResourceLoader.getBlipMessages(), id, nonNull(content), BlipIconResources.Loader.res.css());
   }
 
   @VisibleForTesting
-  BlipMetaViewBuilder(BlipViewBuilder.Css css, BlipMessages messages, String id, UiBuilder content) {
+  BlipMetaViewBuilder(BlipViewBuilder.Css css, BlipMessages messages, String id, UiBuilder content, BlipIconResources.Css iconCss) {
     // must not contain ', it is especially troublesome because it cause
     // security issues.
     Preconditions.checkArgument(!id.contains("\'"));
     this.css = css;
+    this.iconCss = iconCss;
     this.id = id;
     this.content = content;
+    setMenuIcons();
     buildMenuModel(messages);
   }
 
   @Override
   public void setAvatar(String avatarUrl) {
     this.avatarUrl = avatarUrl;
+  }
+
+  @Override
+  public void setAvatarName(String avatarName) {
+    this.avatarName = avatarName;
   }
 
   @Override
@@ -197,8 +227,9 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
     open(output, id, css.meta(), TypeCodes.kind(Type.META));
     {
       // Author avatar.
+      // FIXME i18n
       image(output, Components.AVATAR.getDomId(id), css.avatar(), EscapeUtils.fromString(avatarUrl),
-          EscapeUtils.fromPlainText("author"), null);
+          EscapeUtils.fromPlainText(avatarName), null);
 
       // Metabar.
       open(output, Components.METABAR.getDomId(id),
@@ -240,14 +271,22 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
     return new UiBuilder() {
       @Override
       public void outputHtml(SafeHtmlBuilder out) {
+        boolean first = true;
         for (MenuOption option : options) {
-          out.append(EscapeUtils.fromSafeConstant("|"));
+          if (!first) {
+            out.append(EscapeUtils.fromSafeConstant("|"));
+          } else {
+            first = false;
+          }
           String style = selected.contains(option) //
               ? css.menuOption() + css.menuOptionSelected() : css.menuOption();
+          style += " " + MENU_ICONS.get(option).asString();
           String extra = OPTION_ID_ATTRIBUTE + "='" + MENU_CODES.get(option).asString() + "'"
-              + (selected.contains(option) ? " " + OPTION_SELECTED_ATTRIBUTE + "='s'" : "");
+              + (selected.contains(option) ? " " + OPTION_SELECTED_ATTRIBUTE + "='s'" : "")
+          + " title=\'" +  MENU_TITLES.get(option).asString() + "'";
           openSpanWith(out, null, style, TypeCodes.kind(Type.MENU_ITEM), extra);
-          out.append(MENU_LABELS.get(option));
+          if (option == MenuOption.EDIT || option == MenuOption.EDIT_DONE)
+            out.append(MENU_LABELS.get(option));
           closeSpan(out);
         }
       }
@@ -281,6 +320,11 @@ public final class BlipMetaViewBuilder implements UiBuilder, IntrinsicBlipMetaVi
     MENU_LABELS.put(MenuOption.REPLY, EscapeUtils.fromSafeConstant(messages.reply()));
     MENU_LABELS.put(MenuOption.DELETE, EscapeUtils.fromSafeConstant(messages.delete()));
     MENU_LABELS.put(MenuOption.LINK, EscapeUtils.fromSafeConstant(messages.link()));
+    MENU_TITLES.put(MenuOption.EDIT, EscapeUtils.fromSafeConstant(messages.edit()));
+    MENU_TITLES.put(MenuOption.EDIT_DONE, EscapeUtils.fromSafeConstant(messages.done()));
+    MENU_TITLES.put(MenuOption.REPLY, EscapeUtils.fromSafeConstant(messages.reply()));
+    MENU_TITLES.put(MenuOption.DELETE, EscapeUtils.fromSafeConstant(messages.delete()));
+    MENU_TITLES.put(MenuOption.LINK, EscapeUtils.fromSafeConstant(messages.link()));
     for (MenuOption option : MENU_CODES.keySet()) {
       MENU_OPTIONS.put(MENU_CODES.get(option).asString(), option);
     }

@@ -95,8 +95,7 @@ public class ClientFrontendImpl implements ClientFrontend, WaveBus.Subscriber {
     LOG.info("received openRequest from " + loggedInUser + " for " + waveId + ", filter "
         + waveletIdFilter + ", known wavelets: " + knownWavelets);
 
-    // TODO(josephg): Make it possible for this to succeed & return public
-    // waves.
+    // TODO(josephg): Make it possible for this to succeed & return public waves.
     if (loggedInUser == null) {
       openListener.onFailure("Not logged in");
       return;
@@ -156,8 +155,8 @@ public class ClientFrontendImpl implements ClientFrontend, WaveBus.Subscriber {
       LOG.info("snapshot in response is: " + (snapshotToSend != null));
       if (snapshotToSend == null) {
         // Send deltas.
-        openListener.onUpdate(waveletName, snapshotToSend, DeltaSequence.empty(), null, null,
-            channelId);
+          openListener.onUpdate(waveletName, snapshotToSend, DeltaSequence.empty(),
+              null, null, channelId);
       } else {
         // Send the snapshot.
         openListener.onUpdate(waveletName, snapshotToSend, DeltaSequence.empty(),
@@ -169,7 +168,8 @@ public class ClientFrontendImpl implements ClientFrontend, WaveBus.Subscriber {
     if (waveletIds.size() == 0) {
       // Send message with just the channel id.
       LOG.info("sending just a channel id for " + dummyWaveletName);
-      openListener.onUpdate(dummyWaveletName, null, DeltaSequence.empty(), null, null, channelId);
+        openListener.onUpdate(dummyWaveletName, null, DeltaSequence.empty(), null, null,
+            channelId);
     }
     LOG.info("sending marker for " + dummyWaveletName);
     openListener.onUpdate(dummyWaveletName, null, DeltaSequence.empty(), null, true, null);

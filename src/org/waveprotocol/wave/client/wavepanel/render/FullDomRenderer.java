@@ -142,6 +142,9 @@ public final class FullDomRenderer implements RenderingRules<UiBuilder> {
   public UiBuilder render(Conversation conversation, ParticipantId participant) {
     Profile profile = profileManager.getProfile(participant);
     String id = viewIdMapper.participantOf(conversation, participant);
+    // Use ParticipantAvatarViewBuilder for avatars.
+    // final ParticipantNameViewBuilder participantUi = ParticipantNameViewBuilder.create(id);
+
     ParticipantAvatarViewBuilder participantUi = ParticipantAvatarViewBuilder.create(id);
     participantUi.setAvatar(profile.getImageUrl());
     participantUi.setName(profile.getFullName());
@@ -223,9 +226,11 @@ public final class FullDomRenderer implements RenderingRules<UiBuilder> {
     };
 
     BlipMetaViewBuilder metaUi = BlipMetaViewBuilder.create(viewIdMapper.metaOf(blip), document);
+    if (blip.isRoot())
+      metaUi.disable(BlipMetaViewBuilder.DELETE_MENU_OPTIONS_SET);
     blipPopulator.render(blip, metaUi);
 
-    return BlipViewBuilder.create(viewIdMapper.blipOf(blip), metaUi, threadsUi, convsUi);
+    return BlipViewBuilder.create(viewIdMapper.blipOf(blip), metaUi, threadsUi, convsUi, blip.isRoot());
   }
 
   /**

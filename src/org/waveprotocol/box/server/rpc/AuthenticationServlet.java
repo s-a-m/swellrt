@@ -100,7 +100,7 @@ public class AuthenticationServlet extends HttpServlet {
   private final boolean isRegistrationDisabled;
   private final boolean isLoginPageDisabled;
   private boolean failedClientAuth = false;
-private final WelcomeRobot welcomeBot;
+  // private final WelcomeRobot welcomeBot;
   private final String analyticsAccount;
 
   @Inject
@@ -111,7 +111,7 @@ private final WelcomeRobot welcomeBot;
       @Named(CoreSettings.CLIENTAUTH_CERT_DOMAIN) String clientAuthCertDomain,
       @Named(CoreSettings.DISABLE_REGISTRATION) boolean isRegistrationDisabled,
       @Named(CoreSettings.DISABLE_LOGINPAGE) boolean isLoginPageDisabled,
-    WelcomeRobot welcomeBot,
+     // WelcomeRobot welcomeBot,
       @Named(CoreSettings.ANALYTICS_ACCOUNT) String analyticsAccount) {
     Preconditions.checkNotNull(accountStore, "AccountStore is null");
     Preconditions.checkNotNull(configuration, "Configuration is null");
@@ -124,12 +124,12 @@ private final WelcomeRobot welcomeBot;
     this.clientAuthCertDomain = clientAuthCertDomain.toLowerCase();
     this.isRegistrationDisabled = isRegistrationDisabled;
     this.isLoginPageDisabled = isLoginPageDisabled;
-    this.welcomeBot = welcomeBot;
+   // this.welcomeBot = welcomeBot;
     this.analyticsAccount = analyticsAccount;
   }
 
   @SuppressWarnings("unchecked")
-  private LoginContext login(BufferedReader body) throws IOException, LoginException {
+  public LoginContext login(BufferedReader body) throws IOException, LoginException {
     try {
       Subject subject = new Subject();
 
@@ -302,7 +302,7 @@ private final WelcomeRobot welcomeBot;
             ParticipantId id = ParticipantId.of(email);
             if (!RegistrationUtil.doesAccountExist(accountStore, id)) {
               if (!isRegistrationDisabled) {
-                if (!RegistrationUtil.createAccountIfMissing(accountStore, id, null, welcomeBot)) {
+                if (!RegistrationUtil.createAccountIfMissing(accountStore, id, null)) {
                   return null;
                 }
               } else {

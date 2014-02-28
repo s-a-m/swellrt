@@ -25,8 +25,10 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceFilter;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
@@ -86,7 +88,6 @@ import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
-
 import org.waveprotocol.box.common.comms.WaveClientRpc.ProtocolAuthenticate;
 import org.waveprotocol.box.common.comms.WaveClientRpc.ProtocolAuthenticationResult;
 import org.waveprotocol.box.server.CoreSettings;
@@ -111,6 +112,9 @@ public class ServerRpcProvider {
    * param. It defines the response buffer size.
    */
   private static final int BUFFER_SIZE = 1024 * 1024;
+  
+  // We can retrieve the injector from the context attributes via this attribute name
+  public static final String INJECTOR_ATTRIBUTE = Injector.class.getName();  
 
   private final InetSocketAddress[] httpAddresses;
   private final Integer flashsocketPolicyPort;
@@ -358,6 +362,7 @@ public class ServerRpcProvider {
     final WebAppContext context = new WebAppContext();
 
     context.setParentLoaderPriority(true);
+    context.setAttribute(INJECTOR_ATTRIBUTE, injector);
 
     if (jettySessionManager != null) {
       // This disables JSessionIDs in URLs redirects
@@ -370,25 +375,33 @@ public class ServerRpcProvider {
     final ResourceCollection resources = new ResourceCollection(resourceBases);
     context.setBaseResource(resources);
 
-    addWebSocketServlets();
+    addWebSocketServlets(context);
 
     try {
-      final Injector parentInjector = injector;
+//      final Injector parentInjector = injector;
 
-      final ServletModule servletModule = getServletModule(parentInjector);
+//      final ServletModule servletModule = getServletModule(parentInjector);
 
-      ServletContextListener contextListener = new GuiceServletContextListener() {
-
-        private final Injector childInjector = parentInjector.createChildInjector(servletModule);
-
-        @Override
-        protected Injector getInjector() {
-          return childInjector;
-        }
-      };
-
-      context.addEventListener(contextListener);
-      context.addFilter(GuiceFilter.class, "/*", EnumSet.allOf(DispatcherType.class));
+//      ServletContextListener contextListener = new GuiceServletContextListener() {
+//
+//        private final Injector childInjector = parentInjector.createChildInjector(servletModule);
+//
+//        @Override
+//        protected Injector getInjector() {
+//          return childInjector;
+//        }
+//      };
+//
+//      context.addEventListener(contextListener);
+//      context.addFilter(GuiceFilter.class, "/*", EnumSet.allOf(DispatcherType.class));
+      
+     // We add servlets here to override the DefaultServlet automatic registered by WebAppContext
+     // in path "/" with our WaveClientServlet. Any other way to do this?
+     // Related question (unanswered) http://web.archiveorange.com/archive/v/d0LdlXf1kN0OXyPNyQZp
+     for (Pair<String, ServletHolder> servlet : servletRegistry) {
+     context.addServlet(servlet.getSecond(), servlet.getFirst());
+     }
+      
       context.addFilter(GzipFilter.class, "/webclient/*", EnumSet.allOf(DispatcherType.class));
       String[] hosts = new String[httpAddresses.length];
       for (int i=0; i < httpAddresses.length; i++) {
@@ -418,9 +431,17 @@ public class ServerRpcProvider {
       LOG.warning("Cannot restore sessions");
     }
   }
-  public void addWebSocketServlets() {
+  public void addWebSocketServlets(WebAppContext context) {
     // Servlet where the websocket connection is served from.
-    ServletHolder wsholder = addServlet("/socket", WaveWebSocketServlet.class);
+    //ServletHolder wsholder = addServlet("/socket", WaveWebSocketServlet.class);
+    Injector injector = (Injector) context.getAttribute(INJECTOR_ATTRIBUTE);    
+    ServletHolder wsholder = new ServletHolder(new WaveWebSocketServlet(this,
+        injector.getInstance(Key.get(Integer.class,
+            Names.named(CoreSettings.WEBSOCKET_MAX_IDLE_TIME))),
+        injector.getInstance(Key.get(Integer.class,
+                Names.named(CoreSettings.WEBSOCKET_MAX_MESSAGE_SIZE)))));
+   
+    context.addServlet(wsholder, "/socket");
     // TODO(zamfi): fix to let messages span frames.
     wsholder.setInitParameter("bufferSize", "" + BUFFER_SIZE);
 
@@ -449,8 +470,9 @@ public class ServerRpcProvider {
 
     // Serve the static content and GWT web client with the default servlet
     // (acts like a standard file-based web server).
-    addServlet("/static/*", DefaultServlet.class);
-    addServlet("/webclient/*", DefaultServlet.class);
+    ServletHolder defaultServlet = new ServletHolder(new DefaultServlet());
+    context.addServlet(defaultServlet, "/static/*");
+    context.addServlet(defaultServlet, "/webclient/*");
   }
 
   public ServletModule getServletModule(final Injector injector) {
@@ -685,7 +707,7 @@ public class ServerRpcProvider {
    * @param initParams the map with init params, can be null or empty.
    * @return the {@link ServletHolder} that holds the servlet.
    */
-  public ServletHolder addServlet(String urlPattern, Class<? extends HttpServlet> servlet,
+  public ServletHolder addServlet(String urlPattern, HttpServlet servlet,
       @Nullable Map<String, String> initParams) {
     ServletHolder servletHolder = new ServletHolder(servlet);
     if (initParams != null) {
@@ -702,7 +724,7 @@ public class ServerRpcProvider {
    * @param servlet the servlet class to bind to the specified paths.
    * @return the {@link ServletHolder} that holds the servlet.
    */
-  public ServletHolder addServlet(String urlPattern, Class<? extends HttpServlet> servlet) {
+  public ServletHolder addServlet(String urlPattern, HttpServlet servlet) {
     return addServlet(urlPattern, servlet, null);
   }
 }

@@ -19,8 +19,9 @@
 
 package org.waveprotocol.box.webclient.client;
 
+import org.waveprotocol.box.common.SessionConstants;
+import org.waveprotocol.wave.client.common.util.WindowUtil;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 
 import org.waveprotocol.box.common.SessionConstants;
 import org.waveprotocol.box.webclient.client.i18n.SessionMessages;
@@ -41,7 +42,7 @@ public abstract class Session implements SessionConstants {
     if (JsSession.isAvailable()) {
       INSTANCE = new JsSession();
     } else {
-      Window.alert(messages.sessionDataNotAvailable());
+      WindowUtil.alert(messages.sessionDataNotAvailable());
       INSTANCE = new StubSession();
     }
   }
@@ -72,7 +73,7 @@ public abstract class Session implements SessionConstants {
   public boolean isLoggedIn() {
     return getAddress() != null;
   }
-  
+
   /**
    * @return the id seed that's going to be used for generating ids for the session
    */

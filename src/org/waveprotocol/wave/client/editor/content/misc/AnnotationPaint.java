@@ -84,11 +84,21 @@ public class AnnotationPaint {
   /** Full tag name including namespace for boundary nodes */
   public static final String BOUNDARY_FULL_TAGNAME = "l:b";
 
+  private static AnnotationSpreadRenderer paintRenderer;
+
   /**
-   * Registers subclass with ContentElement
+   * Init the localDomain (used to render local links properly)
+   * @param localDomain 
+   */
+  public static void init(String localDomain) {
+    paintRenderer.setLocalDomain(localDomain);
+  }
+  
+  /**
+   * Registers subclass with ContentElement 
    */
   public static void register(ElementHandlerRegistry registry) {
-    AnnotationSpreadRenderer paintRenderer = new AnnotationSpreadRenderer();
+    paintRenderer = new AnnotationSpreadRenderer();
     registry.registerRenderingMutationHandler(SPREAD_FULL_TAGNAME, paintRenderer);
     registry.registerNiceHtmlRenderer(SPREAD_FULL_TAGNAME, PasteFormatRenderers.SHALLOW_CLONE_RENDERER);
 

@@ -19,6 +19,10 @@
 
 package org.waveprotocol.wave.client.gadget.renderer;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.LocaleInfo;
+
+
 /**
  * Locale implementation for Wave Session.
  *

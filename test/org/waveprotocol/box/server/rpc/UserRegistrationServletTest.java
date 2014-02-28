@@ -35,7 +35,6 @@ import org.waveprotocol.box.server.account.HumanAccountDataImpl;
 import org.waveprotocol.box.server.authentication.PasswordDigest;
 import org.waveprotocol.box.server.persistence.AccountStore;
 import org.waveprotocol.box.server.persistence.memory.MemoryStore;
-import org.waveprotocol.box.server.robots.agent.welcome.WelcomeRobot;
 import org.waveprotocol.wave.model.wave.ParticipantId;
 
 import java.io.IOException;
@@ -56,8 +55,6 @@ public class UserRegistrationServletTest extends TestCase {
   @Mock private HttpServletRequest req;
   @Mock private HttpServletResponse resp;
 
-  @Mock private WelcomeRobot welcomeBot;
-
   @Override
   protected void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
@@ -74,7 +71,6 @@ public class UserRegistrationServletTest extends TestCase {
     AccountData account = store.getAccount(participantId);
     assertNotNull(account);
     assertTrue(account.asHuman().getPasswordDigest().verify("internet".toCharArray()));
-    verify(welcomeBot).greet(eq(participantId));
   }
 
   public void testRegisterNewUserDisabled() throws Exception {
@@ -129,10 +125,8 @@ public class UserRegistrationServletTest extends TestCase {
       HttpServletRequest req, HttpServletResponse resp, String address,
       String password, boolean disabledRegistration) throws IOException {
 
-    UserRegistrationServlet enabledServlet =
-        new UserRegistrationServlet(store, "example.com", welcomeBot, false, "UA-someid");
-    UserRegistrationServlet disabledServlet =
-        new UserRegistrationServlet(store, "example.com", welcomeBot, true, "UA-someid");
+    UserRegistrationServlet enabledServlet = new UserRegistrationServlet(store, "example.com", false, "UA-someid");
+    UserRegistrationServlet disabledServlet = new UserRegistrationServlet(store, "example.com", true, "UA-someid");
 
     when(req.getParameter("address")).thenReturn(address);
     when(req.getParameter("password")).thenReturn(password);

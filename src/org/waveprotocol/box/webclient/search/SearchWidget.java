@@ -90,6 +90,8 @@ public class SearchWidget extends Composite implements SearchView, ChangeHandler
       query.getElement().setAttribute("results", "10");
       query.getElement().setAttribute("autosave", "QUERY_AUTO_SAVE");
     }
+    // We don't use "All search"
+    searchButtonAll.setVisible(false);
     query.addChangeHandler(this);
   }
 
@@ -123,25 +125,25 @@ public class SearchWidget extends Composite implements SearchView, ChangeHandler
     }
     onQuery();
   }
-  
+
   private void onQuery() {
     if (listener != null) {
       listener.onQueryEntered();
     }
   }
-  
+
   @UiHandler("searchButtonShared")
   public void onHandleShared(ClickEvent event) {
     setQuery("with:@");
     onQuery();
   }
-  
+
   @UiHandler("searchButtonAll")
   public void onHandleAll(ClickEvent event) {
     setQuery("");
     onQuery();
   }
-  
+
   @UiHandler("searchButtonInbox")
   public void onHandleInbox(ClickEvent event) {
     setQuery("in:inbox");

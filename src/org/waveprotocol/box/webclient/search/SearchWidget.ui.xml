@@ -32,7 +32,7 @@
      <div class='{css.searchButtonsPanel}'>
        <g:Button ui:field='searchButtonShared' title='Show shared waves'
            styleName='{css.searchButton}'><ui:text from="{msg.shared}"/></g:Button>
-       <g:Button ui:field='searchButtonAll' title='Show all waves'
+      <g:Button ui:field='searchButtonAll' title='Show all waves'
            styleName='{css.searchButton}'><ui:text from="{msg.all}"/></g:Button>
        <g:Button ui:field='searchButtonInbox' title='Show waves in my inbox'
            styleName='{css.searchButton}'><ui:text from="{msg.inbox}"/></g:Button>

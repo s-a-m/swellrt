@@ -44,4 +44,16 @@ public interface ToolbarMessages extends Messages {
 
   @DefaultMessage("To Inbox")
   String toInbox();
+
+  @DefaultMessage("Read")
+  String read();
+
+  @DefaultMessage("Unread")
+  String unread();
+
+  @DefaultMessage("Follow")
+  String follow();
+
+  @DefaultMessage("Unfollow")
+  String unfollow();
 }

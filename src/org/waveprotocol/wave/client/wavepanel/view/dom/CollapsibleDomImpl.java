@@ -158,13 +158,13 @@ final class CollapsibleDomImpl implements DomView {
 
   public void setTotalBlipCount(int totalBlipCount) {
     self.setAttribute(TOTAL_BLIPS_ATTRIBUTE, "" + totalBlipCount);
-    getCountTotal().setInnerText("" + totalBlipCount);
+    getCountTotal().setInnerText("" + totalBlipCount + (totalBlipCount > 1? " replies": " reply"));
   }
 
   public void setUnreadBlipCount(int unreadBlipCount) {
     self.setAttribute(UNREAD_BLIPS_ATTRIBUTE, "" + unreadBlipCount);
     Element unread = getCountUnread();
-    unread.setInnerText("(" + unreadBlipCount + ")");
+    unread.setInnerText(" (" + unreadBlipCount + " unread)");
     if (unreadBlipCount > 0) {
       unread.getStyle().clearDisplay();
     } else {

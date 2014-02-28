@@ -163,7 +163,7 @@ public interface StageThree {
       String sessionId = stageTwo.getSessionId();
 
       SelectionExtractor selectionExtractor = new SelectionExtractor(clock, address, sessionId);
-      return EditSession.install(views, documents, selectionExtractor, focus, panel);
+      return EditSession.install(views, documents, selectionExtractor, focus, panel, getLocalDomain());
     }
 
     protected EditToolbar createEditToolbar() {
