@@ -914,6 +914,9 @@
       <url url="http://repo1.maven.org/maven2/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final-sources.jar" />
       <url url="https://archive.apache.org/dist/velocity/engine/1.6.3/velocity-1.6.3.jar" />
       <url url="https://archive.apache.org/dist/velocity/engine/1.6.3/velocity-1.6.3-dep.jar" />
+      <url url="http://archiva.comunes.org/repository/comunes-snapshots/cc/kune/gwt-initials-avatars-shared/1.0-SNAPSHOT/gwt-initials-avatars-shared-1.0-20140312.114920-3.jar" />
+      <url url="http://archiva.comunes.org/repository/comunes-snapshots/cc/kune/gwt-initials-avatars-shared/1.0-SNAPSHOT/gwt-initials-avatars-shared-1.0-20140312.114920-3-sources.jar" />
+      <url url="http://archiva.comunes.org/repository/comunes-snapshots/cc/kune/gwt-initials-avatars-server/1.0-SNAPSHOT/gwt-initials-avatars-server-1.0-20140312.101742-3.jar" />
     </get>
   </target>
 
