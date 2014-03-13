@@ -1,15 +1,20 @@
 <!--
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  *
  * Author: anorth@google.com (Alex North)
  -->
@@ -68,18 +73,38 @@
       <javac destdir="@{destdir}" debug="true">
         <exclude name="org/waveprotocol/pst/**"/>
         <patternset refid="@{srcpattern}"/>
-        <!-- TODO(anorth): enable -Werror after fixing warnings. -->
-        <compilerarg value="-Werror"/>
         <compilerarg value="-Xlint:all"/>
         <compilerarg value="-Xlint:-serial"/>
         <!-- Deprecation warnings are generated for .class files for some
              compilers, e.g. org.hamcrest.Matcher -> org.hamcrest.BaseMatcher. -->
         <compilerarg value="-Xlint:-deprecation"/>
+        <compilerarg value="-Werror"/>
         <javac-elements/>
       </javac>
     </sequential>
   </macrodef>
 
+  <!-- TODO(akaplanov): remove this and use buildjava after protobuf issue
+       https://code.google.com/p/protobuf/issues/detail?id=323 will be fixed -->
+  <macrodef name="buildproto">
+    <attribute name="srcpattern" description="Pattern id describing files to build"
+        default="default-src-pattern"/>
+    <!--attribute name="srcdir" description="Source root directory"/-->
+    <attribute name="destdir" description="Build root directory"/>
+    <element name="javac-elements" description="Extra elements to pass to javac" implicit="true"/>
+    <sequential>
+      <patternset id="default-src-pattern">
+        <include name="**/*.java"/>
+      </patternset>
+      <javac destdir="@{destdir}" debug="true">
+        <exclude name="org/waveprotocol/pst/**"/>
+        <patternset refid="@{srcpattern}"/>
+        <compilerarg value="-Xlint:none"/>
+        <javac-elements/>
+      </javac>
+    </sequential>
+  </macrodef>
+  
   <!-- Macro which packages class and source files into jars -->
   <macrodef name="distlib">
     <attribute name="srcpattern" description="Pattern id describing files to package"/>
@@ -112,9 +137,10 @@
           metadatafile="${coverage.dir}/metadata.emma" mode="copy"/>
       </emma>
 
-      <junit fork="yes" forkmode="@{forkmode}" printsummary="yes" 
+      <junit fork="yes" forkmode="@{forkmode}" printsummary="yes"
           showoutput="no" haltonfailure="no" failureProperty="test.failed">
         <jvmarg value="-Xmx512M"/>
+	<jvmarg value="-XX:-UseSplitVerifier"/>
         <jvmarg value="-ea"/>
         <!-- Emma arguments -->
         <jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma" />
@@ -165,7 +191,9 @@
     </sequential>
   </macrodef>
 
-  <!-- Task which compiles GXP templates -->
-  <taskdef name="gxpc" classname="com.google.gxp.compiler.ant.GxpcTask"
-      classpath="${lib.runtime}/gxp/gxp-0.2.4-beta.jar" />
+  <target name="define-gxpc" depends="get-third-party-runtime">
+    <!-- Task which compiles GXP templates -->
+    <taskdef name="gxpc" classname="com.google.gxp.compiler.ant.GxpcTask"
+      classpath="${lib.runtime}/google-gxp-0.2.4-beta.jar" />
+  </target>
 </project>

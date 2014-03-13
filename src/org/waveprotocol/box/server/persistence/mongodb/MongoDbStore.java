@@ -35,6 +35,7 @@ import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
 
 import org.bson.types.BasicBSONList;
+import org.waveprotocol.box.attachment.AttachmentMetadata;
 import org.waveprotocol.box.server.account.AccountData;
 import org.waveprotocol.box.server.account.HumanAccountData;
 import org.waveprotocol.box.server.account.HumanAccountDataImpl;
@@ -45,21 +46,16 @@ import org.waveprotocol.box.server.persistence.AccountStore;
 import org.waveprotocol.box.server.persistence.AttachmentStore;
 import org.waveprotocol.box.server.persistence.PersistenceException;
 import org.waveprotocol.box.server.persistence.SignerInfoStore;
-import org.waveprotocol.box.server.persistence.file.FileUtils;
 import org.waveprotocol.box.server.robots.RobotCapabilities;
 import org.waveprotocol.wave.crypto.SignatureException;
 import org.waveprotocol.wave.crypto.SignerInfo;
 import org.waveprotocol.wave.federation.Proto.ProtocolSignerInfo;
-import org.waveprotocol.wave.model.id.WaveletName;
+import org.waveprotocol.wave.media.model.AttachmentId;
 import org.waveprotocol.wave.model.util.CollectionUtils;
 import org.waveprotocol.wave.model.wave.ParticipantId;
-import org.waveprotocol.wave.media.model.AttachmentId;
-import org.waveprotocol.box.attachment.AttachmentMetadata;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -103,7 +99,6 @@ public final class MongoDbStore implements SignerInfoStore, AttachmentStore, Acc
   private static final String CAPABILITY_FILTER_FIELD = "filter";
 
   private static final Logger LOG = Logger.getLogger(MongoDbStore.class.getName());
-  private final static String SEPARATOR_CHAR = "#";
 
   private final DB database;
 
@@ -248,7 +243,7 @@ public final class MongoDbStore implements SignerInfoStore, AttachmentStore, Acc
   }
 
   @Override
-  public void storeThumnail(AttachmentId attachmentId, InputStream dataData) throws IOException {
+  public void storeThumbnail(AttachmentId attachmentId, InputStream dataData) throws IOException {
     throw new UnsupportedOperationException("Not supported yet.");
   }
 
@@ -415,11 +410,5 @@ public final class MongoDbStore implements SignerInfoStore, AttachmentStore, Acc
         ProtocolVersion.valueOf((String) object.get(CAPABILITIES_VERSION_FIELD));
 
     return new RobotCapabilities(capabilities, capabilitiesHash, version);
-  }
-
-  private String computeCompleteAttachmentId(WaveletName waveletName, String id) {
-    String waveletNamePrefix = FileUtils.waveletNameToPathSegment(waveletName);
-    String completeAttachmentId = waveletNamePrefix + SEPARATOR_CHAR + id;
-    return completeAttachmentId;
   }
 }

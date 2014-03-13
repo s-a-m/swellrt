@@ -30,6 +30,7 @@ import org.waveprotocol.wave.client.doodad.link.Link.InvalidLinkException;
 import org.waveprotocol.wave.client.editor.EditorContext;
 import org.waveprotocol.wave.client.editor.util.EditorAnnotationUtil;
 import org.waveprotocol.wave.client.wavepanel.impl.toolbar.i18n.LinkerMessages;
+import org.waveprotocol.wave.model.conversation.AnnotationConstants;
 import org.waveprotocol.wave.model.document.util.DocHelper;
 import org.waveprotocol.wave.model.document.util.FocusedRange;
 import org.waveprotocol.wave.model.document.util.Range;
@@ -58,7 +59,7 @@ public class LinkerHelper {
       Range rg = range.asRange();
       String text = DocHelper.getText(editor.getDocument(), rg.getStart(), rg.getEnd());
       String linkAnnotationValue = Link.normalizeLink(text);
-      EditorAnnotationUtil.setAnnotationOverSelection(editor, Link.KEY, linkAnnotationValue);
+      EditorAnnotationUtil.setAnnotationOverSelection(editor, AnnotationConstants.LINK_PREFIX, linkAnnotationValue);
     } catch (InvalidLinkException e) {
           WindowUtil.prompt(messages.enterLink(), "http://",
               new WindowPromptCallback() {
@@ -72,13 +73,14 @@ public class LinkerHelper {
                     // We set again the range (because can be lost with modal dialogs);
                     editor.getSelectionHelper().setSelectionRange(range);
                     String linkAnnotationValue = Link.normalizeLink(rawLinkValue);
-                    EditorAnnotationUtil.setAnnotationOverSelection(editor, Link.KEY, linkAnnotationValue);
+                    EditorAnnotationUtil.setAnnotationOverSelection(editor, AnnotationConstants.LINK_PREFIX, linkAnnotationValue);
                   } catch (InvalidLinkException e2) {
-                    WindowUtil.alert("Invalid link. Should be a web url in the form: http://example.com/");
+                    WindowUtil.alert(e2.getLocalizedMessage());
                   }
                 }}
               );
     }
+
   }
 
   /**

@@ -34,7 +34,7 @@ import org.waveprotocol.box.server.robots.register.RobotRegistrar;
 import org.waveprotocol.box.server.robots.register.RobotRegistrarImpl;
 import org.waveprotocol.box.server.rpc.ProtoSerializer;
 import org.waveprotocol.box.server.rpc.ServerRpcProvider;
-import org.waveprotocol.box.server.rpc.WebSocketServerChannel;
+import org.waveprotocol.box.server.rpc.WebSocketChannel;
 import org.waveprotocol.box.server.waveserver.LookupExecutor;
 import org.waveprotocol.box.server.waveserver.WaveServerImpl;
 import org.waveprotocol.box.server.waveserver.WaveServerModule;
@@ -104,14 +104,11 @@ public class ServerModule extends AbstractModule {
     bind(Configuration.class).toInstance(Configuration.getConfiguration());
     bind(SessionManager.class).to(SessionManagerImpl.class).in(Singleton.class);
 
-    bind(org.eclipse.jetty.server.SessionManager.class).to(HashSessionManager.class)
-        .in(Singleton.class);
-
     bind(ServerRpcProvider.class).in(Singleton.class);
 
     bind(RobotRegistrar.class).to(RobotRegistrarImpl.class);
 
-    requestStaticInjection(WebSocketServerChannel.class);
+    requestStaticInjection(WebSocketChannel.class);
   }
 
   @Provides
@@ -145,5 +142,15 @@ public class ServerModule extends AbstractModule {
         return Long.toString(Math.abs(random.nextLong()), 36);
       }
     };
+  }
+
+  @Provides
+  @Singleton
+  @Inject
+  public org.eclipse.jetty.server.SessionManager provideSessionManager(
+      @Named(CoreSettings.SESSION_COOKIE_MAX_AGE) int sessionCookieMaxAge) {
+    HashSessionManager sessionManager = new HashSessionManager();
+    sessionManager.getSessionCookieConfig().setMaxAge(sessionCookieMaxAge);
+    return sessionManager;
   }
 }
