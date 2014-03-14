@@ -23,11 +23,12 @@ package org.waveprotocol.wave.client.wavepanel.impl.edit;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 
 import org.waveprotocol.wave.client.account.Profile;
 import org.waveprotocol.wave.client.account.ProfileManager;
 import org.waveprotocol.wave.client.common.safehtml.EscapeUtils;
+import org.waveprotocol.wave.client.common.util.WindowPromptCallback;
+import org.waveprotocol.wave.client.common.util.WindowUtil;
 import org.waveprotocol.wave.client.events.ClientEvents;
 import org.waveprotocol.wave.client.events.WaveCreationEvent;
 import org.waveprotocol.wave.client.wavepanel.WavePanel;
