@@ -22,7 +22,7 @@ package org.waveprotocol.box.webclient.client.atmosphere;
 /**
  * The atmosphere connection interface for wrapping the javascript
  * client in GWT
- *  
+ *
  * @author pablojan@gmail.com (Pablo Ojanguren)
  *
  */
@@ -31,20 +31,20 @@ public interface AtmosphereConnection {
 
   /**
    * Initiate a connection attempt.
-   * 
+   *
    */
   void connect();
 
   /**
    * Initiate an orderly close of the connection.
-   * 
+   *
    */
   void close();
 
 
   /**
    * Send a message.
-   * 
+   *
    * @param message
    */
   void sendMessage(String message);

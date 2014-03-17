@@ -35,14 +35,14 @@ import java.io.OutputStream;
 
  /**
    * Serve atmosphere.js file to GWT clients
-   * 
+   *
    * @author pablojan@gmail.com (Pablo Ojanguren)
    */
   @AtmosphereInterceptorService
   public class AtmosphereClientInterceptor implements AtmosphereInterceptor  {
-    
-    private static final Log LOG = Log.get(AtmosphereClientInterceptor.class);    
-    
+
+    private static final Log LOG = Log.get(AtmosphereClientInterceptor.class);
+
     @Override
     public void configure(AtmosphereConfig config) {
         // Nothing to do
@@ -50,7 +50,7 @@ import java.io.OutputStream;
 
     @Override
     public Action inspect(AtmosphereResource resource) {
-      
+
       AtmosphereRequest request = resource.getRequest();
 
       try {
@@ -59,13 +59,13 @@ import java.io.OutputStream;
 
         if (path == null || path.isEmpty())
          return Action.CONTINUE;
-          
+
         if (path.startsWith("/")) {
           path = path.substring(1);
         }
         String[] parts = path.split("/");
 
-        // Serve the file 
+        // Serve the file
         if (parts.length > 0 && "GET".equals(resource.getRequest().getMethod()) && "atmosphere.js".equals(parts[0])) {
           resource.getResponse().setContentType("text/javascript");
           InputStream is =
@@ -82,14 +82,14 @@ import java.io.OutputStream;
         LOG.severe("Error sending atmosphere.js",e);
       }
 
-    
+
       return Action.CONTINUE;
     }
-    
-    
+
+
     @Override
     public void postInspect(AtmosphereResource resource) {
-      // Nothing to do      
+      // Nothing to do
     }
 
   }

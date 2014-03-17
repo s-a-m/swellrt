@@ -22,7 +22,6 @@ package org.waveprotocol.box.server.rpc.atmosphere;
 
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.Broadcaster;
-import org.atmosphere.cpr.Broadcaster.SCOPE;
 import org.atmosphere.cpr.BroadcasterFactory;
 import org.waveprotocol.box.server.rpc.ProtoCallback;
 import org.waveprotocol.box.server.rpc.WebSocketChannel;
@@ -32,19 +31,19 @@ import java.io.IOException;
 
 /**
  * An atmosphere wrapper for the WebSocketChannel type.
- * 
- * @author pablojan@gmail.com (Pablo Ojanguren) 
+ *
+ * @author pablojan@gmail.com (Pablo Ojanguren)
  */
 public class AtmosphereChannel extends WebSocketChannel  {
-  
-  
+
+
   private static final Log LOG = Log.get(AtmosphereChannel.class);
 
   /* The object needed to send messages out */
   private Broadcaster broadcaster;
-   
 
-  
+
+
   /**
    * Creates a new AtmosphereChannel using the callback for incoming messages.
    *
@@ -53,7 +52,7 @@ public class AtmosphereChannel extends WebSocketChannel  {
   public AtmosphereChannel(ProtoCallback callback) {
     super(callback);
     broadcaster = BroadcasterFactory.getDefault().get();
-    
+
   }
 
   /**
@@ -62,22 +61,22 @@ public class AtmosphereChannel extends WebSocketChannel  {
    * @param resource the Atmosphere resource object
    */
   public void onConnect(AtmosphereResource resource) {
-    
+
     // Create a new broadcaster to publish to this resource
     broadcaster.addAtmosphereResource(resource);
   }
 
-  
+
   public Broadcaster getBroadcaster() {
     return broadcaster;
   }
-  
+
   /**
    * The atmosphere resource has received a new post message
    * @param message the message
    */
   public void onMessage(String message) {
-  
+
     handleMessageString(message);
   }
 
@@ -85,33 +84,33 @@ public class AtmosphereChannel extends WebSocketChannel  {
    * The atmosphere resource has been closed
    */
   public void onDisconnect() {
-    
+
     broadcaster = null;
   }
 
- 
-  
+
+
   /**
    * Send the given data String
    *
    * @param data
-   * @throws IOException 
+   * @throws IOException
    */
   @Override
   protected void sendMessageString(String data) throws IOException {
-  
+
       if (broadcaster == null || broadcaster.isDestroyed()) {
         // Just drop the message. It's rude to throw an exception since the
         // caller had no way of knowing.
         LOG.warning("Atmosphere Channel is not connected");
-      } else {                  
-      
+      } else {
+
        LOG.fine("BROADCAST "+data);
        broadcaster.broadcast(data);
-    }   
+    }
   }
 
 
- 
- 
+
+
 }

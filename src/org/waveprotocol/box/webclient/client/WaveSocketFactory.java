@@ -30,11 +30,11 @@ import org.waveprotocol.box.webclient.client.atmosphere.AtmosphereConnectionList
 /**
  * Factory to create proxy wrappers around either {@link com.google.gwt.websockets.client.WebSocket}
  * or {@link org.waveprotocol.box.webclient.client.atmosphere.AtmosphereConnection}.
- * 
+ *
  * @author tad.glines@gmail.com (Tad Glines)
  */
 public class WaveSocketFactory {
-  
+
   /**
    * Create a WaveSocket instance that wraps a concrete socket implementation.
    * If useWebSocketAlt is true an instance of {@link org.waveprotocol.box.webclient.client.atmosphere.AtmosphereConnection}

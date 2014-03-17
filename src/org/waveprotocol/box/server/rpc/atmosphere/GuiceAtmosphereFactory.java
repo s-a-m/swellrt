@@ -27,8 +27,8 @@ import org.waveprotocol.box.server.rpc.ServerRpcProvider;
 import org.waveprotocol.wave.util.logging.Log;
 
 /**
- * Custom factory to use wave's guice injector in Atmosphere 
- * 
+ * Custom factory to use wave's guice injector in Atmosphere
+ *
  * @author pablojan@gmail.com (Pablo Ojanguren)
  *
  */
@@ -42,9 +42,9 @@ public class GuiceAtmosphereFactory implements AtmosphereObjectFactory {
   @Override
   public <T, U extends T> U newClassInstance(AtmosphereFramework framework, Class<T> classType, Class<U> classToInstantiate) throws InstantiationException, IllegalAccessException {
       initInjector(framework);
-      
-      
-      if (injector == null) {           
+
+
+      if (injector == null) {
           return classToInstantiate.newInstance();
       } else {
           return injector.getInstance(classToInstantiate);
@@ -64,7 +64,7 @@ public class GuiceAtmosphereFactory implements AtmosphereObjectFactory {
               injector = servletInjector;
               LOG.fine("Existing injector found to create Atmosphere instances");
           } else {
-              LOG.fine("Not injector not found to create Atmosphere instances");  
+              LOG.fine("Not injector not found to create Atmosphere instances");
           }
       }
   }

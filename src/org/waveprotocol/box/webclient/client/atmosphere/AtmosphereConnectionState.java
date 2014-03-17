@@ -22,7 +22,7 @@ package org.waveprotocol.box.webclient.client.atmosphere;
 /**
  * Connection state definition inspired by former SocketIO/WebSocket
  * implementation
- * 
+ *
  * @author pablojan@gmail.com (Pablo Ojanguren)
  *
  */
@@ -35,13 +35,13 @@ public enum AtmosphereConnectionState {
       CLOSED("closed"),
       ERROR("error"),
       UNKNOWN("unknown");
-    
+
     private String value;
     private AtmosphereConnectionState(String v) { this.value = v; }
     public String value() { return value; }
-    
+
     public static AtmosphereConnectionState fromString(String val) {
-       
+
         if (val.equals("messageReceived")) {
           return MESSAGE_RECEIVED;
         } else  if (val.equals("messagePublished")) {
@@ -55,7 +55,7 @@ public enum AtmosphereConnectionState {
         } else  if (val.equals("error")) {
           return ERROR;
         }
-      
+
         return UNKNOWN;
     }
 }
