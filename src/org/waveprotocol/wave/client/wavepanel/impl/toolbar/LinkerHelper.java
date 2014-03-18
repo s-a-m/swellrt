@@ -50,7 +50,7 @@ public class LinkerHelper {
   public static void onCreateLink(final EditorContext editor) {
     final FocusedRange range = editor.getSelectionHelper().getSelectionRange();
     if (range == null || range.isCollapsed()) {
-      Window.alert(messages.selectSomeText());
+      WindowUtil.alert(messages.selectSomeText());
       return;
     }
     try {
