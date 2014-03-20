@@ -189,7 +189,19 @@ public final class EditSession
         LinkerHelper.onCreateLink(context);
       }
     });
+    KEY_BINDINGS.registerAction(KeyCombo.ORDER_L, new EditorAction() {
+      @Override
+      public void execute(EditorContext context) {
+        LinkerHelper.onCreateLink(context);
+      }
+    });
     KEY_BINDINGS.registerAction(KeyCombo.ORDER_SHIFT_K, new EditorAction() {
+      @Override
+      public void execute(EditorContext context) {
+        LinkerHelper.onClearLink(context);
+      }
+    });
+    KEY_BINDINGS.registerAction(KeyCombo.ORDER_SHIFT_L, new EditorAction() {
       @Override
       public void execute(EditorContext context) {
         LinkerHelper.onClearLink(context);
