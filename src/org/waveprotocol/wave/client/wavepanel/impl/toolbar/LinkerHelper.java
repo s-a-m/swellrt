@@ -22,9 +22,7 @@ package org.waveprotocol.wave.client.wavepanel.impl.toolbar;
 import org.waveprotocol.wave.client.common.util.WindowPromptCallback;
 import org.waveprotocol.wave.client.common.util.WindowUtil;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 
-import org.waveprotocol.wave.client.common.util.WaveRefConstants;
 import org.waveprotocol.wave.client.doodad.link.Link;
 import org.waveprotocol.wave.client.doodad.link.Link.InvalidLinkException;
 import org.waveprotocol.wave.client.editor.EditorContext;
