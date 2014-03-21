@@ -225,7 +225,7 @@ public class ServerMain {
 
   private static void initializeServlets(Injector injector, ServerRpcProvider server) {
     server.addServlet("/gadget/gadgetlist", injector.getInstance(GadgetProviderServlet.class));
-    server.addServlet("/attachment/*", injector.getInstance(AttachmentServlet.class));
+    //server.addServlet("/attachment/*", injector.getInstance(AttachmentServlet.class));
     server.addServlet(AttachmentServlet.ATTACHMENT_URL + "/*", injector.getInstance(AttachmentServlet.class));
     server.addServlet(AttachmentServlet.THUMBNAIL_URL + "/*", injector.getInstance(AttachmentServlet.class));
     server.addServlet(AttachmentInfoServlet.ATTACHMENTS_INFO_URL, injector.getInstance(AttachmentInfoServlet.class));
