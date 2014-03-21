@@ -908,8 +908,8 @@
       <url url="http://www.antlr3.org/download/antlr-3.2.jar" />
       <url url="http://central.maven.org/maven2/com/google/gwt/gwt-dev/2.5.1/gwt-dev-2.5.1.jar" />
       <url url="http://central.maven.org/maven2/com/google/gwt/gwt-user/2.5.1/gwt-user-2.5.1.jar" />
-      <url url="http://wave.alown.co.uk/third_party/socketio-gwt-0.1-SNAPSHOT.jar" />
-      <url url="http://wave.alown.co.uk/third_party/socketio-gwt-0.1-SNAPSHOT-sources.jar" />
+      <url url="http://archiva.comunes.org/repository/comunes-internal/com/glines/socketio/java/socketio-gwt/24-11-2013/socketio-gwt-24-11-2013.jar" />
+      <url url="http://archiva.comunes.org/repository/comunes-internal/com/glines/socketio/java/socketio-gwt-sources/24-11-2013/socketio-gwt-sources-24-11-2013.jar" />
       <url url="http://repo1.maven.org/maven2/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar" />
       <url url="http://repo1.maven.org/maven2/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final-sources.jar" />
       <url url="https://archive.apache.org/dist/velocity/engine/1.6.3/velocity-1.6.3.jar" />
