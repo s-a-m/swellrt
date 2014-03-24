@@ -49,7 +49,6 @@ import java.util.Set;
 public final class WaveBasedDigest
     implements Digest, BlipReadStateMonitor.Listener, WaveViewListener, WaveletListener {
 
-  private final static int PARTICIPANT_SNIPPET_SIZE = 2;
   private final static double NO_TIME = 1;
 
   /** The wave to digest. */
@@ -122,13 +121,10 @@ public final class WaveBasedDigest
     // Collect the author and participants in the same list, then partition
     // afterwards.
     participantSnippet = CollectionUtils.newArrayList();
-    outer: for (Conversation conversation : conversations) {
+    for (Conversation conversation : conversations) {
       for (ParticipantId participant : conversation.getParticipantIds()) {
-        if (participantSnippet.size() < PARTICIPANT_SNIPPET_SIZE + 1) {
-          participantSnippet.add(participant);
-        } else {
-          break outer;
-        }
+        // We add all participants because we show it randomly
+        participantSnippet.add(participant);
       }
     }
 

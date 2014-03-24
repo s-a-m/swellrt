@@ -19,6 +19,8 @@
 
 package org.waveprotocol.box.webclient.client;
 
+import cc.kune.initials.InitialsResources;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
@@ -207,6 +209,7 @@ public class WebClient implements EntryPoint {
   private void setupUi() {
     // Set up UI
     DockLayoutPanel self = BINDER.createAndBindUi(this);
+    InitialsResources.INS.css().ensureInjected();
     RootPanel.get("app").add(self);
     // DockLayoutPanel forcibly conflicts with sensible layout control, and
     // sticks inline styles on elements without permission. They must be

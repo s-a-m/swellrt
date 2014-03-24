@@ -19,18 +19,28 @@
 
 package org.waveprotocol.box.webclient.search;
 
+import cc.kune.initials.AvatarComposite;
+import cc.kune.initials.AvatarCompositeFactory;
+import cc.kune.initials.InitialLabel;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import org.waveprotocol.box.webclient.search.i18n.DigestDomMessages;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 
+import org.waveprotocol.box.webclient.search.i18n.DigestDomMessages;
 import org.waveprotocol.wave.client.account.Profile;
 import org.waveprotocol.wave.client.common.safehtml.SafeHtml;
 import org.waveprotocol.wave.client.common.safehtml.SafeHtmlBuilder;
 import org.waveprotocol.wave.client.uibuilder.BuilderHelper;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * DOM implementation of a digest view.
@@ -71,7 +81,7 @@ public final class DigestDomImpl implements DigestView {
   @UiField(provided = true)
   final static Css css = SearchPanelResourceLoader.getDigest().css();
 
-  interface Binder extends UiBinder<Element, DigestDomImpl> {
+  interface Binder extends UiBinder<Widget, DigestDomImpl> {
   }
 
   private final static Binder BINDER = GWT.create(Binder.class);
@@ -80,7 +90,7 @@ public final class DigestDomImpl implements DigestView {
   private final SearchPanelWidget container;
   private final Element self;
   @UiField
-  Element avatars;
+  SimplePanel avatars;
   @UiField
   Element title;
   @UiField
@@ -92,7 +102,7 @@ public final class DigestDomImpl implements DigestView {
 
   DigestDomImpl(SearchPanelWidget container) {
     this.container = container;
-    this.self = BINDER.createAndBindUi(this);
+    self = BINDER.createAndBindUi(this).getElement();
     self.setAttribute(BuilderHelper.KIND_ATTRIBUTE, "digest");
     self.setAttribute(DIGEST_ID_ATTRIBUTE, "D" + idCounter++);
   }
@@ -110,7 +120,7 @@ public final class DigestDomImpl implements DigestView {
 
   /** Restores this object to a post-constructor state. */
   void reset() {
-    avatars.setInnerHTML("");
+    avatars.clear();
     title.setInnerText("");
     snippet.setInnerText("");
     time.setInnerText("");
@@ -119,12 +129,16 @@ public final class DigestDomImpl implements DigestView {
   }
 
   @Override
-  public void setAvatars(Iterable<Profile> profiles) {
-    SafeHtmlBuilder html = new SafeHtmlBuilder();
+  public void setAvatars(List<Profile> profiles) {
+    LinkedList<IsWidget> names = new LinkedList<IsWidget>();
     for (Profile profile : profiles) {
-      renderAvatar(html, profile);
+      String name = profile.getAddress();
+      InitialLabel label = new InitialLabel(name);
+      label.setTitle(name);
+      names.add(label);
     }
-    avatars.setInnerHTML(html.toSafeHtml().asString());
+    AvatarComposite composite = AvatarCompositeFactory.get40().build(names);
+    avatars.add(composite);
   }
 
   @Override
@@ -169,19 +183,6 @@ public final class DigestDomImpl implements DigestView {
     html.appendHtmlConstant(String.valueOf(total));
     html.appendHtmlConstant(" " + messages.msgs());
     return html.toSafeHtml();
-  }
-
-  private void renderAvatar(SafeHtmlBuilder html, Profile profile) {
-    // URL is trusted to be attribute safe (i.e., no ' or ")
-    String url = profile.getImageUrl();
-    String name = profile.getFullName();
-    html.appendHtmlConstant("<img class='" + css.avatar() + "' src='");
-    html.appendHtmlConstant(url);
-    html.appendHtmlConstant("' alt='");
-    html.appendEscaped(name);
-    html.appendHtmlConstant("' title='");
-    html.appendEscaped(name);
-    html.appendHtmlConstant("'>");
   }
 
   @Override

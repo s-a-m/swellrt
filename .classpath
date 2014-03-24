@@ -79,9 +79,24 @@
 	<classpathentry kind="lib" path="third_party/runtime/websocket-api-9.1.1.v20140108.jar"/>
 	<classpathentry kind="lib" path="third_party/runtime/mongo-java-driver-2.11.2.jar"/>
 	<classpathentry kind="lib" path="third_party/codegen/socketio-gwt-0.1-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="third_party/codegen/gwt-dev-2.5.1.jar"/>
-	<classpathentry kind="lib" path="third_party/codegen/gwt-user-2.5.1.jar"/>
 	<classpathentry kind="lib" path="third_party/codegen/validation-api-1.1.0.Final-sources.jar"/>
 	<classpathentry kind="lib" path="third_party/codegen/validation-api-1.1.0.Final.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="lib" path="third_party/codegen/gwt-initials-avatars-client-1.0-20140324.102819-16.jar"/>
+	<classpathentry kind="lib" path="third_party/codegen/gwt-initials-avatars-client-1.0-20140324.102819-16-sources.jar"/>
+	<classpathentry kind="lib" path="third_party/runtime/gwt-initials-avatars-shared-1.0-20140324.102812-16.jar"/>
+	<classpathentry kind="lib" path="third_party/runtime/gwt-initials-avatars-shared-1.0-20140324.102812-16-sources.jar"/>
+	<classpathentry kind="lib" path="third_party/runtime/gwt-initials-avatars-server-1.0-20140324.102825-10.jar"/>
+	<classpathentry kind="lib" path="/home/vjrj/bin/eclipse64-2012/plugins/com.google.gwt.eclipse.sdkbundle_2.5.1/gwt-2.5.1/gwt-user.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/home/vjrj/bin/eclipse64-2012/plugins/com.google.gwt.eclipse.sdkbundle_2.5.1/gwt-2.5.1/doc/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/vjrj/bin/eclipse64-2012/plugins/com.google.gwt.eclipse.sdkbundle_2.5.1/gwt-2.5.1/gwt-dev.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/home/vjrj/bin/eclipse64-2012/plugins/com.google.gwt.eclipse.sdkbundle_2.5.1/gwt-2.5.1/doc/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/vjrj/bin/eclipse64-2012/plugins/com.google.gwt.eclipse.sdkbundle_2.5.1/gwt-2.5.1/validation-api-1.0.0.GA.jar" sourcepath="/home/vjrj/bin/eclipse64-2012/plugins/com.google.gwt.eclipse.sdkbundle_2.5.1/gwt-2.5.1/validation-api-1.0.0.GA-sources.jar"/>
+	<classpathentry kind="lib" path="/home/vjrj/bin/eclipse64-2012/plugins/com.google.gwt.eclipse.sdkbundle_2.5.1/gwt-2.5.1/validation-api-1.0.0.GA-sources.jar"/>
+	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

@@ -21,6 +21,8 @@ package org.waveprotocol.box.webclient.search;
 
 import org.waveprotocol.wave.client.account.Profile;
 
+import java.util.List;
+
 /**
  * View interface for a digest.
  *
@@ -30,7 +32,7 @@ public interface DigestView {
   /** Removes this view from the UI. */
   void remove();
 
-  void setAvatars(Iterable<Profile> urls);
+  void setAvatars(List<Profile> urls);
 
   void setTimestamp(String time);
 
