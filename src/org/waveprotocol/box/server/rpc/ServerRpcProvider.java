@@ -390,6 +390,14 @@ public class ServerRpcProvider {
 //
 //      context.addEventListener(contextListener);
 //      context.addFilter(GuiceFilter.class, "/*", EnumSet.allOf(DispatcherType.class));
+
+      // We add servlets here to override the DefaultServlet automatic registered by WebAppContext
+      // in path "/" with our WaveClientServlet. Any other way to do this?
+      // Related question (unanswered) http://web.archiveorange.com/archive/v/d0LdlXf1kN0OXyPNyQZp
+      for (Pair<String, ServletHolder> servlet : servletRegistry) {
+        context.addServlet(servlet.getSecond(), servlet.getFirst());
+      }
+
       context.addFilter(GzipFilter.class, "/webclient/*", EnumSet.allOf(DispatcherType.class));
       String[] hosts = new String[httpAddresses.length];
       for (int i=0; i < httpAddresses.length; i++) {
@@ -397,21 +405,8 @@ public class ServerRpcProvider {
       }
       context.addVirtualHosts(hosts);
       httpServer.setHandler(context);
-            try {
-                httpServer.start();
-                // We add servlets here to override the DefaultServlet automatic registered by WebAppContext
-                // in path "/" with our WaveClientServlet. Any other way to do this?
-                // Related question (unanswered) http://web.archiveorange.com/archive/v/d0LdlXf1kN0OXyPNyQZp
-                for (Pair<String, ServletHolder> servlet : servletRegistry) {
-                  context.addServlet(servlet.getSecond(), servlet.getFirst());
-                 }
 
-           } catch (Exception e) { // yes, .start() throws "Exception"
-                  LOG.severe("Fatal error starting http server.", e);
-                  return;
-                }
-
-      //httpServer.start();
+      httpServer.start();
       restoreSessions();
 
     } catch (Exception e) { // yes, .start() throws "Exception"
