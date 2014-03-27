@@ -2,7 +2,7 @@ language: java
 jdk:
 - openjdk7
 before_install: mkdir -p ~/.m2 && cp settings.xml ~/.m2/
-script: ant dist-api dist-libraries dist-proto dist-pst dist-robot-client-api dist-pst-dep dist-pst dist-server-dep dist-server
+script: ant get-third-party compile-gwt dist-api dist-libraries dist-proto dist-pst dist-robot-client-api dist-pst-dep dist-pst dist-server-dep dist-server
 after_success: ./deploy-wave-kune-to-ci.sh
 env:
   global:
