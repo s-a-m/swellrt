@@ -1,4 +1,10 @@
 language: java
 jdk:
-  - openjdk7
-script:  "ant get-third-party compile-gwt dist-server"
+- openjdk7
+before_install: mkdir -p ~/.m2 && cp settings.xml ~/.m2/
+script: ant dist-api dist-libraries dist-proto dist-pst dist-robot-client-api dist-pst-dep dist-pst dist-server-dep dist-server
+after_success: ./deploy-wave-kune-to-ci.sh
+env:
+  global:
+  - secure: o86qmbVwnAA8agIsu4LsdhBJ0smHSlaBnpCzv/bqE4xjH/lw1Ea/ygC7w6yaPZ2fg/KTfmzbm/tE8lGozr2dMqmNVokwkM/9XaiHRlPcVxNhXqa3jKQwICb+9W5beKT47TwiqTs0PwUYymHXKP2ls0afAxqA0p3SIKADWz/77m8=
+  - secure: iASm1UsmVOFVnO+xquKWkCTW6tszE8+gYn3QwaprYVF0qwtf7z6xsxdWlBeQVfGSO3gYCZPgIfmMo/Co1l2V+kGQ9l1xb8fMqOU+ngP83AJo5JkmPJyU9NykvhAdSyJmKJ+FfpSjYWkCPiZbu7xkK5tzlFU26IOmVBMW4NDpX/M=
