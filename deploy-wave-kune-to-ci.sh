@@ -1,14 +1,10 @@
 #!/bin/bash
 VERSION=0.1.0-p2pv-SNAPSHOT
 
-# Left URL and REPOID empty for local repo installation
-
-#URL=http://archiva.comunes.org/repository/comunes-internal/
+# Leave URL and REPOID empty for local repo installation
 URL=http://grasia.fdi.ucm.es/p2pvalue/artifactory/p2pvalue-snapshot/
-#REPOID=comunes-internal
 REPOID=p2pvalue-snapshot
 
-#ant dist-api dist-libraries dist-proto dist-pst dist-robot-client-api dist-pst-dep dist-pst dist-server-dep dist-server 
 for i in `cat kune-artifacts-alone.txt` 
 do 
   cd dist
