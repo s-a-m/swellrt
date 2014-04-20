@@ -22,4 +22,6 @@ proto-src
 proto-msg
 util
 util-src
+wave-in-a-box-api-0.4-incubating
+wave-in-a-box-wave-api-0.4-incubating
 wave-in-a-box-server-0.4-incubating

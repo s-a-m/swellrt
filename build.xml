@@ -364,7 +364,7 @@
         <path refid="libpath"/>
         <path refid="test.libpath"/>
       </classpath>
-      <jvmarg value="-Xmx1024M"/>
+      <jvmarg value="-Xmx512M"/>
       <!-- Small Javascript size. -->
       <arg line="-style OBFUSCATED"/>
       <!-- Do not include class and package names in compiled JS. -->
@@ -436,7 +436,7 @@
   </target>
 
   <!--=====
-      Hosted
+      Hosted and Superdev
       ======-->
 
   <target name="hosted-gwt" depends="compile"
@@ -447,13 +447,27 @@
         <pathelement location="${gen.dir}/messages"/>
         <path refid="libpath"/>
       </classpath>
-      <jvmarg value="-Xmx1024M"/>
+      <jvmarg value="-Xmx512M"/>
       <jvmarg value="-ea"/>
       <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8001"/>
       <arg value="-noserver" />
       <arg line="-bindAddress 0.0.0.0" />
       <arg line="${gwt.args}"/>
       <arg value="org.waveprotocol.box.webclient.WebClientProd"/>
+    </java>
+  </target>
+
+  <target name="superdev-gwt" depends="compile"
+      description="Runs the superdev mode, for debugging the GWT client in a browser.">
+    <java failonerror="true" fork="true" classname="com.google.gwt.dev.codeserver.CodeServer">
+      <classpath>
+        <pathelement location="${src.dir}"/>
+        <pathelement location="${gen.dir}/messages"/>
+        <path refid="libpath"/>
+      </classpath>
+      <arg line="${gwt.args}"/>
+      <arg line="-src src"/>
+      <arg value="org.waveprotocol.box.webclient.WebClientDev"/>
     </java>
   </target>
 
@@ -472,6 +486,18 @@
     </java>
   </target>
 
+  <target name="editor-superdev" depends="compile" description="Runs the editor harness through the GWT superdev mode server, for debugging in a browser.">
+    <java failonerror="true" fork="true" classname="com.google.gwt.dev.codeserver.CodeServer">
+      <classpath>
+        <pathelement location="${src.dir}"/>
+        <path refid="libpath"/>
+      </classpath>
+      <arg line="${gwt.args}"/>
+      <arg line="-src src"/>
+      <arg value="org.waveprotocol.wave.client.editor.harness.EditorTest"/>
+    </java>
+  </target>
+
   <target name="waveharness-hosted" depends="compile" description="Runs the wave panel harness through the GWT hosted mode server, for debugging in a JVM.">
     <java failonerror="true" fork="true" classname="com.google.gwt.dev.DevMode">
       <classpath>
@@ -483,6 +509,18 @@
       <arg line="${gwt.args}"/>
       <arg line="-war war"/>
       <arg line="-startupUrl waveharness/UndercurrentHarness.html"/>
+      <arg value="org.waveprotocol.wave.client.testing.UndercurrentHarness"/>
+    </java>
+  </target>
+
+  <target name="waveharness-superdev" depends="compile" description="Runs the wave panel harness through the GWT superdev mode server, for debugging in a browser.">
+    <java failonerror="true" fork="true" classname="com.google.gwt.dev.codeserver.CodeServer">
+      <classpath>
+        <pathelement location="${src.dir}"/>
+        <path refid="libpath"/>
+      </classpath>
+      <arg line="${gwt.args}"/>
+      <arg line="-src src"/>
       <arg value="org.waveprotocol.wave.client.testing.UndercurrentHarness"/>
     </java>
   </target>
@@ -908,12 +946,15 @@
       <url url="http://www.antlr3.org/download/antlr-3.2.jar" />
       <url url="http://central.maven.org/maven2/com/google/gwt/gwt-dev/2.5.1/gwt-dev-2.5.1.jar" />
       <url url="http://central.maven.org/maven2/com/google/gwt/gwt-user/2.5.1/gwt-user-2.5.1.jar" />
+      <url url="http://central.maven.org/maven2/com/google/gwt/gwt-codeserver/2.5.1/gwt-codeserver-2.5.1.jar" />
       <url url="http://grasia.fdi.ucm.es/p2pvalue/artifactory/ext-release-local/com/glines/socketio/java/socketio-gwt-sources/24-11-2013/socketio-gwt-sources-24-11-2013.jar" />
       <url url="http://grasia.fdi.ucm.es/p2pvalue/artifactory/ext-release-local/com/glines/socketio/java/socketio-gwt/24-11-2013/socketio-gwt-24-11-2013.jar" />
       <url url="http://repo1.maven.org/maven2/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar" />
       <url url="http://repo1.maven.org/maven2/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final-sources.jar" />
       <url url="https://archive.apache.org/dist/velocity/engine/1.6.3/velocity-1.6.3.jar" />
       <url url="https://archive.apache.org/dist/velocity/engine/1.6.3/velocity-1.6.3-dep.jar" />
+      <url url="http://archiva.comunes.org/repository/comunes-snapshots/cc/kune/gwt-initials-avatars-client/1.0-SNAPSHOT/gwt-initials-avatars-client-1.0-20140324.102819-16.jar"/>
+      <url url="http://archiva.comunes.org/repository/comunes-snapshots/cc/kune/gwt-initials-avatars-client/1.0-SNAPSHOT/gwt-initials-avatars-client-1.0-20140324.102819-16-sources.jar"/>
     </get>
   </target>
 
@@ -995,6 +1036,10 @@
       <url url="http://wave.alown.co.uk/third_party/xmpp.jar" />
       <url url="http://central.maven.org/maven2/xpp3/xpp3/1.1.4c/xpp3-1.1.4c.jar" />
       <url url="http://central.maven.org/maven2/xpp3/xpp3_xpath/1.1.4c/xpp3_xpath-1.1.4c.jar" />
+      <url url="http://repo1.maven.org/maven2/org/gnu/inet/libidn/1.15/libidn-1.15.jar" />
+      <url url="http://archiva.comunes.org/repository/comunes-snapshots/cc/kune/gwt-initials-avatars-shared/1.0-SNAPSHOT/gwt-initials-avatars-shared-1.0-20140324.102812-16.jar" />
+      <url url="http://archiva.comunes.org/repository/comunes-snapshots/cc/kune/gwt-initials-avatars-shared/1.0-SNAPSHOT/gwt-initials-avatars-shared-1.0-20140324.102812-16-sources.jar" />
+      <url url="http://archiva.comunes.org/repository/comunes-snapshots/cc/kune/gwt-initials-avatars-server/1.0-SNAPSHOT/gwt-initials-avatars-server-1.0-20140324.102825-10.jar" />
     </get>
   </target>
 

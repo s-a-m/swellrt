@@ -29,9 +29,8 @@ import com.google.inject.Key;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
-import com.google.inject.servlet.GuiceFilter;
-import com.google.inject.servlet.GuiceServletContextListener;
-import com.google.inject.servlet.ServletModule;
+import com.google.inject.name.Names;
+import com.google.inject.servlet.SessionScoped;
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.Descriptors.MethodDescriptor;
 import com.google.protobuf.Message;
@@ -50,12 +49,28 @@ import com.glines.socketio.server.transport.jetty.JettyWebSocketTransport;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlets.GzipFilter;
 import org.eclipse.jetty.util.resource.ResourceCollection;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
+import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
+import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
+import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
+import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
+import org.waveprotocol.box.common.comms.WaveClientRpc.ProtocolAuthenticate;
+import org.waveprotocol.box.common.comms.WaveClientRpc.ProtocolAuthenticationResult;
+import org.waveprotocol.box.server.CoreSettings;
+import org.waveprotocol.box.server.authentication.SessionManager;
+import org.waveprotocol.box.server.persistence.file.FileUtils;
+import org.waveprotocol.box.server.util.NetUtils;
+import org.waveprotocol.wave.model.util.Pair;
+import org.waveprotocol.wave.model.wave.ParticipantId;
+import org.waveprotocol.wave.util.logging.Log;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -72,7 +87,6 @@ import java.util.concurrent.Executors;
 import javax.annotation.Nullable;
 import javax.servlet.DispatcherType;
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -112,9 +126,9 @@ public class ServerRpcProvider {
    * param. It defines the response buffer size.
    */
   private static final int BUFFER_SIZE = 1024 * 1024;
-  
+
   // We can retrieve the injector from the context attributes via this attribute name
-  public static final String INJECTOR_ATTRIBUTE = Injector.class.getName();  
+  public static final String INJECTOR_ATTRIBUTE = Injector.class.getName();
 
   private final InetSocketAddress[] httpAddresses;
   private final Integer flashsocketPolicyPort;
@@ -168,7 +182,7 @@ public class ServerRpcProvider {
       return socketChannel;
     }
   }
-
+  @SessionScoped
   static class SocketIOConnection extends Connection {
     private final SocketIOServerChannel socketChannel;
 
@@ -402,6 +416,19 @@ public class ServerRpcProvider {
      context.addServlet(servlet.getSecond(), servlet.getFirst());
      }
       
+//      ServletContextListener contextListener = new GuiceServletContextListener() {
+//
+//        private final Injector childInjector = parentInjector.createChildInjector(servletModule);
+//
+//        @Override
+//        protected Injector getInjector() {
+//          return childInjector;
+//        }
+//      };
+//
+//      context.addEventListener(contextListener);
+//      context.addFilter(GuiceFilter.class, "/*", EnumSet.allOf(DispatcherType.class));
+
       context.addFilter(GzipFilter.class, "/webclient/*", EnumSet.allOf(DispatcherType.class));
       String[] hosts = new String[httpAddresses.length];
       for (int i=0; i < httpAddresses.length; i++) {
@@ -475,26 +502,26 @@ public class ServerRpcProvider {
     context.addServlet(defaultServlet, "/webclient/*");
   }
 
-  public ServletModule getServletModule(final Injector injector) {
-
-    return new ServletModule() {
-      @Override
-      protected void configureServlets() {
-        // We add servlets here to override the DefaultServlet automatic registered by WebAppContext
-        // in path "/" with our WaveClientServlet. Any other way to do this?
-        // Related question (unanswered 08-Apr-2011)
-        // http://web.archiveorange.com/archive/v/d0LdlXf1kN0OXyPNyQZp
-        for (Pair<String, ServletHolder> servlet : servletRegistry) {
-          String url = servlet.getFirst();
-          @SuppressWarnings("unchecked")
-          Class<HttpServlet> clazz = (Class<HttpServlet>) servlet.getSecond().getHeldClass();
-          Map<String,String> params = servlet.getSecond().getInitParameters();
-          serve(url).with(clazz,params);
-          bind(clazz).in(Singleton.class);
-        }
-      }
-    };
-  }
+//  public ServletModule getServletModule(final Injector injector) {
+//
+//    return new ServletModule() {
+//      @Override
+//      protected void configureServlets() {
+//        // We add servlets here to override the DefaultServlet automatic registered by WebAppContext
+//        // in path "/" with our WaveClientServlet. Any other way to do this?
+//        // Related question (unanswered 08-Apr-2011)
+//        // http://web.archiveorange.com/archive/v/d0LdlXf1kN0OXyPNyQZp
+//        for (Pair<String, ServletHolder> servlet : servletRegistry) {
+//          String url = servlet.getFirst();
+//          @SuppressWarnings("unchecked")
+//          Class<HttpServlet> clazz = (Class<HttpServlet>) servlet.getSecond().getHeldClass();
+//          Map<String,String> params = servlet.getSecond().getInitParameters();
+//          serve(url).with(clazz,params);
+//          bind(clazz).in(Singleton.class);
+//        }
+//      }
+//    };
+//  }
 
   private static InetSocketAddress[] parseAddressList(List<String> addressList, String websocketAddress) {
     if (addressList == null || addressList.size() == 0) {
@@ -725,6 +752,8 @@ public class ServerRpcProvider {
    * @return the {@link ServletHolder} that holds the servlet.
    */
   public ServletHolder addServlet(String urlPattern, HttpServlet servlet) {
-    return addServlet(urlPattern, servlet, null);
+    ServletHolder servletHolder = new ServletHolder(servlet);
+    servletRegistry.add(new Pair<String, ServletHolder>(urlPattern, servletHolder));
+    return servletHolder;
   }
 }

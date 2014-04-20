@@ -40,6 +40,7 @@ import org.waveprotocol.box.server.persistence.AccountStore;
 import org.waveprotocol.box.server.persistence.PersistenceException;
 import org.waveprotocol.box.server.persistence.PersistenceModule;
 import org.waveprotocol.box.server.persistence.SignerInfoStore;
+import org.waveprotocol.box.server.robots.ProfileFetcherModule;
 import org.waveprotocol.box.server.robots.RobotApiModule;
 import org.waveprotocol.box.server.robots.RobotRegistrationServlet;
 import org.waveprotocol.box.server.robots.active.ActiveApiServlet;
@@ -85,6 +86,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
+
 import org.eclipse.jetty.proxy.ProxyServlet;
 import org.waveprotocol.box.common.comms.WaveClientRpc.ProtocolWaveClientRpc;
 import org.waveprotocol.box.server.rpc.LocaleServlet;
@@ -114,7 +116,7 @@ public class ServerMain {
       LOG.info("Starting GadgetProxyServlet for " + gadgetServerHostname + ":" + gadgetServerPort);
       proxyServlet = new ProxyServlet.Transparent(
           "http://" + gadgetServerHostname + ":" + gadgetServerPort + "/gadgets",
-          "/gadgets");      
+          "/gadgets");
     }
 
     @Override
@@ -169,9 +171,10 @@ public class ServerMain {
     Module federationModule = buildFederationModule(settingsInjector, enableFederation);
     PersistenceModule persistenceModule = settingsInjector.getInstance(PersistenceModule.class);
     Module searchModule = settingsInjector.getInstance(SearchModule.class);
+    Module profileFetcherModule = settingsInjector.getInstance(ProfileFetcherModule.class);
     Injector injector =
         settingsInjector.createChildInjector(new ServerModule(enableFederation, listenerCount,
-            waveletLoadCount, deltaPersistCount, storageContinuationCount, lookupCount),
+            waveletLoadCount, deltaPersistCount, storageContinuationCount, lookupCount), profileFetcherModule,
             new RobotApiModule(), federationModule, persistenceModule, searchModule);
 
     ServerRpcProvider server = injector.getInstance(ServerRpcProvider.class);
@@ -225,7 +228,6 @@ public class ServerMain {
 
   private static void initializeServlets(Injector injector, ServerRpcProvider server) {
     server.addServlet("/gadget/gadgetlist", injector.getInstance(GadgetProviderServlet.class));
-    //server.addServlet("/attachment/*", injector.getInstance(AttachmentServlet.class));
     server.addServlet(AttachmentServlet.ATTACHMENT_URL + "/*", injector.getInstance(AttachmentServlet.class));
     server.addServlet(AttachmentServlet.THUMBNAIL_URL + "/*", injector.getInstance(AttachmentServlet.class));
     server.addServlet(AttachmentInfoServlet.ATTACHMENTS_INFO_URL, injector.getInstance(AttachmentInfoServlet.class));
@@ -245,9 +247,8 @@ public class ServerMain {
     server.addServlet("/robot/rpc", injector.getInstance(ActiveApiServlet.class));
     server.addServlet("/webclient/remote_logging", injector.getInstance(RemoteLoggingServiceImpl.class));
     server.addServlet("/profile/*", injector.getInstance(FetchProfilesServlet.class));
+    server.addServlet("/iniavatars/*", injector.getInstance(InitialsAvatarsServlet.class));
     server.addServlet("/waveref/*", injector.getInstance(WaveRefServlet.class));
-
-
 
     String gadgetHostName =
         injector
@@ -255,7 +256,7 @@ public class ServerMain {
     int port =
         injector.getInstance(Key.get(Integer.class, Names.named(CoreSettings.GADGET_SERVER_PORT)));
     Map<String, String> initParams =
-        Collections.singletonMap("HostHeader", gadgetHostName + ":" + port);
+       Collections.singletonMap("hostHeader", gadgetHostName + ":" + port);
     server.addServlet("/gadgets/*", injector.getInstance(GadgetProxyServlet.class), initParams);
 
     server.addServlet("/", injector.getInstance(WaveClientServlet.class));

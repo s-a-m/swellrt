@@ -22,9 +22,7 @@ package org.waveprotocol.wave.client.wavepanel.impl.toolbar;
 import org.waveprotocol.wave.client.common.util.WindowPromptCallback;
 import org.waveprotocol.wave.client.common.util.WindowUtil;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 
-import org.waveprotocol.wave.client.common.util.WaveRefConstants;
 import org.waveprotocol.wave.client.doodad.link.Link;
 import org.waveprotocol.wave.client.doodad.link.Link.InvalidLinkException;
 import org.waveprotocol.wave.client.editor.EditorContext;
@@ -50,7 +48,7 @@ public class LinkerHelper {
   public static void onCreateLink(final EditorContext editor) {
     final FocusedRange range = editor.getSelectionHelper().getSelectionRange();
     if (range == null || range.isCollapsed()) {
-      Window.alert(messages.selectSomeText());
+      WindowUtil.alert(messages.selectSomeText());
       return;
     }
     try {
@@ -73,14 +71,14 @@ public class LinkerHelper {
                     // We set again the range (because can be lost with modal dialogs);
                     editor.getSelectionHelper().setSelectionRange(range);
                     String linkAnnotationValue = Link.normalizeLink(rawLinkValue);
-                    // TODO(pablojan) to compare with Kune's version
                     EditorAnnotationUtil.setAnnotationOverSelection(editor, AnnotationConstants.LINK_PREFIX, linkAnnotationValue);
                   } catch (InvalidLinkException e2) {
-                    WindowUtil.alert("Invalid link. Should be a web url in the form: http://example.com/");
+                    WindowUtil.alert(e2.getLocalizedMessage());
                   }
                 }}
               );
-    }
+    } 
+      
   }
 
   /**

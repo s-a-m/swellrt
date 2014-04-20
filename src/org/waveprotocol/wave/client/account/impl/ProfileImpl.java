@@ -78,7 +78,7 @@ public final class ProfileImpl implements Profile {
   @Override
   public String getImageUrl() {
     if (imageUrl == null) {
-      imageUrl = "static/images/unknown.jpg";
+      imageUrl = "/iniavatars/100x100/"+ getAddress();
     }
     return imageUrl;
   }

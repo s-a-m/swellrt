@@ -52,14 +52,18 @@
 
 .inner {
   line-height: 16px;
-  height: 32px;  /* Exactly 2 lines of text. */
+  height: 43px;  /* Exactly 2 lines of text. */
   overflow: hidden;
 }
 
 .avatars {
   float: left;
   margin-right: 1em;
-  width: 108px;  /* (32 + 4) x 3. */
+  height: 41px;
+  width: 41px;
+  background-color: #FFF;
+  border: 1px solid #cad0d9;
+  /* width: 108px;  /* (32 + 4) x 3. */
 }
 
 .avatar {

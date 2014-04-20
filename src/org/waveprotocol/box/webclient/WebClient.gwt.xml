@@ -50,6 +50,7 @@
   <inherits name='org.waveprotocol.box.webclient.widget.error.Error'/>
   <inherits name='org.waveprotocol.box.webclient.widget.frame.Frame'/>
   <inherits name='org.waveprotocol.box.webclient.widget.loading.Loading'/>
+  <inherits name='cc.kune.initials.InitialsAvatars'/>
 
   <set-configuration-property name="CssResource.obfuscationPrefix" value="SWC" />
 
