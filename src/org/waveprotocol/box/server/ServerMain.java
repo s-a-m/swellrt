@@ -19,6 +19,8 @@
 
 package org.waveprotocol.box.server;
 
+import cc.kune.initials.InitialsAvatarsServlet;
+
 import com.google.gwt.logging.server.RemoteLoggingServiceImpl;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
