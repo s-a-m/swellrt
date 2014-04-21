@@ -1,5 +1,5 @@
-#
-#
+#!/bin/bash
+
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -16,10 +16,12 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-#
-#
 
-# Mongo DB options, configure these if you are using the "mongo" option for one of your stores
-mongoDbHost=127.0.0.1
-mongoDbPort=27017
-mongoDbDatabase=fedone
+# This script will start the data migration between two different store types
+# Initially this tool is intended to migrate deltas from file to mongodb store
+# Run "ant dist-server" before to use this script
+
+# The version of Wave in a Box, extracted from the build.properties file
+WAVEINABOX_VERSION=`sed "s/[\\t ]*=[\\t ]*/=/g" build.properties | grep ^waveinabox.version= | cut -f2 -d=`
+
+exec java -cp dist/wave-in-a-box-server-$WAVEINABOX_VERSION.jar org.waveprotocol.box.server.DataMigrationTool $*

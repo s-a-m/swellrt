@@ -73,6 +73,9 @@ public class CoreSettings {
   public static final String ANALYTICS_ACCOUNT = "analytics_account";
   public static final String THUMBNAIL_PATTERNS_DIRECTORY = "thumbnail_patterns_directory";
   public static final String PROFILE_FETCHER_TYPE = "profile_fetcher_type";
+  public static final String MONGODB_HOST = "mongodb_host";
+  public static final String MONGODB_PORT = "mongodb_port";
+  public static final String MONGODB_DATABASE = "mongodb_database";
 
   @Setting(name = WAVE_SERVER_DOMAIN)
   private static String waveServerDomain;
@@ -264,4 +267,16 @@ public class CoreSettings {
   @Setting(name = PROFILE_FETCHER_TYPE,
       description = "The wave profile fetcher used", defaultValue = "gravatar")
   private static String profileFetcherType;
+
+  @Setting(name = MONGODB_HOST, description = "The host address for the MongoDB server",
+      defaultValue = "127.0.0.1")
+  private static String mongoDBhost;
+
+  @Setting(name = MONGODB_PORT, description = "The port number of the MongoDB server",
+      defaultValue = "27017")
+  private static String mongoDBport;
+
+  @Setting(name = MONGODB_DATABASE, description = "The database name used in the MongoDB server",
+      defaultValue = "wiab")
+  private static String mongoDBdatabase;
 }
