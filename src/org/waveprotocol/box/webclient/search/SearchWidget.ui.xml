@@ -43,6 +43,15 @@ xmlns:dp="urn:import:com.google.gwt.user.datepicker.client">
         width: 100%;
     }
 
+    .disclosureSearchFilterPanel .header {
+        padding: 0px 12px;
+        color: gray;
+        text-decoration: none;
+        margin: 0px 0px auto;
+    }
+
+
+
     .hideit {
 
     display: none;
