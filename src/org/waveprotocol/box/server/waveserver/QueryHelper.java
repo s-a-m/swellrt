@@ -31,8 +31,13 @@ import org.waveprotocol.wave.model.wave.ParticipantId;
 import org.waveprotocol.wave.model.wave.data.ObservableWaveletData;
 import org.waveprotocol.wave.model.wave.data.WaveViewData;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,16 +135,16 @@ public class QueryHelper {
           return creator0.compareTo(creator1);
         }
 
-    private ParticipantId computeCreator(WaveViewData wave) {
-      for (ObservableWaveletData wavelet : wave.getWavelets()) {
-        if (IdUtil.isConversationRootWaveletId(wavelet.getWaveletId())) {
-          return wavelet.getCreator();
+        private ParticipantId computeCreator(WaveViewData wave) {
+          for (ObservableWaveletData wavelet : wave.getWavelets()) {
+            if (IdUtil.isConversationRootWaveletId(wavelet.getWaveletId())) {
+              return wavelet.getCreator();
+            }
+          }
+          // If not found creator - compare with UNKNOWN_CREATOR;
+          return UNKNOWN_CREATOR;
         }
-      }
-      // If not found creator - compare with UNKNOWN_CREATOR;
-      return UNKNOWN_CREATOR;
-    }
-  };
+      };
 
   /** Sorts search result in descending order by creator */
   public static final Comparator<WaveViewData> DESC_CREATOR_COMPARATOR =
@@ -240,6 +245,95 @@ public class QueryHelper {
     }
   }
 
+  static DateFormat filterDateFormat = new SimpleDateFormat("yyyyMMdd");
+
+  /** Values for the usedate query param for filter by date range **/
+  public enum UseDateValueType {
+
+    CREATEDATE("createdate"), LASTMODDATE("lastmoddate");
+
+    final String token;
+
+    UseDateValueType(String value) {
+      this.token = value;
+    }
+
+    String getToken() {
+      return this.token;
+    }
+
+    private static final Map<String, UseDateValueType> reverseLookupMap =
+        new HashMap<String, UseDateValueType>();
+
+    static {
+      for (UseDateValueType type : UseDateValueType.values()) {
+        reverseLookupMap.put(type.getToken(), type);
+      }
+    }
+
+    public static UseDateValueType fromToken(String token) {
+      UseDateValueType useDateByValue = reverseLookupMap.get(token);
+      if (useDateByValue == null) {
+        throw new IllegalArgumentException("Illegal 'usedate' value: " + token);
+      }
+      return reverseLookupMap.get(token);
+    }
+
+  }
+
+  /**
+   * Transforms a query param value of type Date to a long value
+   *
+   * @param queryParams the query params.
+   * @param queryType the filter for the query , i.e. 'from'.
+   * @return 0 if no parameter was found.
+   */
+  public static long getDateAsLong(Map<TokenQueryType, Set<String>> queryParams,
+      TokenQueryType queryType) {
+
+    if (queryParams.containsKey(queryType)) {
+      if (!queryParams.get(queryType).isEmpty()) {
+        return Long.parseLong(queryParams.get(queryType).iterator().next());
+      }
+    }
+    return 0;
+  }
+
+  /**
+   * Increments the date up to the time 23:59
+   *
+   * @param input date
+   * @return date value for the same day with the 23:59 day time
+   */
+  public static long roundUpDate(long date) {
+
+    Calendar cal = new GregorianCalendar();
+    cal.setTimeInMillis(date);
+    cal.set(Calendar.HOUR_OF_DAY, 23);
+    cal.set(Calendar.MINUTE, 59);
+    cal.set(Calendar.MILLISECOND, 999);
+
+    return cal.getTimeInMillis();
+  }
+
+
+  /**
+   * Return a UseDateValueType as a field date to restric a search
+   *
+   * @param queryParams the query params.
+   * @return null if no use date parameter exist.
+   */
+  public static UseDateValueType getUseDateField(Map<TokenQueryType, Set<String>> queryParams) {
+
+    if (queryParams.containsKey(TokenQueryType.USEDATE)) {
+      if (!queryParams.get(TokenQueryType.USEDATE).isEmpty()) {
+        return UseDateValueType
+            .fromToken(queryParams.get(TokenQueryType.USEDATE).iterator().next());
+      }
+    }
+    return null;
+  }
+
   /**
    * Builds a list of participants to serve as the filter for the query.
    *
@@ -336,6 +430,26 @@ public class QueryHelper {
           throw new InvalidQueryException(msg);
         }
       }
+      // Verify date ranges format and convert to to long
+      if (tokenType.equals(TokenQueryType.FROM) || tokenType.equals(TokenQueryType.TO)) {
+        try {
+          tokenValue = Long.toString(filterDateFormat.parse(tokenValue).getTime());
+
+        } catch (ParseException e) {
+          String msg = "Invalid date query value: " + tokenValue;
+          throw new InvalidQueryException(msg);
+        }
+      }
+      // Verify use date field
+      if (tokenType.equals(TokenQueryType.USEDATE)) {
+        try {
+          UseDateValueType.fromToken(tokenValue);
+        } catch (IllegalArgumentException e) {
+          String msg = "Invalid usedate query value: " + tokenValue;
+          throw new InvalidQueryException(msg);
+        }
+      }
+
       Set<String> valuesPerToken = tokensMap.get(tokenType);
       if (valuesPerToken == null) {
         valuesPerToken = Sets.newLinkedHashSet();

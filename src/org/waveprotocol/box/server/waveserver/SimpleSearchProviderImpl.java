@@ -30,6 +30,7 @@ import com.google.wave.api.SearchResult;
 import org.waveprotocol.box.server.CoreSettings;
 import org.waveprotocol.box.server.util.WaveletDataUtil;
 import org.waveprotocol.box.server.waveserver.QueryHelper.InvalidQueryException;
+import org.waveprotocol.box.server.waveserver.QueryHelper.UseDateValueType;
 import org.waveprotocol.wave.model.id.IdUtil;
 import org.waveprotocol.wave.model.id.WaveId;
 import org.waveprotocol.wave.model.id.WaveletId;
@@ -82,6 +83,12 @@ public class SimpleSearchProviderImpl extends AbstractSearchProviderImpl {
 
     final List<ParticipantId> withParticipantIds;
     final List<ParticipantId> creatorParticipantIds;
+
+    final long dateFrom = QueryHelper.getDateAsLong(queryParams, TokenQueryType.FROM);
+    final long dateTo =
+        QueryHelper.roundUpDate(QueryHelper.getDateAsLong(queryParams, TokenQueryType.TO));
+    final UseDateValueType useDateField = QueryHelper.getUseDateField(queryParams);
+
     try {
       String localDomain = user.getDomain();
       // Build and validate.
@@ -99,7 +106,8 @@ public class SimpleSearchProviderImpl extends AbstractSearchProviderImpl {
 
     Multimap<WaveId, WaveletId> currentUserWavesView =  createWavesViewToFilter(user, isAllQuery);
     Function<ReadableWaveletData, Boolean> filterWaveletsFunction =
-        createFilterWaveletsFunction(user, isAllQuery, withParticipantIds, creatorParticipantIds);
+        createFilterWaveletsFunction(user, isAllQuery, withParticipantIds, creatorParticipantIds,
+            dateFrom, dateTo, useDateField);
 
     List<WaveViewData> results =
         Lists.newArrayList(filterWavesViewBySearchCriteria(filterWaveletsFunction,
@@ -133,9 +141,11 @@ public class SimpleSearchProviderImpl extends AbstractSearchProviderImpl {
     return currentUserWavesView;
   }
 
-  private Function<ReadableWaveletData, Boolean> createFilterWaveletsFunction(final ParticipantId user,
-      final boolean isAllQuery, final List<ParticipantId> withParticipantIds,
-      final List<ParticipantId> creatorParticipantIds) {
+  private Function<ReadableWaveletData, Boolean> createFilterWaveletsFunction(
+      final ParticipantId user, final boolean isAllQuery,
+      final List<ParticipantId> withParticipantIds,
+      final List<ParticipantId> creatorParticipantIds, final long dateFrom, final long dateTo,
+      final UseDateValueType useDateField) {
     // A function to be applied by the WaveletContainer.
     Function<ReadableWaveletData, Boolean> matchesFunction =
         new Function<ReadableWaveletData, Boolean>() {
@@ -143,8 +153,9 @@ public class SimpleSearchProviderImpl extends AbstractSearchProviderImpl {
           @Override
           public Boolean apply(ReadableWaveletData wavelet) {
             try {
-              return isWaveletMatchesCriteria(wavelet, user, sharedDomainParticipantId, withParticipantIds,
-                  creatorParticipantIds, isAllQuery);
+              return isWaveletMatchesCriteria(wavelet, user, sharedDomainParticipantId,
+                  withParticipantIds, creatorParticipantIds, isAllQuery, dateFrom, dateTo,
+                  useDateField);
             } catch (WaveletStateException e) {
               LOG.warning(
                   "Failed to access wavelet "
@@ -169,7 +180,30 @@ public class SimpleSearchProviderImpl extends AbstractSearchProviderImpl {
    */
   private boolean isWaveletMatchesCriteria(ReadableWaveletData wavelet, ParticipantId user,
       ParticipantId sharedDomainParticipantId, List<ParticipantId> withList,
-      List<ParticipantId> creatorList, boolean isAllQuery) throws WaveletStateException {
+      List<ParticipantId> creatorList, boolean isAllQuery, long fromTime, long toTime,
+      UseDateValueType useDateField) throws WaveletStateException {
+
+    // Filter wavelets by date as follows
+    // to date (now) > wavelet date > from date (past)
+    if (useDateField != null && useDateField.equals(UseDateValueType.CREATEDATE)) {
+
+      if (toTime != 0 && wavelet.getCreationTime() > toTime)
+        return false;
+
+      if (wavelet.getCreationTime() < fromTime)
+        return false;
+    }
+
+
+    if (useDateField != null && useDateField.equals(UseDateValueType.LASTMODDATE)) {
+
+      if (toTime != 0 && wavelet.getLastModifiedTime() > toTime)
+        return false;
+
+      if (wavelet.getLastModifiedTime() < fromTime)
+        return false;
+    }
+
     // If it is user data wavelet for the user - return true.
     if (IdUtil.isUserDataWavelet(wavelet.getWaveletId()) && wavelet.getCreator().equals(user)) {
       return true;
@@ -177,7 +211,6 @@ public class SimpleSearchProviderImpl extends AbstractSearchProviderImpl {
     // Filter by creator. This is the fastest check so we perform it first.
     for (ParticipantId creator : creatorList) {
       if (!creator.equals(wavelet.getCreator())) {
-        // Skip.
         return false;
       }
     }
@@ -198,7 +231,6 @@ public class SimpleSearchProviderImpl extends AbstractSearchProviderImpl {
     // Now filter by 'with'.
     for (ParticipantId otherUser : withList) {
       if (!wavelet.getParticipants().contains(otherUser)) {
-        // Skip.
         return false;
       }
     }

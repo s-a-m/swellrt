@@ -33,6 +33,9 @@ public enum TokenQueryType {
   WITH("with"),
   CREATOR("creator"),
   ID("id"),
+  FROM("from"),
+  TO("to"),
+  USEDATE("usedate")
   ;
 
   final String token;

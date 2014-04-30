@@ -26,6 +26,10 @@ package org.waveprotocol.box.webclient.search;
  */
 public interface SearchView {
 
+  public static final String FIELD_LAST_MOD_DATE = "lastmoddate";
+  public static final String FIELD_CREATE_DATE = "createdate";
+  public static final String DATE_FORMAT_PATTERN = "yyyyMMdd";
+
   /**
    * Handles UI gesture events.
    */

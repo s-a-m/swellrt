@@ -20,7 +20,6 @@
 package org.waveprotocol.box.webclient.search.i18n;
 
 import com.google.gwt.i18n.client.Messages;
-import com.google.gwt.i18n.client.Messages.DefaultMessage;
 
 /**
  *
@@ -35,4 +34,32 @@ public interface SearchWidgetMessages extends Messages {
 
   @DefaultMessage("Inbox")
   public String inbox();
+
+  @DefaultMessage("Search options")
+  public String searchOptions();
+
+  @DefaultMessage("Created by")
+  public String createdBy();
+
+  @DefaultMessage("With participants")
+  public String withParticipants();
+
+  @DefaultMessage("Scope")
+  public String scope();
+
+  @DefaultMessage("Creation date range")
+  public String creationDateRange();
+
+  @DefaultMessage("Last modification date range")
+  public String lastmodDateRange();
+
+  @DefaultMessage("Search")
+  public String search();
+
+  @DefaultMessage("Reset")
+  public String reset();
+
+  @DefaultMessage(" (Wrong date range)")
+  public String errorRange();
+
 }

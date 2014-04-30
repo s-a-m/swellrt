@@ -22,24 +22,81 @@
 
 <!-- Template for SearchWidget. Author: hearnden@google.com (David Hearnden) -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+xmlns:dp="urn:import:com.google.gwt.user.datepicker.client">
+
+
+  <ui:style>
+
+      .disclosureSearchFilterPanel {
+
+        width: 100%;
+    }
+
+    .disclosureSearchFilterPanel-open {
+
+        width: 100%;
+    }
+
+    .disclosureSearchFilterPanel-closed {
+
+        width: 100%;
+    }
+
+    .hideit {
+
+    display: none;
+
+    }
+
+  </ui:style>
+
+
   <ui:with
     field="css" type="org.waveprotocol.box.webclient.search.SearchWidget.Css" />
   <ui:with
     field="msg" type="org.waveprotocol.box.webclient.search.i18n.SearchWidgetMessages" />
-  <g:HTMLPanel styleName='{css.self}'>
-   <div class='{css.search}'>
-     <div class='{css.searchButtonsPanel}'>
-       <g:Button ui:field='searchButtonShared' title='Show shared waves'
-           styleName='{css.searchButton}'><ui:text from="{msg.shared}"/></g:Button>
-      <g:Button ui:field='searchButtonAll' title='Show all waves'
-           styleName='{css.searchButton}'><ui:text from="{msg.all}"/></g:Button>
-       <g:Button ui:field='searchButtonInbox' title='Show waves in my inbox'
-           styleName='{css.searchButton}'><ui:text from="{msg.inbox}"/></g:Button>
-     </div>
-     <div class='{css.searchboxContainer}'>
-       <g:TextBox ui:field='query' styleName='{css.query}'/>
-     </div>
-   </div>
-  </g:HTMLPanel>
+
+
+   <g:DisclosurePanel styleName='{style.disclosureSearchFilterPanel}' ui:field='disclosurePanel'>
+    <g:header><ui:text from="{msg.searchOptions}"/></g:header>
+    <g:VerticalPanel styleName='{css.self}'>
+
+     <g:TextBox  styleName='{css.searchTextBox} {style.hideit}' ui:field='query'  />
+
+     <g:Label styleName='{css.searchLabel}'><ui:text from="{msg.createdBy}"/></g:Label>
+     <g:TextBox styleName='{css.searchTextBox} {css.searchContentRow}' ui:field='creators' />
+
+     <g:Label styleName='{css.searchLabel}'><ui:text from="{msg.withParticipants}"/></g:Label>
+     <g:TextBox styleName='{css.searchTextBox} {css.searchContentRow}' ui:field='participants'/>
+
+     <g:Label styleName='{css.searchLabel}'><ui:text from="{msg.scope}"/></g:Label>
+     <g:ListBox styleName='{css.searchContentRow}' ui:field='scope'>
+         <g:item value='inbox'><ui:text from="{msg.inbox}"/></g:item>
+         <g:item value='shared'><ui:text from="{msg.shared}"/></g:item>
+         <g:item value='all'><ui:text from="{msg.all}"/></g:item>
+     </g:ListBox>
+
+     <g:Label styleName='{css.searchLabel}'><ui:text from="{msg.creationDateRange}"/></g:Label>
+       <g:HorizontalPanel verticalAlignment='middle' styleName='{css.searchContentRow}'>
+        <dp:DateBox styleName='{css.searchDateBox} {css.searchInline}' ui:field='createFromDate' />
+        <g:Label styleName='{css.searchInline}'>&rsaquo;</g:Label>
+        <dp:DateBox styleName='{css.searchDateBox}' ui:field='createToDate' />
+       </g:HorizontalPanel>
+
+      <g:Label styleName='{css.searchLabel}'><ui:text from="{msg.lastmodDateRange}"/></g:Label>
+      <g:HorizontalPanel verticalAlignment='middle' styleName='{css.searchContentRow}'>
+        <dp:DateBox styleName='{css.searchDateBox}  {css.searchInline}' ui:field='lastmodFromDate' />
+        <g:Label styleName='{css.searchInline}'>&rsaquo;</g:Label>
+        <dp:DateBox styleName='{css.searchDateBox}'  ui:field='lastmodToDate' />
+       </g:HorizontalPanel>
+
+
+    <g:HorizontalPanel styleName='{css.searchButtonRow}' >
+        <g:Button styleName='{css.searchButton}' ui:field='search'><ui:text from="{msg.search}"/></g:Button>
+        <g:Button styleName='{css.searchButton}' ui:field='reset'><ui:text from="{msg.reset}"/></g:Button>
+    </g:HorizontalPanel>
+    </g:VerticalPanel>
+   </g:DisclosurePanel>
+
 </ui:UiBinder>
