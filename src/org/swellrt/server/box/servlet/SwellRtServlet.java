@@ -15,7 +15,6 @@ import org.waveprotocol.wave.model.wave.ParticipantId;
 import org.waveprotocol.wave.util.logging.Log;
 
 import java.io.IOException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -57,8 +56,6 @@ public class SwellRtServlet extends HttpServlet {
   }
 
   private DBObject parseParam(String param) throws IOException {
-
-    param = URLDecoder.decode(param, "UTF-8");
 
     DBObject objectQuery = null;
     if (param == null || param.isEmpty()) {
