@@ -38,3 +38,4 @@ war/WEB-INF
 /selenium/.settings
 **/*swp
 /trash.txt
+/ignore

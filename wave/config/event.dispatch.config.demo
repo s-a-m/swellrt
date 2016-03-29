@@ -1,0 +1,7 @@
+{
+    "gcm"   :
+                {
+                    "authKey" : "none",
+                    "url"   :   "http://localhost:9090"
+                }
+}

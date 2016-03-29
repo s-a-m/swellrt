@@ -1,0 +1,29 @@
+
+_WidgetController = {   
+
+    super: {
+
+        init: function(state, parent) {
+
+            console.log("Widget super init state = "+state+ ", parent = "+parent);
+
+            var imgElement = document.createElement("img");
+            imgElement.setAttribute(state);
+            parent.appendChild(imgElement);
+        },
+
+        state: function(oldState, newState, parent) {
+
+            console.log("Widget super state changed. Old state = "+oldState+ ", new state ="+newState+ ", parent = "+parent);
+
+            var imgElement = parent.getElementsByTagName("img")[0];
+            if (imgElement !== undefined) {
+                imgElement.setAttribute(newState);
+            }
+
+        }
+    }
+};
+
+
+<widget type="super" state="hello" />
