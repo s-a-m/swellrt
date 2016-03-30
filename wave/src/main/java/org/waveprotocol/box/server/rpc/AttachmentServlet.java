@@ -21,15 +21,13 @@ package org.waveprotocol.box.server.rpc;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-
+import com.typesafe.config.Config;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
 import org.waveprotocol.box.attachment.AttachmentMetadata;
-import org.waveprotocol.box.server.CoreSettings;
 import org.waveprotocol.box.server.attachment.AttachmentService;
 import org.waveprotocol.box.server.authentication.SessionManager;
 import org.waveprotocol.box.server.persistence.AttachmentStore.AttachmentData;
@@ -41,21 +39,23 @@ import org.waveprotocol.wave.model.id.InvalidIdException;
 import org.waveprotocol.wave.model.id.WaveletName;
 import org.waveprotocol.wave.model.wave.ParticipantId;
 import org.waveprotocol.wave.util.logging.Log;
+import com.google.inject.name.Named;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Calendar;
 import java.util.List;
-import java.util.logging.Level;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLDecoder;
+import java.util.Calendar;
+import java.util.List;
+import java.util.logging.Level;
 
 /**
  * Serves attachments from a provided store.
@@ -82,12 +82,11 @@ public class AttachmentServlet extends HttpServlet {
 
   @Inject
   private AttachmentServlet(AttachmentService service, WaveletProvider waveletProvider,
-      SessionManager sessionManager,
-      @Named(CoreSettings.THUMBNAIL_PATTERNS_DIRECTORY) String thumbnailPatternsDirectory) {
+      SessionManager sessionManager, Config config) {
     this.service = service;
     this.waveletProvider = waveletProvider;
     this.sessionManager = sessionManager;
-    this.thumbnailPattternsDirectory = thumbnailPatternsDirectory;
+    this.thumbnailPattternsDirectory = config.getString("core.thumbnail_patterns_directory");
   }
 
   @Override
@@ -222,10 +221,9 @@ public class AttachmentServlet extends HttpServlet {
           return;
         }
 
-        String fileName = fileItem.getName();
         // Get only the file name not whole path.
-        if (fileName != null) {
-          fileName = FilenameUtils.getName(fileName);
+        if (fileItem != null && fileItem.getName()  != null) {
+          String fileName = FilenameUtils.getName(fileItem.getName());
           service.storeAttachment(id, fileItem.getInputStream(), waveletName, fileName, user);
           response.setStatus(HttpServletResponse.SC_CREATED);
           String msg =

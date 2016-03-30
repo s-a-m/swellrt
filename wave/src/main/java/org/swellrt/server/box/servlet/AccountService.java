@@ -1,12 +1,19 @@
 package org.swellrt.server.box.servlet;
 
-import com.google.gson.JsonParseException;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.validator.routines.EmailValidator;
-import org.waveprotocol.box.server.CoreSettings;
 import org.waveprotocol.box.server.account.AccountData;
 import org.waveprotocol.box.server.account.HumanAccountData;
 import org.waveprotocol.box.server.account.HumanAccountDataImpl;
@@ -21,17 +28,9 @@ import org.waveprotocol.wave.model.wave.InvalidParticipantAddress;
 import org.waveprotocol.wave.model.wave.ParticipantId;
 import org.waveprotocol.wave.util.logging.Log;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.net.URLDecoder;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.google.gson.JsonParseException;
+import com.google.inject.Inject;
+import com.typesafe.config.Config;
 
 /**
  * Service for creating and editing accounts.
@@ -94,13 +93,12 @@ public class AccountService extends SwellRTService {
 
   @Inject
   public AccountService(SessionManager sessionManager, AccountStore accountStore,
-      AccountAttachmentStore attachmentAccountStore,
-      @Named(CoreSettings.WAVE_SERVER_DOMAIN) String domain) {
+      AccountAttachmentStore attachmentAccountStore, Config config) {
 
     super(sessionManager);
     this.accountStore = accountStore;
     this.attachmentAccountStore = attachmentAccountStore;
-    this.domain = domain;
+    this.domain = config.getString("core.wave_server_domain");
   }
 
   protected ParticipantId getParticipantFromRequest(HttpServletRequest req)

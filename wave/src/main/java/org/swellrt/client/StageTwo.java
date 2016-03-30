@@ -20,8 +20,9 @@
 
 package org.swellrt.client;
 
-import com.google.common.base.Preconditions;
-import com.google.gwt.user.client.Command;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 
 import org.swellrt.model.generic.Model;
 import org.waveprotocol.wave.client.OptimalGroupingScheduler;
@@ -98,9 +99,8 @@ import org.waveprotocol.wave.model.wave.opbased.WaveViewImpl;
 import org.waveprotocol.wave.model.wave.opbased.WaveViewImpl.WaveletConfigurator;
 import org.waveprotocol.wave.model.wave.opbased.WaveViewImpl.WaveletFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
+import com.google.common.base.Preconditions;
+import com.google.gwt.user.client.Command;
 
 /**
  * The second stage of client code.

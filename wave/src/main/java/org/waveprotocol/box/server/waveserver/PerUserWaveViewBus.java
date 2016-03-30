@@ -19,17 +19,19 @@
 
 package org.waveprotocol.box.server.waveserver;
 
-import com.google.common.util.concurrent.ListenableFuture;
-
 import org.waveprotocol.wave.model.id.WaveletName;
 import org.waveprotocol.wave.model.wave.ParticipantId;
 import org.waveprotocol.wave.model.wave.data.ReadableWaveletData;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 /**
  * Provides a subscription service for changes to wavelets that can cause
- * modification of the per user wave view. It is an adapter interface for {@link WaveBus}.
- *
+ * modification of the per user wave view. It is an adapter interface for
+ * {@link WaveBus}.
+ * 
  * @author yurize@apache.org (Yuri Zelikov)
+ * @author pablojan@gmail.org (Pablo Ojanguren)
  */
 public interface PerUserWaveViewBus {
 
@@ -68,7 +70,8 @@ public interface PerUserWaveViewBus {
      * Notifies the subscriber of changes in a wavelet that should be indexed.
      * It pass forward the wavelet snapshot.
      * 
-     * @param waveletData the wavelet snapshot.
+     * @param waveletData
+     *          the wavelet snapshot.
      * @return the future that allows to be notified of the update completion.
      */
     ListenableFuture<Void> onWaveUpdated(ReadableWaveletData waveletData);

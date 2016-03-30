@@ -1,5 +1,7 @@
 package org.swellrt.client;
 
+import java.util.Set;
+
 import org.waveprotocol.box.webclient.client.RemoteViewServiceMultiplexer;
 import org.waveprotocol.wave.client.account.ProfileManager;
 import org.waveprotocol.wave.client.common.util.AsyncHolder;
@@ -12,8 +14,6 @@ import org.waveprotocol.wave.model.document.WaveContext;
 import org.waveprotocol.wave.model.id.IdGenerator;
 import org.waveprotocol.wave.model.wave.ParticipantId;
 import org.waveprotocol.wave.model.waveref.WaveRef;
-
-import java.util.Set;
 
 public class WaveWrapper extends Stages {
 

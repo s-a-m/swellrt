@@ -19,8 +19,7 @@
 
 package org.swellrt.client;
 
-import com.google.common.base.Preconditions;
-import com.google.gwt.user.client.Command;
+import java.util.Set;
 
 import org.swellrt.model.ModelSchemas;
 import org.swellrt.model.generic.Model;
@@ -40,7 +39,8 @@ import org.waveprotocol.wave.model.wave.data.WaveViewData;
 import org.waveprotocol.wave.model.wave.data.impl.WaveViewDataImpl;
 import org.waveprotocol.wave.model.waveref.WaveRef;
 
-import java.util.Set;
+import com.google.common.base.Preconditions;
+import com.google.gwt.user.client.Command;
 
 /**
  * Provides stage 2 of the staged loading of the wave panel

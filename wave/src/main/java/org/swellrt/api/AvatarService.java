@@ -1,5 +1,9 @@
 package org.swellrt.api;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import cc.kune.initials.AvatarComposite;
 import cc.kune.initials.AvatarComposite.Builder;
 import cc.kune.initials.InitialLabel;
@@ -11,10 +15,6 @@ import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 public class AvatarService {
 

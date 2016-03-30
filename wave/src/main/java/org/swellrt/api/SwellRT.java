@@ -1,21 +1,10 @@
 package org.swellrt.api;
 
-import com.google.gwt.core.client.Callback;
-import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArrayString;
-import com.google.gwt.core.client.JsonUtils;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.ui.RootPanel;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.swellrt.api.ServiceCallback.JavaScriptResponse;
 import org.swellrt.client.WaveWrapper;
@@ -41,11 +30,22 @@ import org.waveprotocol.wave.model.util.Preconditions;
 import org.waveprotocol.wave.model.wave.ParticipantId;
 import org.waveprotocol.wave.model.waveref.WaveRef;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.core.client.JsonUtils;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * A generic module to manage Wave's top operations. It encapsulates

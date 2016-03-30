@@ -1,9 +1,9 @@
 package org.swellrt.model;
 
+import java.util.Set;
+
 import org.waveprotocol.wave.model.document.AnnotationInterval;
 import org.waveprotocol.wave.model.wave.ParticipantId;
-
-import java.util.Set;
 
 public interface ReadableText extends ReadableType {
 

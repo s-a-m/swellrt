@@ -1,7 +1,9 @@
 package org.swellrt.server;
 
-import com.google.common.base.Preconditions;
-import com.google.inject.Inject;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.waveprotocol.box.common.Snippets;
 import org.waveprotocol.box.server.robots.util.ConversationUtil;
@@ -28,10 +30,8 @@ import org.waveprotocol.wave.model.wave.data.ReadableWaveletData;
 import org.waveprotocol.wave.model.wave.opbased.OpBasedWavelet;
 import org.waveprotocol.wave.util.logging.Log;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.google.common.base.Preconditions;
+import com.google.inject.Inject;
 
 /**
  * A utility class to manage Waves in our own way. Some of the code here is

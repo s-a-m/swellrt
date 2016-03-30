@@ -26,7 +26,7 @@ import static org.waveprotocol.wave.communication.gwt.JsonHelper.setPropertyAsIn
 import static org.waveprotocol.wave.communication.gwt.JsonHelper.setPropertyAsObject;
 import static org.waveprotocol.wave.communication.gwt.JsonHelper.setPropertyAsString;
 
-import com.google.common.base.Preconditions;
+import java.util.Queue;
 
 import org.waveprotocol.box.common.comms.jso.ProtocolAuthenticateJsoImpl;
 import org.waveprotocol.box.common.comms.jso.ProtocolOpenRequestJsoImpl;
@@ -44,7 +44,7 @@ import org.waveprotocol.wave.communication.json.JsonException;
 import org.waveprotocol.wave.model.util.CollectionUtils;
 import org.waveprotocol.wave.model.util.IntMap;
 
-import java.util.Queue;
+import com.google.common.base.Preconditions;
 
 
 /**
@@ -116,7 +116,7 @@ public class WaveWebSocketClient implements WaveSocket.WaveSocketCallback {
 
   public WaveWebSocketClient(boolean websocketNotAvailable, String urlBase) {
     submitRequestCallbacks = CollectionUtils.createIntMap();
-    socket = WaveSocketFactory.create(websocketNotAvailable, urlBase, getSessionToken(), this);
+    socket = WaveSocketFactory.create(websocketNotAvailable, urlBase, this);
   }
 
   /**

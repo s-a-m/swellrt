@@ -1,7 +1,5 @@
 package org.swellrt.server.box.events;
 
-import junit.framework.TestCase;
-
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -9,6 +7,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import junit.framework.TestCase;
 
 public class EventDispatcherImplTest extends TestCase {
 
@@ -76,7 +76,8 @@ public class EventDispatcherImplTest extends TestCase {
             this.getClass()
                 .getClassLoader()
                 .getResourceAsStream(
-                    "org/swellrt/server/box/events/EventDispatcherImplTest_Rules.json"), "UTF-8");
+                    "org/swellrt/server/box/events/EventDispatcherImplTest_Rules.json"),
+        "UTF-8");
 
     Collection<EventRule> rules = EventRule.fromReader(reader);
 

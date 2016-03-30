@@ -1,23 +1,5 @@
 package org.swellrt.server.box.servlet;
 
-import com.google.common.base.Preconditions;
-import com.google.gson.JsonParseException;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-
-import org.apache.commons.io.IOUtils;
-import org.waveprotocol.box.server.CoreSettings;
-import org.waveprotocol.box.server.authentication.HttpRequestBasedCallbackHandler;
-import org.waveprotocol.box.server.authentication.ParticipantPrincipal;
-import org.waveprotocol.box.server.authentication.SessionManager;
-import org.waveprotocol.box.server.persistence.AccountStore;
-import org.waveprotocol.box.server.persistence.PersistenceException;
-import org.waveprotocol.box.server.util.RegistrationUtil;
-import org.waveprotocol.wave.model.id.WaveIdentifiers;
-import org.waveprotocol.wave.model.wave.InvalidParticipantAddress;
-import org.waveprotocol.wave.model.wave.ParticipantId;
-import org.waveprotocol.wave.util.logging.Log;
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -38,6 +20,23 @@ import javax.security.auth.x500.X500Principal;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.io.IOUtils;
+import org.waveprotocol.box.server.authentication.HttpRequestBasedCallbackHandler;
+import org.waveprotocol.box.server.authentication.ParticipantPrincipal;
+import org.waveprotocol.box.server.authentication.SessionManager;
+import org.waveprotocol.box.server.persistence.AccountStore;
+import org.waveprotocol.box.server.persistence.PersistenceException;
+import org.waveprotocol.box.server.util.RegistrationUtil;
+import org.waveprotocol.wave.model.id.WaveIdentifiers;
+import org.waveprotocol.wave.model.wave.InvalidParticipantAddress;
+import org.waveprotocol.wave.model.wave.ParticipantId;
+import org.waveprotocol.wave.util.logging.Log;
+
+import com.google.common.base.Preconditions;
+import com.google.gson.JsonParseException;
+import com.google.inject.Inject;
+import com.typesafe.config.Config;
 
 /**
  * A servlet for authenticating a user's password and giving them a token via a
@@ -109,17 +108,14 @@ public class AuthenticationService extends SwellRTService {
 
   @Inject
   public AuthenticationService(AccountStore accountStore, Configuration configuration,
-      SessionManager sessionManager, @Named(CoreSettings.WAVE_SERVER_DOMAIN) String domain,
-      @Named(CoreSettings.ENABLE_CLIENTAUTH) boolean isClientAuthEnabled,
-      @Named(CoreSettings.CLIENTAUTH_CERT_DOMAIN) String clientAuthCertDomain) {
+      SessionManager sessionManager, Config config) {
 
     super(sessionManager);
     this.accountStore = accountStore;
     this.configuration = configuration;
-    this.domain = domain.toLowerCase();
-    this.isClientAuthEnabled = isClientAuthEnabled;
-    this.clientAuthCertDomain = clientAuthCertDomain.toLowerCase();
-
+    this.domain = config.getString("core.wave_server_domain");
+    this.isClientAuthEnabled = config.getBoolean("security.enable_clientauth");
+    this.clientAuthCertDomain = config.getString("security.clientauth_cert_domain");
   }
 
   @Override
@@ -451,7 +447,8 @@ public class AuthenticationService extends SwellRTService {
    * sesion is recycled. This will allow to detected multiple logins from
    * different browser tabs, etc.
    * 
-   * @param req HttpServletRequest
+   * @param req
+   *          HttpServletRequest
    * @return the HttpSession object
    */
   public static HttpSession createOrRecycleSession(HttpServletRequest req) {

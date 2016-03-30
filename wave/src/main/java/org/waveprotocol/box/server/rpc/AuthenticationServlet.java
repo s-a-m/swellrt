@@ -19,28 +19,6 @@
 
 package org.waveprotocol.box.server.rpc;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import com.google.gxp.base.GxpContext;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-
-import org.eclipse.jetty.util.MultiMap;
-import org.eclipse.jetty.util.UrlEncoded;
-import org.swellrt.server.box.servlet.AuthenticationService;
-import org.waveprotocol.box.server.CoreSettings;
-import org.waveprotocol.box.server.authentication.HttpRequestBasedCallbackHandler;
-import org.waveprotocol.box.server.authentication.ParticipantPrincipal;
-import org.waveprotocol.box.server.authentication.SessionManager;
-import org.waveprotocol.box.server.gxp.AuthenticationPage;
-import org.waveprotocol.box.server.persistence.AccountStore;
-import org.waveprotocol.box.server.robots.agent.welcome.WelcomeRobot;
-import org.waveprotocol.box.server.util.RegistrationUtil;
-import org.waveprotocol.wave.model.id.WaveIdentifiers;
-import org.waveprotocol.wave.model.wave.InvalidParticipantAddress;
-import org.waveprotocol.wave.model.wave.ParticipantId;
-import org.waveprotocol.wave.util.logging.Log;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -70,11 +48,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.eclipse.jetty.util.MultiMap;
+import org.eclipse.jetty.util.UrlEncoded;
+import org.swellrt.server.box.servlet.AuthenticationService;
+import org.waveprotocol.box.server.authentication.HttpRequestBasedCallbackHandler;
+import org.waveprotocol.box.server.authentication.ParticipantPrincipal;
+import org.waveprotocol.box.server.authentication.SessionManager;
+import org.waveprotocol.box.server.gxp.AuthenticationPage;
+import org.waveprotocol.box.server.persistence.AccountStore;
+import org.waveprotocol.box.server.robots.agent.welcome.WelcomeRobot;
+import org.waveprotocol.box.server.util.RegistrationUtil;
+import org.waveprotocol.wave.model.id.WaveIdentifiers;
+import org.waveprotocol.wave.model.wave.InvalidParticipantAddress;
+import org.waveprotocol.wave.model.wave.ParticipantId;
+import org.waveprotocol.wave.util.logging.Log;
+
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
+import com.google.gxp.base.GxpContext;
+import com.google.inject.Inject;
+import com.typesafe.config.Config;
+
 /**
  * A servlet for authenticating a user's password and giving them a token via a
  * cookie.
- *
+ * 
  * @author josephg@gmail.com (Joseph Gentle)
+ * @author pablojan@gmail.com (Pablo Ojanguren)
  */
 @SuppressWarnings("serial")
 @Singleton
@@ -103,27 +103,24 @@ private final WelcomeRobot welcomeBot;
 
   @Inject
   public AuthenticationServlet(AccountStore accountStore,
-      Configuration configuration, SessionManager sessionManager,
-      @Named(CoreSettings.WAVE_SERVER_DOMAIN) String domain,
-      @Named(CoreSettings.ENABLE_CLIENTAUTH) boolean isClientAuthEnabled,
-      @Named(CoreSettings.CLIENTAUTH_CERT_DOMAIN) String clientAuthCertDomain,
-      @Named(CoreSettings.DISABLE_REGISTRATION) boolean isRegistrationDisabled,
-      @Named(CoreSettings.DISABLE_LOGINPAGE) boolean isLoginPageDisabled,
-    WelcomeRobot welcomeBot,
-      @Named(CoreSettings.ANALYTICS_ACCOUNT) String analyticsAccount) {
+                               Configuration configuration,
+      SessionManager sessionManager,
+                               Config config,
+                               WelcomeRobot welcomeBot) {
     Preconditions.checkNotNull(accountStore, "AccountStore is null");
     Preconditions.checkNotNull(configuration, "Configuration is null");
     Preconditions.checkNotNull(sessionManager, "Session manager is null");
+
     this.accountStore = accountStore;
     this.configuration = configuration;
     this.sessionManager = sessionManager;
-    this.domain = domain.toLowerCase();
-    this.isClientAuthEnabled = isClientAuthEnabled;
-    this.clientAuthCertDomain = clientAuthCertDomain.toLowerCase();
-    this.isRegistrationDisabled = isRegistrationDisabled;
-    this.isLoginPageDisabled = isLoginPageDisabled;
+    this.domain = config.getString("core.wave_server_domain");
+    this.isClientAuthEnabled = config.getBoolean("security.enable_clientauth");
+    this.clientAuthCertDomain = config.getString("security.clientauth_cert_domain");
+    this.isRegistrationDisabled = config.getBoolean("administration.disable_registration");
+    this.isLoginPageDisabled = config.getBoolean("administration.disable_loginpage");
     this.welcomeBot = welcomeBot;
-    this.analyticsAccount = analyticsAccount;
+    this.analyticsAccount = config.getString("administration.analytics_account");
   }
 
   @SuppressWarnings("unchecked")
@@ -139,6 +136,7 @@ private final WelcomeRobot welcomeBot;
     return context;
 
   }
+
 
   /**
    * The POST request should have all the fields required for authentication.
@@ -272,6 +270,7 @@ private final WelcomeRobot welcomeBot;
     } else
       redirectLoggedInUser(req, resp);
   }
+
 
   /**
    * Get the participant id of the given subject.

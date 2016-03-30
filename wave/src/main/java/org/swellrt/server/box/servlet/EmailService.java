@@ -1,28 +1,6 @@
 package org.swellrt.server.box.servlet;
 
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.NotImplementedException;
-import org.apache.velocity.Template;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.context.Context;
-import org.apache.velocity.exception.ResourceNotFoundException;
-import org.apache.velocity.tools.ConversionUtils;
-import org.apache.velocity.tools.ToolManager;
-import org.apache.velocity.tools.generic.ResourceTool;
-import org.swellrt.server.velocity.CustomResourceTool;
-import org.waveprotocol.box.server.CoreSettings;
-import org.waveprotocol.box.server.account.AccountData;
-import org.waveprotocol.box.server.account.HumanAccountData;
-import org.waveprotocol.box.server.authentication.SessionManager;
-import org.waveprotocol.box.server.persistence.AccountStore;
-import org.waveprotocol.box.server.persistence.PersistenceException;
-import org.waveprotocol.wave.model.wave.ParticipantId;
-import org.waveprotocol.wave.util.logging.Log;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -48,6 +26,28 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.NotImplementedException;
+import org.apache.velocity.Template;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.context.Context;
+import org.apache.velocity.exception.ResourceNotFoundException;
+import org.apache.velocity.tools.ConversionUtils;
+import org.apache.velocity.tools.ToolManager;
+import org.apache.velocity.tools.generic.ResourceTool;
+import org.swellrt.server.velocity.CustomResourceTool;
+import org.waveprotocol.box.server.account.AccountData;
+import org.waveprotocol.box.server.account.HumanAccountData;
+import org.waveprotocol.box.server.authentication.SessionManager;
+import org.waveprotocol.box.server.persistence.AccountStore;
+import org.waveprotocol.box.server.persistence.PersistenceException;
+import org.waveprotocol.wave.model.wave.ParticipantId;
+import org.waveprotocol.wave.util.logging.Log;
+
+import com.google.inject.Inject;
+import com.typesafe.config.Config;
+
 
 public class EmailService extends SwellRTService {
 
@@ -76,6 +76,7 @@ public class EmailService extends SwellRTService {
   private final AccountStore accountStore;
   private final String host;
   private final String from;
+  private final String velocityPath;
   private final String recoverPasswordTemplateName;
   private final VelocityEngine ve;
   private URLClassLoader loader;
@@ -85,14 +86,13 @@ public class EmailService extends SwellRTService {
   private String recoverPasswordMessages;
 
   @Inject
-  public EmailService(SessionManager sessionManager, AccountStore accountStore,
-      @Named(CoreSettings.EMAIL_HOST) String host,
-      @Named(CoreSettings.EMAIL_FROM_ADDRESS) String from,
-      @Named(CoreSettings.VELOCITY_PATH) String velocityPath) {
+  public EmailService(SessionManager sessionManager, AccountStore accountStore, Config config) {
+
     super(sessionManager);
     this.accountStore = accountStore;
-    this.host = host;
-    this.from = from;
+    this.host = config.getString("email.email_host");
+    this.from = config.getString("email.email_from_address");
+    this.velocityPath = config.getString("email.velocity_path");
 
 
     Properties p = new Properties();

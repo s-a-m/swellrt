@@ -28,9 +28,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-
 import org.waveprotocol.box.common.ExceptionalIterator;
-import org.waveprotocol.box.server.CoreSettings;
+import org.waveprotocol.box.server.CoreSettingsNames;
+import org.waveprotocol.box.server.executor.ExecutorAnnotations.LookupExecutor;
 import org.waveprotocol.box.server.persistence.PersistenceException;
 import org.waveprotocol.wave.model.id.WaveId;
 import org.waveprotocol.wave.model.id.WaveletId;
@@ -41,7 +41,6 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
-import org.waveprotocol.box.server.executor.ExecutorAnnotations.LookupExecutor;
 
 /**
  * A collection of wavelets, local and remote, held in memory.
@@ -57,13 +56,13 @@ public class WaveMap {
   private static ListenableFuture<ImmutableSet<WaveletId>> lookupWavelets(
       final WaveId waveId, final WaveletStore<?> waveletStore, Executor lookupExecutor) {
     ListenableFutureTask<ImmutableSet<WaveletId>> task =
-        ListenableFutureTask.<ImmutableSet<WaveletId>>create(
-            new Callable<ImmutableSet<WaveletId>>() {
-              @Override
-              public ImmutableSet<WaveletId> call() throws PersistenceException {
-                return waveletStore.lookup(waveId);
-              }
-            });
+        ListenableFutureTask.create(
+           new Callable<ImmutableSet<WaveletId>>() {
+             @Override
+             public ImmutableSet<WaveletId> call() throws PersistenceException {
+               return waveletStore.lookup(waveId);
+             }
+           });
     lookupExecutor.execute(task);
     return task;
   }
@@ -74,10 +73,9 @@ public class WaveMap {
   @Inject
   public WaveMap(final DeltaAndSnapshotStore waveletStore,
       final WaveletNotificationSubscriber notifiee,
-      WaveBus dispatcher,
       final LocalWaveletContainer.Factory localFactory,
       final RemoteWaveletContainer.Factory remoteFactory,
-      @Named(CoreSettings.WAVE_SERVER_DOMAIN) final String waveDomain,
+                 @Named(CoreSettingsNames.WAVE_SERVER_DOMAIN) final String waveDomain,
       @LookupExecutor final Executor lookupExecutor) {
     // NOTE(anorth): DeltaAndSnapshotStore is more specific than necessary, but
     // helps Guice out.
@@ -143,6 +141,28 @@ public class WaveMap {
     } catch (ExecutionException ex) {
       throw new RuntimeException(ex);
     }
+  }
+
+  /**
+   * Tries to fetch the wavelet as remote, if not found - fetches as local
+   * wavelet.
+   *
+   * @param waveletName the wavelet name
+   * @return the local or remote wavelet.
+   * @throws WaveletStateException if something goes wrong
+   */
+  public WaveletContainer getWavelet(WaveletName waveletName) throws WaveletStateException {
+    WaveletContainer waveletContainer = null;
+    try {
+      waveletContainer = getRemoteWavelet(waveletName);
+    } catch (WaveletStateException | NullPointerException e) {
+      // Ignored.
+    }
+
+    if (waveletContainer == null) {
+      waveletContainer = getLocalWavelet(waveletName);
+    }
+    return waveletContainer;
   }
 
   public LocalWaveletContainer getLocalWavelet(WaveletName waveletName)

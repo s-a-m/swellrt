@@ -1,13 +1,5 @@
 package org.swellrt.api;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
-import com.google.gwt.core.client.JsArrayString;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.Random;
-
 import org.swellrt.api.js.generic.AdapterTypeJS;
 import org.swellrt.model.generic.FileType;
 import org.swellrt.model.generic.Model;
@@ -16,6 +8,14 @@ import org.waveprotocol.wave.model.util.Preconditions;
 import org.waveprotocol.wave.model.wave.ParticipantId;
 import org.waveprotocol.wave.model.waveref.WaveRef;
 import org.waveprotocol.wave.util.escapers.GwtWaverefEncoder;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Random;
 
 /**
  * Utility methods for working with JavaScript

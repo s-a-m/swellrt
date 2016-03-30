@@ -26,6 +26,17 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import junit.framework.TestCase;
 
 import org.mockito.Mock;
@@ -43,16 +54,9 @@ import org.waveprotocol.box.server.robots.agent.welcome.WelcomeRobot;
 import org.waveprotocol.wave.model.wave.ParticipantId;
 import org.waveprotocol.wave.util.escapers.PercentEscaper;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import com.google.common.collect.ImmutableMap;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 
 /**
  * @author josephg@gmail.com (Joseph Gentle)
@@ -79,8 +83,16 @@ public class AuthenticationServletTest extends TestCase {
         new HumanAccountDataImpl(USER, new PasswordDigest("password".toCharArray()));
     store.putAccount(account);
 
-    servlet = new AuthenticationServlet(store, AuthTestUtil.makeConfiguration(),
-        manager, "examPLe.com", false, "", false, false, welcomeBot, "UA-someid");
+    Config config = ConfigFactory.parseMap(ImmutableMap.<String, Object> builder()
+        .put("core.wave_server_domain", "example.com")
+        .put("administration.disable_registration", false)
+        .put("administration.analytics_account", "UA-someid")
+        .put("security.enable_clientauth", false).put("security.clientauth_cert_domain", "")
+        .put("administration.disable_loginpage", false).build()
+    );
+
+    servlet = new AuthenticationServlet(store, AuthTestUtil.makeConfiguration(), manager, config,
+        welcomeBot);
     AccountStoreHolder.init(store, "eXaMple.com");
   }
 

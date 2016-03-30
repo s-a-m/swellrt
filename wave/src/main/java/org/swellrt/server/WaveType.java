@@ -1,8 +1,8 @@
 package org.swellrt.server;
 
-import com.google.common.base.Preconditions;
-
 import org.waveprotocol.wave.model.id.WaveId;
+
+import com.google.common.base.Preconditions;
 
 
 @Deprecated

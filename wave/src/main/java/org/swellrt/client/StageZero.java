@@ -20,12 +20,12 @@
 
 package org.swellrt.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
-
 import org.waveprotocol.wave.client.common.util.AsyncHolder;
 import org.waveprotocol.wave.client.common.util.JsoCollectionFactory;
 import org.waveprotocol.wave.model.util.CollectionUtils;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 
 /**
  * Encapsulates the entry level module for Undercurrent.

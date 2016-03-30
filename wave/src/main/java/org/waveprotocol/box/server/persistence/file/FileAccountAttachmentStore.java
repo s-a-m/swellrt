@@ -1,16 +1,5 @@
 package org.waveprotocol.box.server.persistence.file;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-
-import org.apache.commons.codec.binary.Base64;
-import org.waveprotocol.box.server.CoreSettings;
-import org.waveprotocol.box.server.persistence.AccountAttachmentStore;
-import org.waveprotocol.box.server.persistence.AttachmentUtil;
-import org.waveprotocol.wave.model.util.CharBase64;
-import org.waveprotocol.wave.model.wave.ParticipantId;
-import org.waveprotocol.wave.util.logging.Log;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,6 +8,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
+import org.apache.commons.codec.binary.Base64;
+import org.waveprotocol.box.server.persistence.AccountAttachmentStore;
+import org.waveprotocol.box.server.persistence.AttachmentUtil;
+import org.waveprotocol.wave.model.util.CharBase64;
+import org.waveprotocol.wave.model.wave.ParticipantId;
+import org.waveprotocol.wave.util.logging.Log;
+
+import com.google.inject.Inject;
+import com.typesafe.config.Config;
+
+/**
+ * A simplistic implementation of attachment file-based store for accouts.
+ * 
+ * @author pablojan@gmail.com (Pablo Ojanguren)
+ * 
+ */
 public class FileAccountAttachmentStore implements AccountAttachmentStore {
 
 
@@ -37,10 +42,9 @@ public class FileAccountAttachmentStore implements AccountAttachmentStore {
   private final String domainAsPath;
 
   @Inject
-  public FileAccountAttachmentStore(@Named(CoreSettings.WAVE_SERVER_DOMAIN) String domain,
-      @Named(CoreSettings.ACCOUNT_ATTACHMENT_STORE_DIRECTORY) String basePath) {
-    this.basePath = basePath;
-    this.domainAsPath = getDomainAsPath(domain);
+  public FileAccountAttachmentStore(Config config) {
+    this.basePath = config.getString("core.account_attachment_store_directory");
+    this.domainAsPath = getDomainAsPath(config.getString("core.wave_server_domain"));
     new File(basePath + File.separatorChar + AVATAR_DIR).mkdirs();
 
   }

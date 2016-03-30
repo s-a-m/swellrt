@@ -20,7 +20,6 @@
 /_accounts
 /_deltas
 /_attachments
-/_account_attachments
 /_certificates
 /_indexes
 /gwt-unitCache
@@ -31,11 +30,40 @@ war/WEB-INF
 /src/org/waveprotocol/box/server/rpc/atmosphere/atmosphere-min.js
 /src/org/waveprotocol/box/server/rpc/atmosphere/atmosphere.js
 .DS_Store
-/war/swellrt
-/selenium/lib/*
-/selenium/driver/*
-/selenium/*.class
-/selenium/.settings
-**/*swp
-/trash.txt
-/ignore
+
+### IntelliJ Idea
+.idea
+*.iml
+*.eml
+*.ipr
+*.iws
+.settings/
+
+### Eclipse
+*.project
+*.classpath
+*/.settings/
+
+### Gradle
+.gradle
+build/
+wave/build/
+wave/war/WEB-INF/
+wave/war/webclient/
+wave/war/org*
+pst/build/
+distributions/
+### Reports
+reports/
+### Generated Sources
+**/generated/
+### Gwt Testing
+wave/gwt-unitCache
+### config
+wave/local.net.cfg.lua
+wave/config/wave.conf
+### Vagrant
+.vagrant/
+
+### Backup files
+*~

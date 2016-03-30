@@ -1,10 +1,10 @@
 package org.swellrt.model;
 
+import java.util.Set;
+
 import org.waveprotocol.wave.model.id.WaveId;
 import org.waveprotocol.wave.model.id.WaveletId;
 import org.waveprotocol.wave.model.wave.ParticipantId;
-
-import java.util.Set;
 
 public interface ReadableModel {
 

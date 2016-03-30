@@ -1,7 +1,10 @@
 package org.swellrt.server.box.events;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -9,11 +12,8 @@ import org.apache.commons.io.IOUtils;
 import org.waveprotocol.wave.model.wave.InvalidParticipantAddress;
 import org.waveprotocol.wave.model.wave.ParticipantId;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 public class EventRuleTest extends TestCase {
 
@@ -25,8 +25,10 @@ public class EventRuleTest extends TestCase {
   protected EventRule createEventRule() throws UnsupportedEncodingException {
 
 
-      InputStreamReader isr = new InputStreamReader(this.getClass().getClassLoader()
-            .getResourceAsStream("org/swellrt/server/box/events/EventRuleTest_Rule_1.json"),
+    InputStreamReader isr = new InputStreamReader(this
+        .getClass()
+        .getClassLoader()
+        .getResourceAsStream("org/swellrt/server/box/events/EventRuleTest_Rule_1.json"),
             "UTF-8");
 
 

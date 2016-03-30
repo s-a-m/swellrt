@@ -1,13 +1,13 @@
 package org.swellrt.server;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.waveprotocol.wave.model.document.Doc;
 import org.waveprotocol.wave.model.document.Doc.E;
 import org.waveprotocol.wave.model.document.Document;
 import org.waveprotocol.wave.model.document.util.DocHelper;
 import org.waveprotocol.wave.model.document.util.DocHelper.NodeAction;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ExtendedDocHelper {
 

@@ -1,16 +1,5 @@
 package org.swellrt.api;
 
-import com.google.common.base.Preconditions;
-import com.google.gwt.core.client.Callback;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
-import com.google.gwt.core.client.JsArrayString;
-import com.google.gwt.core.client.JsonUtils;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.event.shared.UmbrellaException;
-import com.google.gwt.http.client.RequestException;
-
 import org.swellrt.api.js.WaveClientJS;
 import org.swellrt.api.js.editor.TextEditorJS;
 import org.swellrt.api.js.generic.ModelJS;
@@ -21,6 +10,17 @@ import org.swellrt.model.generic.TextType;
 import org.waveprotocol.wave.client.wave.InteractiveDocument;
 import org.waveprotocol.wave.client.wave.WaveDocuments;
 import org.waveprotocol.wave.concurrencycontrol.common.UnsavedDataListener.UnsavedDataInfo;
+
+import com.google.common.base.Preconditions;
+import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.core.client.JsonUtils;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.event.shared.UmbrellaException;
+import com.google.gwt.http.client.RequestException;
 
 /**
  * SwellRT client API entrypoint

@@ -20,12 +20,12 @@
 
 package org.swellrt.client;
 
+import org.waveprotocol.wave.client.common.util.AsyncHolder;
+import org.waveprotocol.wave.client.common.util.AsyncHolder.Accessor;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.user.client.Command;
-
-import org.waveprotocol.wave.client.common.util.AsyncHolder;
-import org.waveprotocol.wave.client.common.util.AsyncHolder.Accessor;
 
 /**
  * Loads Undercurrent's stages in order.
