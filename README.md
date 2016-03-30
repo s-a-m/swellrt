@@ -1,13 +1,12 @@
 # SwellRT
 
-SwellRT is a framework to develop real-time applications for JavaScript, Android and Java. It provides following assets:
+SwellRT is a framework to develop quickly real-time applications in JavaScript, Android or Java. It provides following assets:
 
-* Server for **real-time storage**, with federation support (share data and users among servers)
-* A reactive client API to manage **real-time data objects**. Client libraries are available for JavaScript, Android and Java.
+* Server app providing **real-time storage** with federation support.
+* Reactive Client API to manage **real-time data objects**. Available client libraries for JavaScript, Android and Java.
 
-SwellRT is suitable for **real-time collaboration**:  different clients can read and edit objects at the same time on real-time.
-
-Specially, rich-text objects are provided supgportin **real-time text editing**.
+SwellRT is suitable for **real-time collaboration**:  different users can read and edit data objects at the same time on real-time.
+Specially, rich-text objects are provided supporting **real-time text editing**.
 
 
 ## Real-time collaboration
