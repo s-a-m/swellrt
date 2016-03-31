@@ -21,10 +21,10 @@ SwellRT provides federated infrastructure: it allows applications and users from
 This feature enables apps to scale beyond a central infrastructure.
 
 
-# Setup with Docker
+## Setup with Docker
 
 
-# Setup from sources
+## Setup from source
 
 
 
