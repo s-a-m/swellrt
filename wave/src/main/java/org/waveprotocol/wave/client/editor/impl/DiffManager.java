@@ -19,18 +19,17 @@
 
 package org.waveprotocol.wave.client.editor.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.waveprotocol.wave.client.editor.content.TransparentManager;
+import org.waveprotocol.wave.model.document.util.FilteredView.Skip;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.StyleInjector;
-
-import org.waveprotocol.wave.client.editor.content.DiffHighlightingFilter;
-import org.waveprotocol.wave.client.editor.content.TransparentManager;
-import org.waveprotocol.wave.model.document.util.FilteredView.Skip;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Transparent node manager for diff annotations
@@ -121,13 +120,15 @@ public class DiffManager implements TransparentManager<Element> {
     switch (type) {
       case INSERT:
         element.addClassName(resources.css().insert());
+      // TODO DiffHighlightingFilter.wrapAnonymousAuthor(author)
         element.getStyle()
-            .setBackgroundColor(DiffHighlightingFilter.colorProvider.getColor(DiffHighlightingFilter.wrapAnonymousAuthor(author)));
+.setBackgroundColor("#ef9a9a");
         break;
       case DELETE:
         element.addClassName(resources.css().delete());
+      // TODO DiffHighlightingFilter.wrapAnonymousAuthor(author)
         element.getStyle()
-            .setBackgroundColor(DiffHighlightingFilter.colorProvider.getColor(DiffHighlightingFilter.wrapAnonymousAuthor(author)));
+.setBackgroundColor("#ef9a9a");
         NodeManager.setTransparency(element, Skip.DEEP);
         element.setAttribute("contentEditable", "false");
         break;

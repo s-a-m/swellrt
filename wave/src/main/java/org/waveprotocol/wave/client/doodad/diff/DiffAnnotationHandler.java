@@ -19,6 +19,9 @@
 
 package org.waveprotocol.wave.client.doodad.diff;
 
+import java.util.Collections;
+import java.util.Map;
+
 import org.waveprotocol.wave.client.editor.content.AnnotationPainter;
 import org.waveprotocol.wave.client.editor.content.AnnotationPainter.BoundaryFunction;
 import org.waveprotocol.wave.client.editor.content.AnnotationPainter.PaintFunction;
@@ -32,9 +35,6 @@ import org.waveprotocol.wave.model.document.util.DocumentContext;
 import org.waveprotocol.wave.model.document.util.LocalDocument;
 import org.waveprotocol.wave.model.util.CollectionUtils;
 import org.waveprotocol.wave.model.util.ReadableStringSet;
-
-import java.util.Collections;
-import java.util.Map;
 
 /**
  * Defines behaviour for rendering diffs
@@ -88,8 +88,7 @@ public class DiffAnnotationHandler implements AnnotationMutationHandler {
     public Map<String, String> apply(Map<String, Object> from, boolean isEditing) {
       String author = (String) from.get(DiffHighlightingFilter.DIFF_INSERT_KEY);
       if (author != null) {
-        return Collections.singletonMap("backgroundColor", DiffHighlightingFilter.colorProvider
-            .getColor(DiffHighlightingFilter.wrapAnonymousAuthor(author)));
+        return Collections.singletonMap("backgroundColor", "#ef9a9a");
       } else {
         return Collections.emptyMap();
       }

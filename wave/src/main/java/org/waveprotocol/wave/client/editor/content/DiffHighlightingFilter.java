@@ -22,7 +22,6 @@ package org.waveprotocol.wave.client.editor.content;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.waveprotocol.wave.client.common.util.DomHelper;
 import org.waveprotocol.wave.client.editor.DocOperationLog;
@@ -49,12 +48,6 @@ import org.waveprotocol.wave.model.util.ReadableStringMap;
 import org.waveprotocol.wave.model.util.ReadableStringSet;
 import org.waveprotocol.wave.model.util.StringMap;
 
-import cc.kune.initials.ColorHelper;
-import cc.kune.initials.ColorProvider;
-
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
@@ -86,30 +79,6 @@ public class DiffHighlightingFilter implements ModifiableDocument {
   }
 
 
-  /**
-   * TODO(pablojan) Integrate DiffManager with avatars generator, to sync
-   * colors. A manager of Participants is needed, providing random colors.
-   * Consider to extend ParticipantId?
-   *
-   * A random color provider for authors highlighting.
-   *
-   * @author vjrj@ourproject.org (Vicente J. Ruiz Jurado)
-   */
-  public static ColorProvider colorProvider = new ColorProvider() {
-    @Override
-    public String getColor(final String key) {
-      return colorsCache.getUnchecked(key);
-    }
-  };
-
-  private static LoadingCache<String, String> colorsCache = CacheBuilder.newBuilder()
-      .maximumSize(500).expireAfterAccess(600, TimeUnit.SECONDS)
-      .build(new CacheLoader<String, String>() {
-        @Override
-        public String load(final String name) {
-          return ColorHelper.getRandomClearColor(name);
-        }
-      });
 
   /**
    * Removes the anonymous prefix to avoid duplicated colour highlighting.
@@ -425,12 +394,12 @@ public class DiffHighlightingFilter implements ModifiableDocument {
            * Element e = Document.get().createSpanElement();
            * DiffManager.styleElement(e, DiffType.DELETE, author);
            * e.setInnerText(text.substring(index, nextIndex));
-
-
-          currentDeleteInfo.htmlElements.add(e);
-          if (surroundedInfo != null) {
-            currentDeleteInfo.htmlElements.addAll(surroundedInfo.htmlElements);
-          }
+           * 
+           * 
+           * currentDeleteInfo.htmlElements.add(e); if (surroundedInfo != null)
+           * {
+           * currentDeleteInfo.htmlElements.addAll(surroundedInfo.htmlElements);
+           * }
            */
           // End pablojan code
 
